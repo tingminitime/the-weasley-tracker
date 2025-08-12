@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div>✨ Hello Electron !</div>
+  <RouterView />
 </template>

@@ -31,7 +31,7 @@ export default antfu(
     },
     settings: {
       'better-tailwindcss': {
-        entryPoint: './src/styles/main.css',
+        entryPoint: './src/renderer/src/assets/main.css',
       },
     },
   },
