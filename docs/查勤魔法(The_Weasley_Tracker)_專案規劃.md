@@ -34,12 +34,12 @@
 - **出勤紀錄**：
   - 讀取出勤紀錄表 (AttendanceRecords)
   - 包含簽到時間、簽退時間、工作地點類型 (office 或 wfh)
-  - 狀態會根據簽到/簽退時間自動更新
+  - 根據簽到/簽退時間更新狀態
   - 支援遠端上班 (WFH) 狀態
 - **行事曆紀錄**：
   - 讀取行事曆紀錄表 (CalendarEvents)
   - 包含會議時間、狀態 (`scheduled`, `ongoing`, `completed`, `canceled`)
-  - 自動偵測會議時間，更新成員進入「會議中」狀態
+  - 判斷會議時間，更新成員進入或移除「會議中」狀態
 
 ### 4. AI 對話功能
 - **查詢功能**：「小王現在在做什麼？」、「這位同仁今天遠端上班」
@@ -55,72 +55,72 @@
 ### 使用者資料表 (唯讀)
 ```typescript
 interface MockUser {
-  id: string;
-  name: string;
-  department: string;
+  id: string
+  name: string
+  department: string
   workSchedule: {
-    startTime: string; // 預設 "08:30"
-    endTime: string;   // 預設 "17:30"
-  };
+    startTime: string // 預設 "08:30"
+    endTime: string // 預設 "17:30"
+  }
 }
 ```
 
 ### 出勤紀錄表 (Mock Data - 唯獨)
 ```typescript
 interface AttendanceRecord {
-  id: string;
-  userId: string;
-  checkIn?: Date; // 簽到時間（office 和 wfh 都需要）
-  checkOut?: Date; // 簽退時間（office 和 wfh 都需要）
-  workType: 'office' | 'wfh'; // 工作地點類型
-  date: string; // YYYY-MM-DD
-  status: 'on_duty' | 'off_duty' | 'on_leave' | 'wfh'; // 當前狀態
-  startTime: Date; // 預定開始時間
-  endTime: Date; // 預定結束時間
+  id: string
+  userId: string
+  checkIn?: Date // 簽到時間（office 和 wfh 都需要）
+  checkOut?: Date // 簽退時間（office 和 wfh 都需要）
+  workType: 'office' | 'wfh' // 工作地點類型
+  date: string // YYYY-MM-DD
+  status: 'on_duty' | 'off_duty' | 'on_leave' | 'wfh' // 當前狀態
+  startTime: Date // 預定開始時間
+  endTime: Date // 預定結束時間
 }
 ```
 
 ### 行事曆紀錄表 (Mocl Data - 唯獨)
 ```typescript
 interface CalendarEvent {
-  id: string;
-  userId: string;
-  title: string;
-  startTime: Date;
-  endTime: Date;
-  status: 'scheduled' | 'ongoing' | 'completed' | 'canceled';
-  eventStatus: 'meeting';
+  id: string
+  userId: string
+  title: string
+  startTime: Date
+  endTime: Date
+  status: 'scheduled' | 'ongoing' | 'completed' | 'canceled'
+  eventStatus: 'meeting'
 }
 ```
 
 ### 主狀態表 (可讀寫)
 ```typescript
-type StatusType = 'on_duty' | 'off_duty' | 'on_leave' | 'wfh' | 'out' | 'meeting';
+type StatusType = 'on_duty' | 'off_duty' | 'on_leave' | 'wfh' | 'out' | 'meeting'
 
 interface UserStatus {
-  userId: string;
-  name: string;
-  
+  userId: string
+  name: string
+
   // 當前有效狀態（經過優先級計算後的結果）
-  currentStatus: StatusType;
-  statusDetail?: string;
-  lastUpdated: Date;
-  expiresAt: Date;
-  
+  currentStatus: StatusType
+  statusDetail?: string
+  lastUpdated: Date
+  expiresAt: Date
+
   // 所有時間段記錄（按優先級和時間排序）
-  timeSlots: TimeSlot[];
+  timeSlots: TimeSlot[]
 }
 
 interface TimeSlot {
-  id: string;
-  startTime: Date;
-  endTime: Date;
-  status: StatusType;
-  statusDetail?: string;
-  source: 'attendance' | 'calendar' | 'ai_modified';
-  priority: number; // 3=AI修改, 2=出勤, 1=行事曆
-  createdAt: Date;
-  expiresAt: Date;
+  id: string
+  startTime: Date
+  endTime: Date
+  status: StatusType
+  statusDetail?: string
+  source: 'attendance' | 'calendar' | 'ai_modified'
+  priority: number // 3=AI修改, 2=出勤, 1=行事曆
+  createdAt: Date
+  expiresAt: Date
 }
 ```
 
