@@ -4,7 +4,7 @@ import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss'
 export default antfu(
   {
     ignores: [
-      '*.md',
+      '**/*.md',
     ],
   },
   {

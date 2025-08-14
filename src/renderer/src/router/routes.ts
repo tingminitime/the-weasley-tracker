@@ -1,10 +1,18 @@
-import Index from '@renderer/pages/index.vue'
-
 export const routes = [
   {
     path: '/',
     name: 'home',
-    component: Index,
+    redirect: '/dashboard',
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@renderer/pages/Login.vue'),
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import('@renderer/pages/Dashboard.vue'),
   },
   {
     path: '/:pathMatch(.*)*',

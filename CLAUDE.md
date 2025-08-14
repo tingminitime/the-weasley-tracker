@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 2. **Single-Machine Mode**: Uses electron-store for local data storage with mock data
 3. **Multi-User Simulation**: Mock user system with simple login/logout functionality
 4. **AI-Powered Queries**: Natural language status queries and updates via MCP Tools
-5. **Batch Operations**: Support queries like "Who is currently in meetings?" or "What are John, Mary, and Tom doing?"
+5. **Batch Operations**: Support queries like "有誰正在會議中?" or "小王、小李、小陳現在的狀態是?"
 
 ### Key Features
 - **6 Status Types**: `on_duty`, `off_duty`, `on_leave`, `wfh`, `out`, `meeting`
