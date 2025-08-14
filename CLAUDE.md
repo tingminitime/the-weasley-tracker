@@ -55,6 +55,12 @@ The `electron.vite.config.ts` file configures:
 - Preload script exposes `window.electron` and `window.api` to renderer
 - Uses `@electron-toolkit/preload` for secure API exposure
 
+### Frontend Architecture
+- **State Management**: Pinia store setup in `src/renderer/src/main.ts`
+- **Routing**: Vue Router with hash-based navigation configured in `src/renderer/src/router/`
+- **Styling**: Tailwind CSS v4 with custom theme and component classes in `src/renderer/src/assets/main.css`
+- **Icons**: @egoist/tailwindcss-icons plugin for icon support
+
 ### Code Standards
 - ESLint configuration using Antfu's config with TypeScript and Vue support
 - Tailwind CSS class organization enforced by better-tailwindcss plugin
