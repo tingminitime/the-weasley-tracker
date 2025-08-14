@@ -33,6 +33,7 @@
     "@egoist/tailwindcss-icons": "^1.9.0",
     "@electron-toolkit/eslint-config-ts": "^3.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
+    "@modelcontextprotocol/sdk": "^1.17.2",
     "@tailwindcss/vite": "^4.1.11",
     "@types/node": "^22.16.5",
     "@vitejs/plugin-vue": "^6.0.0",
