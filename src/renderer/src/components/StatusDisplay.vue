@@ -31,7 +31,7 @@ const statusConfig = {
     avatarClass: 'bg-yellow-500',
   },
   wfh: {
-    text: '在家工作',
+    text: '遠端上班',
     class: 'bg-blue-100 text-blue-800',
     dotClass: 'bg-blue-400',
     avatarClass: 'bg-blue-500',

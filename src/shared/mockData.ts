@@ -63,6 +63,42 @@ export function generateMockUsers(): MockUser[] {
         endTime: '19:00',
       },
     },
+    {
+      id: 'user-007',
+      name: '陳雅琪',
+      department: 'Operations',
+      workSchedule: {
+        startTime: '08:00',
+        endTime: '17:00',
+      },
+    },
+    {
+      id: 'user-008',
+      name: '林志豪',
+      department: 'Finance',
+      workSchedule: {
+        startTime: '09:00',
+        endTime: '18:00',
+      },
+    },
+    {
+      id: 'user-009',
+      name: 'Amy Wilson',
+      department: 'Marketing',
+      workSchedule: {
+        startTime: '09:30',
+        endTime: '18:30',
+      },
+    },
+    {
+      id: 'user-010',
+      name: '黃建民',
+      department: 'Engineering',
+      workSchedule: {
+        startTime: '08:30',
+        endTime: '17:30',
+      },
+    },
   ]
 }
 
@@ -80,8 +116,8 @@ export function generateTodayAttendanceRecords(users: MockUser[]): AttendanceRec
     const [endHour, endMinute] = user.workSchedule.endTime.split(':').map(Number)
     endTime.setHours(endHour, endMinute, 0, 0)
 
-    // Simulate different scenarios
-    const scenario = index % 4
+    // Simulate different scenarios - expanded to cover more status types
+    const scenario = index % 6
     let record: AttendanceRecord
 
     switch (scenario) {
@@ -126,30 +162,43 @@ export function generateTodayAttendanceRecords(users: MockUser[]): AttendanceRec
         break
       }
 
-      case 3: { // Late arrival or not checked in yet
-        const now = new Date()
-        if (now > startTime) {
-          record = {
-            id: `att-${user.id}-${todayStr}`,
-            userId: user.id,
-            workType: 'office',
-            date: todayStr,
-            status: 'off_duty', // Will be updated when they check in
-            startTime,
-            endTime,
-          }
+      case 3: { // Off duty - not checked in yet
+        record = {
+          id: `att-${user.id}-${todayStr}`,
+          userId: user.id,
+          workType: 'office',
+          date: todayStr,
+          status: 'off_duty',
+          startTime,
+          endTime,
         }
-        else {
-          record = {
-            id: `att-${user.id}-${todayStr}`,
-            userId: user.id,
-            checkIn: new Date(startTime.getTime() + Math.random() * 10 * 60000),
-            workType: 'office',
-            date: todayStr,
-            status: 'on_duty',
-            startTime,
-            endTime,
-          }
+        break
+      }
+
+      case 4: { // Normal office work for meeting status (will be overridden by AI)
+        record = {
+          id: `att-${user.id}-${todayStr}`,
+          userId: user.id,
+          checkIn: new Date(startTime.getTime() + Math.random() * 20 * 60000),
+          workType: 'office',
+          date: todayStr,
+          status: 'on_duty',
+          startTime,
+          endTime,
+        }
+        break
+      }
+
+      case 5: { // Normal office work for out status (will be overridden by AI)
+        record = {
+          id: `att-${user.id}-${todayStr}`,
+          userId: user.id,
+          checkIn: new Date(startTime.getTime() + Math.random() * 25 * 60000),
+          workType: 'office',
+          date: todayStr,
+          status: 'on_duty',
+          startTime,
+          endTime,
         }
         break
       }
@@ -328,13 +377,64 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
     }
   }
 
-  // Occasionally add AI-modified status (priority 3) for some variety
-  if (Math.random() < 0.3) { // 30% chance
+  // Add AI-modified status for specific users to ensure all status types are covered
+  const userIndex = Number.parseInt(user.id.split('-')[1]) - 1 // Extract index from user-001, user-002, etc.
+
+  // Ensure specific users get specific AI-modified statuses
+  if (userIndex === 0) { // user-001 gets meeting status
+    const aiStart = new Date(currentTime.getTime() - Math.random() * 2 * 60 * 60000)
+    const aiEnd = new Date(aiStart.getTime() + (1 + Math.random() * 2) * 60 * 60000)
+
+    slots.push({
+      id: `ai-${user.id}-${Date.now()}`,
+      startTime: aiStart,
+      endTime: aiEnd,
+      status: 'meeting',
+      statusDetail: 'Ad-hoc discussion',
+      source: 'ai_modified',
+      priority: 3,
+      createdAt: currentTime,
+      expiresAt: calculateExpirationTime('meeting', aiEnd),
+    })
+  }
+  else if (userIndex === 5) { // user-006 gets out status
+    const aiStart = new Date(currentTime.getTime() - Math.random() * 1 * 60 * 60000)
+    const aiEnd = new Date(aiStart.getTime() + (2 + Math.random() * 2) * 60 * 60000)
+
+    slots.push({
+      id: `ai-${user.id}-${Date.now()}`,
+      startTime: aiStart,
+      endTime: aiEnd,
+      status: 'out',
+      statusDetail: 'Client meeting',
+      source: 'ai_modified',
+      priority: 3,
+      createdAt: currentTime,
+      expiresAt: calculateExpirationTime('out', aiEnd),
+    })
+  }
+  else if (userIndex === 3) { // user-004 gets wfh AI override
+    const aiStart = new Date(currentTime.getTime() - Math.random() * 2 * 60 * 60000)
+    const aiEnd = new Date(aiStart.getTime() + (3 + Math.random() * 2) * 60 * 60000)
+
+    slots.push({
+      id: `ai-${user.id}-${Date.now()}`,
+      startTime: aiStart,
+      endTime: aiEnd,
+      status: 'wfh',
+      statusDetail: 'Working from home',
+      source: 'ai_modified',
+      priority: 3,
+      createdAt: currentTime,
+      expiresAt: calculateExpirationTime('wfh', aiEnd),
+    })
+  }
+  else if (Math.random() < 0.2) { // 20% chance for other users to get random AI status
     const aiStatuses = ['out', 'meeting', 'wfh']
     const aiStatus = aiStatuses[Math.floor(Math.random() * aiStatuses.length)] as StatusType
 
-    const aiStart = new Date(currentTime.getTime() - Math.random() * 2 * 60 * 60000) // Up to 2 hours ago
-    const aiEnd = new Date(aiStart.getTime() + (1 + Math.random() * 3) * 60 * 60000) // 1-4 hours duration
+    const aiStart = new Date(currentTime.getTime() - Math.random() * 2 * 60 * 60000)
+    const aiEnd = new Date(aiStart.getTime() + (1 + Math.random() * 3) * 60 * 60000)
 
     slots.push({
       id: `ai-${user.id}-${Date.now()}`,

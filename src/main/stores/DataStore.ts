@@ -10,6 +10,7 @@ import type {
   TimeSlot,
   UserStatus,
 } from '@shared/types'
+import path from 'node:path'
 import Store from 'electron-store'
 
 export class DataStore {
@@ -17,6 +18,7 @@ export class DataStore {
 
   constructor() {
     this.store = new Store<AppData>({
+      cwd: path.join(process.cwd(), 'data'),
       defaults: {
         users: [],
         attendanceRecords: [],
