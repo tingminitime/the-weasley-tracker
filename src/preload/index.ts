@@ -1,4 +1,11 @@
-import type { AttendanceRecord, CalendarEvent, LoginRequest, MockUser, UserStatus } from '@shared/types'
+import type {
+  AttendanceRecord,
+  CalendarEvent,
+  LoginRequest,
+  MockUser,
+  TimeSlot,
+  UserStatus,
+} from '@shared/types'
 import { electronAPI } from '@electron-toolkit/preload'
 import { contextBridge, ipcRenderer } from 'electron'
 
@@ -34,6 +41,48 @@ const api = {
   // Utility APIs
   initializeMockData: () => ipcRenderer.invoke('data:initializeMockData'),
   resetData: () => ipcRenderer.invoke('data:reset'),
+
+  // Status Management APIs
+  statusUpdateUserStatus: (request: any) => ipcRenderer.invoke('status:updateUserStatus', request),
+  statusRefreshUserStatus: (userId: string) => ipcRenderer.invoke('status:refreshUserStatus', userId),
+  statusRefreshAllUserStatuses: () => ipcRenderer.invoke('status:refreshAllUserStatuses'),
+  statusQueryUserStatuses: (query: any) => ipcRenderer.invoke('status:queryUserStatuses', query),
+  statusCleanupExpiredStatuses: () => ipcRenderer.invoke('status:cleanupExpiredStatuses'),
+  statusGetStatusHistory: (userId: string, days?: number) =>
+    ipcRenderer.invoke('status:getStatusHistory', userId, days),
+  statusRemoveTimeSlot: (userId: string, timeSlotId: string) =>
+    ipcRenderer.invoke('status:removeTimeSlot', userId, timeSlotId),
+  statusGetActiveUsers: () => ipcRenderer.invoke('status:getActiveUsers'),
+  statusGetUsersInMeetings: () => ipcRenderer.invoke('status:getUsersInMeetings'),
+  statusGetUsersOnLeave: () => ipcRenderer.invoke('status:getUsersOnLeave'),
+  statusGetWorkingFromHomeUsers: () => ipcRenderer.invoke('status:getWorkingFromHomeUsers'),
+  statusScheduleStatusUpdate: (request: any) => ipcRenderer.invoke('status:scheduleStatusUpdate', request),
+
+  // Data Synchronization APIs
+  syncAllData: (options?: any) => ipcRenderer.invoke('sync:syncAllData', options),
+  syncAttendanceData: (options?: any) => ipcRenderer.invoke('sync:syncAttendanceData', options),
+  syncCalendarData: (options?: any) => ipcRenderer.invoke('sync:syncCalendarData', options),
+  syncRefreshUserStatuses: (options?: any) => ipcRenderer.invoke('sync:refreshUserStatuses', options),
+  syncGetLastSyncInfo: () => ipcRenderer.invoke('sync:getLastSyncInfo'),
+  syncValidateDataConsistency: () => ipcRenderer.invoke('sync:validateDataConsistency'),
+
+  // Enhanced DataStore APIs
+  dataStoreAddTimeSlotToUser: (userId: string, timeSlot: TimeSlot) =>
+    ipcRenderer.invoke('dataStore:addTimeSlotToUser', userId, timeSlot),
+  dataStoreRemoveTimeSlotFromUser: (userId: string, timeSlotId: string) =>
+    ipcRenderer.invoke('dataStore:removeTimeSlotFromUser', userId, timeSlotId),
+  dataStoreUpdateTimeSlotInUser: (userId: string, timeSlot: TimeSlot) =>
+    ipcRenderer.invoke('dataStore:updateTimeSlotInUser', userId, timeSlot),
+  dataStoreGetTimeSlotsByUserId: (userId: string): Promise<TimeSlot[]> =>
+    ipcRenderer.invoke('dataStore:getTimeSlotsByUserId', userId),
+  dataStoreGetTimeSlotsBySource: (source: 'attendance' | 'calendar' | 'ai_modified'): Promise<TimeSlot[]> =>
+    ipcRenderer.invoke('dataStore:getTimeSlotsBySource', source),
+  dataStoreBulkUpdateUserStatuses: (statuses: UserStatus[]) =>
+    ipcRenderer.invoke('dataStore:bulkUpdateUserStatuses', statuses),
+  dataStoreCleanupExpiredTimeSlots: () => ipcRenderer.invoke('dataStore:cleanupExpiredTimeSlots'),
+  dataStoreBatchGetUserData: (userIds: string[]) =>
+    ipcRenderer.invoke('dataStore:batchGetUserData', userIds),
+  dataStoreGetUserStatusStats: () => ipcRenderer.invoke('dataStore:getUserStatusStats'),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

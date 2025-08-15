@@ -3,6 +3,7 @@ import type {
   CalendarEvent,
   MockUser,
   StatusType,
+  TimeSlot,
   UserStatus,
 } from './types'
 
@@ -233,50 +234,207 @@ export function generateInitialUserStatuses(users: MockUser[]): UserStatus[] {
   const now = new Date()
 
   return users.map((user) => {
-    // Determine current status based on attendance and calendar
-    let currentStatus: StatusType = 'off_duty'
-    let statusDetail = ''
-
-    // Simple logic for initial status
-    const workStart = new Date(now)
-    const [startHour, startMinute] = user.workSchedule.startTime.split(':').map(Number)
-    workStart.setHours(startHour, startMinute, 0, 0)
-
-    const workEnd = new Date(now)
-    const [endHour, endMinute] = user.workSchedule.endTime.split(':').map(Number)
-    workEnd.setHours(endHour, endMinute, 0, 0)
-
-    if (now >= workStart && now <= workEnd) {
-      // During work hours
-      const scenarios = ['on_duty', 'meeting', 'out', 'wfh']
-      currentStatus = scenarios[Math.floor(Math.random() * scenarios.length)] as StatusType
-
-      switch (currentStatus) {
-        case 'meeting':
-          statusDetail = 'Daily Standup'
-          break
-        case 'out':
-          statusDetail = 'Client visit'
-          break
-        case 'wfh':
-          statusDetail = 'Working from home'
-          break
-      }
-    }
-
-    // Set expiration time
-    const expiresAt = new Date(workEnd)
+    const timeSlots = generateInitialTimeSlots(user, now)
+    const resolvedStatus = resolveStatusFromTimeSlots(timeSlots, user, now)
 
     return {
       userId: user.id,
       name: user.name,
-      currentStatus,
-      statusDetail,
+      currentStatus: resolvedStatus.status,
+      statusDetail: resolvedStatus.detail,
       lastUpdated: now,
-      expiresAt,
-      timeSlots: [], // Will be populated later with actual logic
+      expiresAt: resolvedStatus.expiresAt,
+      timeSlots,
     }
   })
+}
+
+function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[] {
+  const slots: TimeSlot[] = []
+  const today = currentTime.toISOString().split('T')[0]
+
+  // Create work schedule time slot from attendance
+  const workStart = new Date(currentTime)
+  const [startHour, startMinute] = user.workSchedule.startTime.split(':').map(Number)
+  workStart.setHours(startHour, startMinute, 0, 0)
+
+  const workEnd = new Date(currentTime)
+  const [endHour, endMinute] = user.workSchedule.endTime.split(':').map(Number)
+  workEnd.setHours(endHour, endMinute, 0, 0)
+
+  // Simulate attendance-based time slot (priority 2)
+  const attendanceScenarios = ['on_duty', 'wfh', 'on_leave']
+  const attendanceStatus = attendanceScenarios[Math.floor(Math.random() * attendanceScenarios.length)] as StatusType
+
+  if (attendanceStatus !== 'on_leave' && currentTime >= workStart) {
+    // Only add work slot if user has checked in and it's after work start
+    const checkInTime = new Date(workStart.getTime() + Math.random() * 30 * 60000) // Within 30 minutes
+
+    slots.push({
+      id: `att-${user.id}-${today}`,
+      startTime: checkInTime,
+      endTime: workEnd,
+      status: attendanceStatus,
+      statusDetail: attendanceStatus === 'wfh' ? 'Working from home' : undefined,
+      source: 'attendance',
+      priority: 2,
+      createdAt: currentTime,
+      expiresAt: calculateExpirationTime(attendanceStatus, workEnd),
+    })
+  }
+  else if (attendanceStatus === 'on_leave') {
+    // Add leave time slot for the whole day
+    slots.push({
+      id: `leave-${user.id}-${today}`,
+      startTime: workStart,
+      endTime: workEnd,
+      status: 'on_leave',
+      source: 'attendance',
+      priority: 2,
+      createdAt: currentTime,
+      expiresAt: workEnd,
+    })
+  }
+
+  // Generate random meeting slots (priority 1)
+  const numMeetings = Math.floor(Math.random() * 3) // 0-2 meetings
+  const meetingTitles = ['Daily Standup', 'Sprint Planning', 'Client Review', 'Team Sync']
+
+  for (let i = 0; i < numMeetings; i++) {
+    const meetingStart = new Date(workStart)
+    meetingStart.setHours(
+      workStart.getHours() + Math.floor(Math.random() * 8), // Random hour during work day
+      Math.floor(Math.random() * 4) * 15, // 0, 15, 30, or 45 minutes
+      0,
+      0,
+    )
+
+    const meetingDuration = [30, 60, 90][Math.floor(Math.random() * 3)] // 30, 60, or 90 minutes
+    const meetingEnd = new Date(meetingStart.getTime() + meetingDuration * 60000)
+
+    // Only add meeting if it's within work hours
+    if (meetingEnd <= workEnd) {
+      slots.push({
+        id: `meeting-${user.id}-${i}-${today}`,
+        startTime: meetingStart,
+        endTime: meetingEnd,
+        status: 'meeting',
+        statusDetail: meetingTitles[Math.floor(Math.random() * meetingTitles.length)],
+        source: 'calendar',
+        priority: 1,
+        createdAt: currentTime,
+        expiresAt: meetingEnd,
+      })
+    }
+  }
+
+  // Occasionally add AI-modified status (priority 3) for some variety
+  if (Math.random() < 0.3) { // 30% chance
+    const aiStatuses = ['out', 'meeting', 'wfh']
+    const aiStatus = aiStatuses[Math.floor(Math.random() * aiStatuses.length)] as StatusType
+
+    const aiStart = new Date(currentTime.getTime() - Math.random() * 2 * 60 * 60000) // Up to 2 hours ago
+    const aiEnd = new Date(aiStart.getTime() + (1 + Math.random() * 3) * 60 * 60000) // 1-4 hours duration
+
+    slots.push({
+      id: `ai-${user.id}-${Date.now()}`,
+      startTime: aiStart,
+      endTime: aiEnd,
+      status: aiStatus,
+      statusDetail: aiStatus === 'out' ? 'Client meeting' : aiStatus === 'meeting' ? 'Ad-hoc discussion' : 'Working from home',
+      source: 'ai_modified',
+      priority: 3,
+      createdAt: currentTime,
+      expiresAt: calculateExpirationTime(aiStatus, aiEnd),
+    })
+  }
+
+  return slots.sort((a, b) => {
+    // Sort by priority (highest first), then by start time
+    if (a.priority !== b.priority) {
+      return b.priority - a.priority
+    }
+    return a.startTime.getTime() - b.startTime.getTime()
+  })
+}
+
+function resolveStatusFromTimeSlots(timeSlots: TimeSlot[], user: MockUser, currentTime: Date): {
+  status: StatusType
+  detail?: string
+  expiresAt: Date
+} {
+  // Find active time slot (highest priority slot that's currently active)
+  const activeSlot = timeSlots.find(slot =>
+    currentTime >= slot.startTime
+    && currentTime <= slot.endTime
+    && slot.expiresAt > currentTime,
+  )
+
+  if (activeSlot) {
+    return {
+      status: activeSlot.status,
+      detail: activeSlot.statusDetail,
+      expiresAt: activeSlot.expiresAt,
+    }
+  }
+
+  // No active slot - determine based on work hours
+  const workStart = new Date(currentTime)
+  const [startHour, startMinute] = user.workSchedule.startTime.split(':').map(Number)
+  workStart.setHours(startHour, startMinute, 0, 0)
+
+  const workEnd = new Date(currentTime)
+  const [endHour, endMinute] = user.workSchedule.endTime.split(':').map(Number)
+  workEnd.setHours(endHour, endMinute, 0, 0)
+
+  const isWorkingHours = currentTime >= workStart && currentTime <= workEnd
+  const isWorkingDay = currentTime.getDay() >= 1 && currentTime.getDay() <= 5
+
+  if (isWorkingDay && isWorkingHours) {
+    return {
+      status: 'on_duty',
+      expiresAt: workEnd,
+    }
+  }
+  else {
+    // Off duty - expires at next work day start
+    const nextWorkDay = new Date(currentTime)
+    nextWorkDay.setDate(nextWorkDay.getDate() + 1)
+    while (nextWorkDay.getDay() === 0 || nextWorkDay.getDay() === 6) {
+      nextWorkDay.setDate(nextWorkDay.getDate() + 1)
+    }
+    nextWorkDay.setHours(startHour, startMinute, 0, 0)
+
+    return {
+      status: 'off_duty',
+      expiresAt: nextWorkDay,
+    }
+  }
+}
+
+function calculateExpirationTime(status: StatusType, endTime: Date): Date {
+  switch (status) {
+    case 'meeting':
+      return endTime // Meetings expire at their end time
+    case 'on_leave':
+      return endTime // Leave expires at specified end time
+    case 'off_duty': {
+      // Off duty expires at next work day start (simplified - using end time + 1 day)
+      const nextDay = new Date(endTime)
+      nextDay.setDate(nextDay.getDate() + 1)
+      nextDay.setHours(8, 30, 0, 0) // Default start time
+      return nextDay
+    }
+    case 'on_duty':
+    case 'wfh':
+    case 'out':
+    default: {
+      // Work statuses expire at end of work day
+      const workDayEnd = new Date(endTime)
+      workDayEnd.setHours(17, 30, 0, 0) // Default end time
+      return workDayEnd
+    }
+  }
 }
 
 export function initializeMockData(): {

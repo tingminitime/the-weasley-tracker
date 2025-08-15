@@ -4,7 +4,13 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { initializeMockData } from '@shared/mockData'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import icon from '../../resources/icon.png?asset'
+import { DataSynchronizer } from './services/DataSynchronizer'
+import { StatusManager } from './services/StatusManager'
 import { dataStore } from './stores/DataStore'
+
+// Initialize business logic services
+const statusManager = new StatusManager(dataStore)
+const dataSynchronizer = new DataSynchronizer(dataStore, statusManager)
 
 function shouldDisableGPU() {
   // 1. 明確的環境變數控制
@@ -161,6 +167,117 @@ app.whenReady().then(() => {
     catch (error) {
       return { success: false, error: String(error) }
     }
+  })
+
+  // Status Management IPC handlers
+  ipcMain.handle('status:updateUserStatus', (_, request) => {
+    return statusManager.updateUserStatus(request)
+  })
+
+  ipcMain.handle('status:refreshUserStatus', (_, userId: string) => {
+    return statusManager.refreshUserStatus(userId)
+  })
+
+  ipcMain.handle('status:refreshAllUserStatuses', () => {
+    return statusManager.refreshAllUserStatuses()
+  })
+
+  ipcMain.handle('status:queryUserStatuses', (_, query) => {
+    return statusManager.queryUserStatuses(query)
+  })
+
+  ipcMain.handle('status:cleanupExpiredStatuses', () => {
+    return statusManager.cleanupExpiredStatuses()
+  })
+
+  ipcMain.handle('status:getStatusHistory', (_, userId: string, days?: number) => {
+    return statusManager.getStatusHistory(userId, days)
+  })
+
+  ipcMain.handle('status:removeTimeSlot', (_, userId: string, timeSlotId: string) => {
+    return statusManager.removeTimeSlot(userId, timeSlotId)
+  })
+
+  ipcMain.handle('status:getActiveUsers', () => {
+    return statusManager.getActiveUsers()
+  })
+
+  ipcMain.handle('status:getUsersInMeetings', () => {
+    return statusManager.getUsersInMeetings()
+  })
+
+  ipcMain.handle('status:getUsersOnLeave', () => {
+    return statusManager.getUsersOnLeave()
+  })
+
+  ipcMain.handle('status:getWorkingFromHomeUsers', () => {
+    return statusManager.getWorkingFromHomeUsers()
+  })
+
+  ipcMain.handle('status:scheduleStatusUpdate', (_, request) => {
+    return statusManager.scheduleStatusUpdate(request)
+  })
+
+  // Data Synchronization IPC handlers
+  ipcMain.handle('sync:syncAllData', (_, options) => {
+    return dataSynchronizer.syncAllData(options)
+  })
+
+  ipcMain.handle('sync:syncAttendanceData', (_, options) => {
+    return dataSynchronizer.syncAttendanceData(options)
+  })
+
+  ipcMain.handle('sync:syncCalendarData', (_, options) => {
+    return dataSynchronizer.syncCalendarData(options)
+  })
+
+  ipcMain.handle('sync:refreshUserStatuses', (_, options) => {
+    return dataSynchronizer.refreshUserStatuses(options)
+  })
+
+  ipcMain.handle('sync:getLastSyncInfo', () => {
+    return dataSynchronizer.getLastSyncInfo()
+  })
+
+  ipcMain.handle('sync:validateDataConsistency', () => {
+    return dataSynchronizer.validateDataConsistency()
+  })
+
+  // Enhanced DataStore IPC handlers
+  ipcMain.handle('dataStore:addTimeSlotToUser', (_, userId: string, timeSlot) => {
+    return dataStore.addTimeSlotToUser(userId, timeSlot)
+  })
+
+  ipcMain.handle('dataStore:removeTimeSlotFromUser', (_, userId: string, timeSlotId: string) => {
+    return dataStore.removeTimeSlotFromUser(userId, timeSlotId)
+  })
+
+  ipcMain.handle('dataStore:updateTimeSlotInUser', (_, userId: string, timeSlot) => {
+    return dataStore.updateTimeSlotInUser(userId, timeSlot)
+  })
+
+  ipcMain.handle('dataStore:getTimeSlotsByUserId', (_, userId: string) => {
+    return dataStore.getTimeSlotsByUserId(userId)
+  })
+
+  ipcMain.handle('dataStore:getTimeSlotsBySource', (_, source) => {
+    return dataStore.getTimeSlotsBySource(source)
+  })
+
+  ipcMain.handle('dataStore:bulkUpdateUserStatuses', (_, statuses) => {
+    return dataStore.bulkUpdateUserStatuses(statuses)
+  })
+
+  ipcMain.handle('dataStore:cleanupExpiredTimeSlots', () => {
+    return dataStore.cleanupExpiredTimeSlots()
+  })
+
+  ipcMain.handle('dataStore:batchGetUserData', (_, userIds: string[]) => {
+    return dataStore.batchGetUserData(userIds)
+  })
+
+  ipcMain.handle('dataStore:getUserStatusStats', () => {
+    return dataStore.getUserStatusStats()
   })
 
   createWindow()

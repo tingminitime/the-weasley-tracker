@@ -7,6 +7,7 @@ import type {
   LoginRequest,
   LoginResponse,
   MockUser,
+  TimeSlot,
   UserStatus,
 } from '@shared/types'
 import Store from 'electron-store'
@@ -216,6 +217,205 @@ export class DataStore {
         isLoggedIn: false,
       },
     }
+  }
+
+  // TimeSlot operations
+  addTimeSlotToUser(userId: string, timeSlot: TimeSlot): DataOperationResult<TimeSlot> {
+    try {
+      const userStatus = this.getUserStatusById(userId)
+      if (!userStatus) {
+        return { success: false, error: 'User status not found' }
+      }
+
+      const updatedTimeSlots = [...userStatus.timeSlots, timeSlot]
+      const updatedStatus: UserStatus = {
+        ...userStatus,
+        timeSlots: updatedTimeSlots,
+        lastUpdated: new Date(),
+      }
+
+      const result = this.updateUserStatus(updatedStatus)
+      if (result.success) {
+        return { success: true, data: timeSlot }
+      }
+      return { success: false, error: result.error }
+    }
+    catch (error) {
+      return { success: false, error: String(error) }
+    }
+  }
+
+  removeTimeSlotFromUser(userId: string, timeSlotId: string): DataOperationResult<void> {
+    try {
+      const userStatus = this.getUserStatusById(userId)
+      if (!userStatus) {
+        return { success: false, error: 'User status not found' }
+      }
+
+      const updatedTimeSlots = userStatus.timeSlots.filter(slot => slot.id !== timeSlotId)
+      if (updatedTimeSlots.length === userStatus.timeSlots.length) {
+        return { success: false, error: 'Time slot not found' }
+      }
+
+      const updatedStatus: UserStatus = {
+        ...userStatus,
+        timeSlots: updatedTimeSlots,
+        lastUpdated: new Date(),
+      }
+
+      const result = this.updateUserStatus(updatedStatus)
+      return result.success ? { success: true } : { success: false, error: result.error }
+    }
+    catch (error) {
+      return { success: false, error: String(error) }
+    }
+  }
+
+  updateTimeSlotInUser(userId: string, timeSlot: TimeSlot): DataOperationResult<TimeSlot> {
+    try {
+      const userStatus = this.getUserStatusById(userId)
+      if (!userStatus) {
+        return { success: false, error: 'User status not found' }
+      }
+
+      const slotIndex = userStatus.timeSlots.findIndex(slot => slot.id === timeSlot.id)
+      if (slotIndex === -1) {
+        return { success: false, error: 'Time slot not found' }
+      }
+
+      const updatedTimeSlots = [...userStatus.timeSlots]
+      updatedTimeSlots[slotIndex] = timeSlot
+
+      const updatedStatus: UserStatus = {
+        ...userStatus,
+        timeSlots: updatedTimeSlots,
+        lastUpdated: new Date(),
+      }
+
+      const result = this.updateUserStatus(updatedStatus)
+      if (result.success) {
+        return { success: true, data: timeSlot }
+      }
+      return { success: false, error: result.error }
+    }
+    catch (error) {
+      return { success: false, error: String(error) }
+    }
+  }
+
+  getTimeSlotsByUserId(userId: string): TimeSlot[] {
+    const userStatus = this.getUserStatusById(userId)
+    return userStatus ? userStatus.timeSlots : []
+  }
+
+  getTimeSlotsBySource(source: 'attendance' | 'calendar' | 'ai_modified'): TimeSlot[] {
+    const allStatuses = this.getUserStatuses()
+    const allTimeSlots: TimeSlot[] = []
+
+    allStatuses.forEach((status) => {
+      const filteredSlots = status.timeSlots.filter(slot => slot.source === source)
+      allTimeSlots.push(...filteredSlots)
+    })
+
+    return allTimeSlots
+  }
+
+  bulkUpdateUserStatuses(statuses: UserStatus[]): DataOperationResult<UserStatus[]> {
+    try {
+      const currentStatuses = this.getUserStatuses()
+      const statusMap = new Map(currentStatuses.map(s => [s.userId, s]))
+
+      statuses.forEach((status) => {
+        statusMap.set(status.userId, status)
+      })
+
+      const updatedStatuses = Array.from(statusMap.values())
+      this.setUserStatuses(updatedStatuses)
+
+      return { success: true, data: statuses }
+    }
+    catch (error) {
+      return { success: false, error: String(error) }
+    }
+  }
+
+  // Cleanup operations
+  cleanupExpiredTimeSlots(): DataOperationResult<number> {
+    try {
+      const now = new Date()
+      const allStatuses = this.getUserStatuses()
+      let cleanupCount = 0
+
+      const updatedStatuses = allStatuses.map((status) => {
+        const validTimeSlots = status.timeSlots.filter(slot => slot.expiresAt > now)
+
+        if (validTimeSlots.length !== status.timeSlots.length) {
+          cleanupCount += (status.timeSlots.length - validTimeSlots.length)
+          return {
+            ...status,
+            timeSlots: validTimeSlots,
+            lastUpdated: now,
+          }
+        }
+
+        return status
+      })
+
+      if (cleanupCount > 0) {
+        this.setUserStatuses(updatedStatuses)
+      }
+
+      return { success: true, data: cleanupCount }
+    }
+    catch (error) {
+      return { success: false, error: String(error) }
+    }
+  }
+
+  // Batch operations for performance
+  batchGetUserData(userIds: string[]): {
+    users: MockUser[]
+    statuses: UserStatus[]
+    attendance: AttendanceRecord[]
+    calendar: CalendarEvent[]
+  } {
+    const users = userIds.map(id => this.getUserById(id)).filter(Boolean) as MockUser[]
+    const statuses = userIds.map(id => this.getUserStatusById(id)).filter(Boolean) as UserStatus[]
+
+    const attendance = this.getAttendanceRecords().filter(record =>
+      userIds.includes(record.userId),
+    )
+
+    const calendar = this.getCalendarEvents().filter(event =>
+      userIds.includes(event.userId),
+    )
+
+    return { users, statuses, attendance, calendar }
+  }
+
+  // Statistics and reporting
+  getUserStatusStats(): {
+    totalUsers: number
+    statusCounts: Record<string, number>
+    activeSlotsCount: number
+  } {
+    const statuses = this.getUserStatuses()
+    const totalUsers = statuses.length
+
+    const statusCounts: Record<string, number> = {}
+    let activeSlotsCount = 0
+
+    statuses.forEach((status) => {
+      statusCounts[status.currentStatus] = (statusCounts[status.currentStatus] || 0) + 1
+
+      const now = new Date()
+      const activeSlots = status.timeSlots.filter(slot =>
+        slot.startTime <= now && slot.endTime >= now,
+      )
+      activeSlotsCount += activeSlots.length
+    })
+
+    return { totalUsers, statusCounts, activeSlotsCount }
   }
 
   // Get all data (for debugging)
