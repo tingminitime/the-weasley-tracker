@@ -2,6 +2,7 @@ import { resolve } from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
+import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
   main: {
@@ -21,7 +22,7 @@ export default defineConfig({
     },
   },
   renderer: {
-    plugins: [vue(), tailwindcss() as any],
+    plugins: [vue(), vueDevTools(), tailwindcss() as any],
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src'),
