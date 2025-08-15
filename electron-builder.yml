@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: the-weasley-tracker
+productName: The Weasley Tracker
 directories:
   buildResources: build
 files:

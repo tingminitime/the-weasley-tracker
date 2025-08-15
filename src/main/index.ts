@@ -51,6 +51,7 @@ function createWindow(): void {
     height: Math.min(900, Math.floor(display.workAreaSize.height * 0.85)), // 最大800px，或螢幕高度的85%
     show: false,
     autoHideMenuBar: true,
+    title: 'The Weasley Tracker',
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),

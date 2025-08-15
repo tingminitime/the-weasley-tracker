@@ -58,7 +58,9 @@ async function refreshData() {
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Header -->
-    <header class="border-b border-gray-200 bg-white shadow-sm">
+    <header
+      class="sticky top-0 z-10 border-b border-gray-200 bg-white shadow-sm"
+    >
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
           <div class="flex items-center">
@@ -94,7 +96,7 @@ async function refreshData() {
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 />
               </svg>
-              {{ loading ? '更新中...' : '重新整理' }}
+              <span class="font-semibold">{{ loading ? '更新中...' : '重新整理' }}</span>
             </button>
 
             <UserSwitcher />

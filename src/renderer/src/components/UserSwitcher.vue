@@ -146,7 +146,7 @@ onUnmounted(() => {
         "
       >
         <div class="py-1">
-          <div class="border-b px-4 py-2 text-sm text-gray-500">
+          <div class="border-b px-4 py-2 text-sm font-semibold text-gray-500">
             切換用戶
           </div>
 

@@ -131,15 +131,15 @@ function formatTime(time: string | Date): string {
           class="flex h-10 w-10 items-center justify-center rounded-full"
           :class="avatarClass"
         >
-          <span class="text-sm font-medium text-white">
+          <span class="font-semibold text-white">
             {{ user.name.charAt(0) }}
           </span>
         </div>
         <div>
-          <h3 class="text-lg font-medium text-gray-900">
+          <h3 class="text-lg font-semibold text-gray-900">
             {{ user.name }}
           </h3>
-          <p class="text-sm text-gray-500">
+          <p class="text-gray-500">
             {{ user.department }}
           </p>
         </div>
@@ -169,12 +169,12 @@ function formatTime(time: string | Date): string {
       {{ status.statusDetail }}
     </div>
 
-    <div class="mt-3 text-xs text-gray-400">
+    <div class="mt-3 text-sm text-gray-400">
       <div v-if="status?.lastUpdated">
-        最後更新: {{ formatTime(status.lastUpdated) }}
+        最後更新：{{ formatTime(status.lastUpdated) }}
       </div>
       <div v-if="status?.expiresAt && !isExpired">
-        到期時間: {{ formatTime(status.expiresAt) }}
+        到期時間：{{ formatTime(status.expiresAt) }}
       </div>
       <div
         v-if="isExpired"
@@ -184,16 +184,16 @@ function formatTime(time: string | Date): string {
       </div>
     </div>
 
-    <div class="mt-3 text-xs">
-      <div class="text-gray-500">
-        工作時間: {{ user.workSchedule.startTime }} - {{ user.workSchedule.endTime }}
+    <div class="mt-3 text-sm">
+      <div class="text-gray-700">
+        工作時間：{{ user.workSchedule.startTime }} - {{ user.workSchedule.endTime }}
       </div>
 
       <div
         v-if="attendanceToday.length > 0"
         class="mt-1"
       >
-        <span class="text-gray-500">今日出勤:</span>
+        <span class="text-gray-700">今日出勤：</span>
         <span
           class="ml-1"
           :class="attendanceClass"
