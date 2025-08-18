@@ -148,8 +148,8 @@ function formatTime(time: string | Date): string {
       <div class="flex items-center space-x-2">
         <span
           class="
-            inline-flex items-center rounded-full px-2.5 py-0.5 text-xs
-            font-medium
+            inline-flex items-center rounded-full px-2.5 py-0.5 text-sm
+            font-medium tracking-wider
           "
           :class="statusClass"
         >

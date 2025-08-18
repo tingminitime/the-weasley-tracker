@@ -136,6 +136,7 @@ The `electron.vite.config.ts` file configures:
 - **Routing**: Vue Router with hash-based navigation configured in `src/renderer/src/router/`
 - **Styling**: Tailwind CSS v4 with custom theme and component classes in `src/renderer/src/assets/main.css`
 - **Icons**: @egoist/tailwindcss-icons plugin for icon support
+- **Composition Utilities**: VueUse composables (@vueuse/core) for reactive utilities, DOM manipulation, and lifecycle management
 
 ### Code Standards
 - ESLint configuration using Antfu's config with TypeScript and Vue support
