@@ -1,667 +1,657 @@
 {
-  "users": [
-    {
-      "id": "user-001",
-      "name": "張小華",
-      "department": "Engineering",
-      "workSchedule": {
-        "startTime": "09:00",
-        "endTime": "18:00"
-      }
-    },
-    {
-      "id": "user-002",
-      "name": "李大明",
-      "department": "Product",
-      "workSchedule": {
-        "startTime": "08:30",
-        "endTime": "17:30"
-      }
-    },
-    {
-      "id": "user-003",
-      "name": "王美玲",
-      "department": "Design",
-      "workSchedule": {
-        "startTime": "09:30",
-        "endTime": "18:30"
-      }
-    },
-    {
-      "id": "user-004",
-      "name": "John Smith",
-      "department": "Marketing",
-      "workSchedule": {
-        "startTime": "08:00",
-        "endTime": "17:00"
-      }
-    },
-    {
-      "id": "user-005",
-      "name": "Sarah Connor",
-      "department": "HR",
-      "workSchedule": {
-        "startTime": "09:00",
-        "endTime": "18:00"
-      }
-    },
-    {
-      "id": "user-006",
-      "name": "Mike Johnson",
-      "department": "Engineering",
-      "workSchedule": {
-        "startTime": "10:00",
-        "endTime": "19:00"
-      }
-    },
-    {
-      "id": "user-007",
-      "name": "陳雅琪",
-      "department": "Operations",
-      "workSchedule": {
-        "startTime": "08:00",
-        "endTime": "17:00"
-      }
-    },
-    {
-      "id": "user-008",
-      "name": "林志豪",
-      "department": "Finance",
-      "workSchedule": {
-        "startTime": "09:00",
-        "endTime": "18:00"
-      }
-    },
-    {
-      "id": "user-009",
-      "name": "Amy Wilson",
-      "department": "Marketing",
-      "workSchedule": {
-        "startTime": "09:30",
-        "endTime": "18:30"
-      }
-    },
-    {
-      "id": "user-010",
-      "name": "黃建民",
-      "department": "Engineering",
-      "workSchedule": {
-        "startTime": "08:30",
-        "endTime": "17:30"
-      }
-    }
-  ],
-  "attendanceRecords": [
-    {
-      "id": "att-user-001-2025-08-18",
-      "userId": "user-001",
-      "checkIn": "2025-08-18T01:10:39.592Z",
-      "workType": "office",
-      "date": "2025-08-18",
-      "status": "on_duty",
-      "startTime": "2025-08-18T01:00:00.000Z",
-      "endTime": "2025-08-18T10:00:00.000Z"
-    },
-    {
-      "id": "att-user-002-2025-08-18",
-      "userId": "user-002",
-      "checkIn": "2025-08-18T00:43:26.919Z",
-      "workType": "wfh",
-      "date": "2025-08-18",
-      "status": "wfh",
-      "startTime": "2025-08-18T00:30:00.000Z",
-      "endTime": "2025-08-18T09:30:00.000Z"
-    },
-    {
-      "id": "att-user-003-2025-08-18",
-      "userId": "user-003",
-      "workType": "office",
-      "date": "2025-08-18",
-      "status": "on_leave",
-      "startTime": "2025-08-18T01:30:00.000Z",
-      "endTime": "2025-08-18T10:30:00.000Z"
-    },
-    {
-      "id": "att-user-004-2025-08-18",
-      "userId": "user-004",
-      "workType": "office",
-      "date": "2025-08-18",
-      "status": "off_duty",
-      "startTime": "2025-08-18T00:00:00.000Z",
-      "endTime": "2025-08-18T09:00:00.000Z"
-    },
-    {
-      "id": "att-user-005-2025-08-18",
-      "userId": "user-005",
-      "checkIn": "2025-08-18T01:10:55.535Z",
-      "workType": "office",
-      "date": "2025-08-18",
-      "status": "on_duty",
-      "startTime": "2025-08-18T01:00:00.000Z",
-      "endTime": "2025-08-18T10:00:00.000Z"
-    },
-    {
-      "id": "att-user-006-2025-08-18",
-      "userId": "user-006",
-      "checkIn": "2025-08-18T02:04:17.670Z",
-      "workType": "office",
-      "date": "2025-08-18",
-      "status": "on_duty",
-      "startTime": "2025-08-18T02:00:00.000Z",
-      "endTime": "2025-08-18T11:00:00.000Z"
-    },
-    {
-      "id": "att-user-007-2025-08-18",
-      "userId": "user-007",
-      "checkIn": "2025-08-18T00:09:43.507Z",
-      "workType": "office",
-      "date": "2025-08-18",
-      "status": "on_duty",
-      "startTime": "2025-08-18T00:00:00.000Z",
-      "endTime": "2025-08-18T09:00:00.000Z"
-    },
-    {
-      "id": "att-user-008-2025-08-18",
-      "userId": "user-008",
-      "checkIn": "2025-08-18T01:12:52.337Z",
-      "workType": "wfh",
-      "date": "2025-08-18",
-      "status": "wfh",
-      "startTime": "2025-08-18T01:00:00.000Z",
-      "endTime": "2025-08-18T10:00:00.000Z"
-    },
-    {
-      "id": "att-user-009-2025-08-18",
-      "userId": "user-009",
-      "workType": "office",
-      "date": "2025-08-18",
-      "status": "on_leave",
-      "startTime": "2025-08-18T01:30:00.000Z",
-      "endTime": "2025-08-18T10:30:00.000Z"
-    },
-    {
-      "id": "att-user-010-2025-08-18",
-      "userId": "user-010",
-      "workType": "office",
-      "date": "2025-08-18",
-      "status": "off_duty",
-      "startTime": "2025-08-18T00:30:00.000Z",
-      "endTime": "2025-08-18T09:30:00.000Z"
-    }
-  ],
-  "calendarEvents": [
-    {
-      "id": "event-user-001-0-1755479794096",
-      "userId": "user-001",
-      "title": "Sprint Planning",
-      "startTime": "2025-08-18T01:00:00.000Z",
-      "endTime": "2025-08-18T02:00:00.000Z",
-      "status": "ongoing",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-001-1-1755479794096",
-      "userId": "user-001",
-      "title": "Team Sync",
-      "startTime": "2025-08-18T08:15:00.000Z",
-      "endTime": "2025-08-18T09:15:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-002-0-1755479794096",
-      "userId": "user-002",
-      "title": "Client Review",
-      "startTime": "2025-08-18T06:15:00.000Z",
-      "endTime": "2025-08-18T06:45:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-002-1-1755479794096",
-      "userId": "user-002",
-      "title": "Code Review",
-      "startTime": "2025-08-18T08:00:00.000Z",
-      "endTime": "2025-08-18T08:30:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-003-0-1755479794096",
-      "userId": "user-003",
-      "title": "Quarterly Planning",
-      "startTime": "2025-08-18T05:30:00.000Z",
-      "endTime": "2025-08-18T06:30:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-003-1-1755479794096",
-      "userId": "user-003",
-      "title": "Daily Standup",
-      "startTime": "2025-08-18T03:45:00.000Z",
-      "endTime": "2025-08-18T04:15:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-004-0-1755479794096",
-      "userId": "user-004",
-      "title": "Product Demo",
-      "startTime": "2025-08-18T08:30:00.000Z",
-      "endTime": "2025-08-18T10:00:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-005-0-1755479794096",
-      "userId": "user-005",
-      "title": "Client Review",
-      "startTime": "2025-08-18T04:15:00.000Z",
-      "endTime": "2025-08-18T05:45:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-006-0-1755479794096",
-      "userId": "user-006",
-      "title": "Team Sync",
-      "startTime": "2025-08-18T07:30:00.000Z",
-      "endTime": "2025-08-18T08:00:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-007-0-1755479794096",
-      "userId": "user-007",
-      "title": "Quarterly Planning",
-      "startTime": "2025-08-18T08:30:00.000Z",
-      "endTime": "2025-08-18T09:00:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-008-0-1755479794096",
-      "userId": "user-008",
-      "title": "Team Sync",
-      "startTime": "2025-08-18T05:45:00.000Z",
-      "endTime": "2025-08-18T06:15:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-008-1-1755479794096",
-      "userId": "user-008",
-      "title": "Code Review",
-      "startTime": "2025-08-18T08:15:00.000Z",
-      "endTime": "2025-08-18T09:15:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-009-0-1755479794096",
-      "userId": "user-009",
-      "title": "Code Review",
-      "startTime": "2025-08-18T04:15:00.000Z",
-      "endTime": "2025-08-18T05:45:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    },
-    {
-      "id": "event-user-010-0-1755479794096",
-      "userId": "user-010",
-      "title": "Client Review",
-      "startTime": "2025-08-18T06:15:00.000Z",
-      "endTime": "2025-08-18T06:45:00.000Z",
-      "status": "scheduled",
-      "eventStatus": "meeting"
-    }
-  ],
-  "userStatuses": [
-    {
-      "userId": "user-001",
-      "name": "張小華",
-      "currentStatus": "on_leave",
-      "lastUpdated": "2025-08-18T01:16:34.097Z",
-      "expiresAt": "2025-08-18T10:00:00.000Z",
-      "timeSlots": [
-        {
-          "id": "ai-user-001-1755479794097",
-          "startTime": "2025-08-17T23:22:59.707Z",
-          "endTime": "2025-08-18T01:15:32.455Z",
-          "status": "meeting",
-          "statusDetail": "Ad-hoc discussion",
-          "source": "ai_modified",
-          "priority": 3,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T01:15:32.455Z"
-        },
-        {
-          "id": "leave-user-001-2025-08-18",
-          "startTime": "2025-08-18T01:00:00.000Z",
-          "endTime": "2025-08-18T10:00:00.000Z",
-          "status": "on_leave",
-          "source": "attendance",
-          "priority": 2,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T10:00:00.000Z"
-        },
-        {
-          "id": "meeting-user-001-0-2025-08-18",
-          "startTime": "2025-08-18T02:30:00.000Z",
-          "endTime": "2025-08-18T04:00:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Sprint Planning",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T04:00:00.000Z"
-        },
-        {
-          "id": "meeting-user-001-1-2025-08-18",
-          "startTime": "2025-08-18T07:30:00.000Z",
-          "endTime": "2025-08-18T08:00:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Sprint Planning",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T08:00:00.000Z"
-        }
-      ]
-    },
-    {
-      "userId": "user-002",
-      "name": "李大明",
-      "currentStatus": "on_leave",
-      "lastUpdated": "2025-08-18T01:16:34.097Z",
-      "expiresAt": "2025-08-18T09:30:00.000Z",
-      "timeSlots": [
-        {
-          "id": "leave-user-002-2025-08-18",
-          "startTime": "2025-08-18T00:30:00.000Z",
-          "endTime": "2025-08-18T09:30:00.000Z",
-          "status": "on_leave",
-          "source": "attendance",
-          "priority": 2,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T09:30:00.000Z"
-        },
-        {
-          "id": "meeting-user-002-0-2025-08-18",
-          "startTime": "2025-08-18T03:45:00.000Z",
-          "endTime": "2025-08-18T05:15:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Daily Standup",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T05:15:00.000Z"
-        }
-      ]
-    },
-    {
-      "userId": "user-003",
-      "name": "王美玲",
-      "currentStatus": "off_duty",
-      "lastUpdated": "2025-08-18T01:16:34.097Z",
-      "expiresAt": "2025-08-19T01:30:00.000Z",
-      "timeSlots": [
-        {
-          "id": "meeting-user-003-0-2025-08-18",
-          "startTime": "2025-08-18T02:45:00.000Z",
-          "endTime": "2025-08-18T03:15:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Daily Standup",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T03:15:00.000Z"
-        }
-      ]
-    },
-    {
-      "userId": "user-004",
-      "name": "John Smith",
-      "currentStatus": "wfh",
-      "statusDetail": "Working from home",
-      "lastUpdated": "2025-08-18T01:16:34.097Z",
-      "expiresAt": "2025-08-18T09:30:00.000Z",
-      "timeSlots": [
-        {
-          "id": "ai-user-004-1755479794097",
-          "startTime": "2025-08-18T01:11:49.071Z",
-          "endTime": "2025-08-18T04:58:19.229Z",
-          "status": "wfh",
-          "statusDetail": "Working from home",
-          "source": "ai_modified",
-          "priority": 3,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T09:30:00.000Z"
-        },
-        {
-          "id": "leave-user-004-2025-08-18",
-          "startTime": "2025-08-18T00:00:00.000Z",
-          "endTime": "2025-08-18T09:00:00.000Z",
-          "status": "on_leave",
-          "source": "attendance",
-          "priority": 2,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T09:00:00.000Z"
-        }
-      ]
-    },
-    {
-      "userId": "user-005",
-      "name": "Sarah Connor",
-      "currentStatus": "on_leave",
-      "lastUpdated": "2025-08-18T01:16:34.097Z",
-      "expiresAt": "2025-08-18T10:00:00.000Z",
-      "timeSlots": [
-        {
-          "id": "leave-user-005-2025-08-18",
-          "startTime": "2025-08-18T01:00:00.000Z",
-          "endTime": "2025-08-18T10:00:00.000Z",
-          "status": "on_leave",
-          "source": "attendance",
-          "priority": 2,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T10:00:00.000Z"
-        }
-      ]
-    },
-    {
-      "userId": "user-006",
-      "name": "Mike Johnson",
-      "currentStatus": "out",
-      "statusDetail": "Client meeting",
-      "lastUpdated": "2025-08-18T01:16:34.097Z",
-      "expiresAt": "2025-08-18T09:30:00.000Z",
-      "timeSlots": [
-        {
-          "id": "ai-user-006-1755479794097",
-          "startTime": "2025-08-18T01:10:23.503Z",
-          "endTime": "2025-08-18T03:37:53.128Z",
-          "status": "out",
-          "statusDetail": "Client meeting",
-          "source": "ai_modified",
-          "priority": 3,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T09:30:00.000Z"
-        },
-        {
-          "id": "meeting-user-006-0-2025-08-18",
-          "startTime": "2025-08-18T02:30:00.000Z",
-          "endTime": "2025-08-18T03:00:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Sprint Planning",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T03:00:00.000Z"
-        },
-        {
-          "id": "meeting-user-006-1-2025-08-18",
-          "startTime": "2025-08-18T05:00:00.000Z",
-          "endTime": "2025-08-18T06:30:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Team Sync",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T06:30:00.000Z"
-        }
-      ]
-    },
-    {
-      "userId": "user-007",
-      "name": "陳雅琪",
-      "currentStatus": "on_leave",
-      "lastUpdated": "2025-08-18T01:16:34.097Z",
-      "expiresAt": "2025-08-18T09:00:00.000Z",
-      "timeSlots": [
-        {
-          "id": "leave-user-007-2025-08-18",
-          "startTime": "2025-08-18T00:00:00.000Z",
-          "endTime": "2025-08-18T09:00:00.000Z",
-          "status": "on_leave",
-          "source": "attendance",
-          "priority": 2,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T09:00:00.000Z"
-        },
-        {
-          "id": "meeting-user-007-0-2025-08-18",
-          "startTime": "2025-08-18T07:00:00.000Z",
-          "endTime": "2025-08-18T07:30:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Client Review",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T07:30:00.000Z"
-        },
-        {
-          "id": "meeting-user-007-1-2025-08-18",
-          "startTime": "2025-08-18T07:00:00.000Z",
-          "endTime": "2025-08-18T07:30:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Team Sync",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T07:30:00.000Z"
-        }
-      ]
-    },
-    {
-      "userId": "user-008",
-      "name": "林志豪",
-      "currentStatus": "on_duty",
-      "lastUpdated": "2025-08-18T01:16:34.097Z",
-      "expiresAt": "2025-08-18T10:00:00.000Z",
-      "timeSlots": [
-        {
-          "id": "att-user-008-2025-08-18",
-          "startTime": "2025-08-18T01:23:11.444Z",
-          "endTime": "2025-08-18T10:00:00.000Z",
-          "status": "on_duty",
-          "source": "attendance",
-          "priority": 2,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T09:30:00.000Z"
-        },
-        {
-          "id": "meeting-user-008-0-2025-08-18",
-          "startTime": "2025-08-18T02:15:00.000Z",
-          "endTime": "2025-08-18T03:15:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Sprint Planning",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T03:15:00.000Z"
-        },
-        {
-          "id": "meeting-user-008-1-2025-08-18",
-          "startTime": "2025-08-18T08:15:00.000Z",
-          "endTime": "2025-08-18T09:15:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Daily Standup",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T09:15:00.000Z"
-        }
-      ]
-    },
-    {
-      "userId": "user-009",
-      "name": "Amy Wilson",
-      "currentStatus": "off_duty",
-      "lastUpdated": "2025-08-18T01:16:34.097Z",
-      "expiresAt": "2025-08-19T01:30:00.000Z",
-      "timeSlots": [
-        {
-          "id": "meeting-user-009-1-2025-08-18",
-          "startTime": "2025-08-18T05:30:00.000Z",
-          "endTime": "2025-08-18T06:00:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Client Review",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T06:00:00.000Z"
-        },
-        {
-          "id": "meeting-user-009-0-2025-08-18",
-          "startTime": "2025-08-18T08:30:00.000Z",
-          "endTime": "2025-08-18T10:00:00.000Z",
-          "status": "meeting",
-          "statusDetail": "Team Sync",
-          "source": "calendar",
-          "priority": 1,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T10:00:00.000Z"
-        }
-      ]
-    },
-    {
-      "userId": "user-010",
-      "name": "黃建民",
-      "currentStatus": "wfh",
-      "statusDetail": "Working from home",
-      "lastUpdated": "2025-08-18T01:16:34.097Z",
-      "expiresAt": "2025-08-18T09:30:00.000Z",
-      "timeSlots": [
-        {
-          "id": "ai-user-010-1755479794098",
-          "startTime": "2025-08-18T00:50:52.983Z",
-          "endTime": "2025-08-18T03:00:04.931Z",
-          "status": "wfh",
-          "statusDetail": "Working from home",
-          "source": "ai_modified",
-          "priority": 3,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T09:30:00.000Z"
-        },
-        {
-          "id": "att-user-010-2025-08-18",
-          "startTime": "2025-08-18T00:50:48.941Z",
-          "endTime": "2025-08-18T09:30:00.000Z",
-          "status": "wfh",
-          "statusDetail": "Working from home",
-          "source": "attendance",
-          "priority": 2,
-          "createdAt": "2025-08-18T01:16:34.097Z",
-          "expiresAt": "2025-08-18T09:30:00.000Z"
-        }
-      ]
-    }
-  ],
-  "authSession": {
-    "currentUserId": "user-002",
-    "isLoggedIn": true,
-    "loginTime": "2025-08-18T01:16:36.943Z"
-  }
+	"users": [
+		{
+			"id": "user-001",
+			"name": "張小華",
+			"department": "Engineering",
+			"workSchedule": {
+				"startTime": "09:00",
+				"endTime": "18:00"
+			}
+		},
+		{
+			"id": "user-002",
+			"name": "李大明",
+			"department": "Product",
+			"workSchedule": {
+				"startTime": "08:30",
+				"endTime": "17:30"
+			}
+		},
+		{
+			"id": "user-003",
+			"name": "王美玲",
+			"department": "Design",
+			"workSchedule": {
+				"startTime": "09:30",
+				"endTime": "18:30"
+			}
+		},
+		{
+			"id": "user-004",
+			"name": "John Smith",
+			"department": "Marketing",
+			"workSchedule": {
+				"startTime": "08:00",
+				"endTime": "17:00"
+			}
+		},
+		{
+			"id": "user-005",
+			"name": "Sarah Connor",
+			"department": "HR",
+			"workSchedule": {
+				"startTime": "09:00",
+				"endTime": "18:00"
+			}
+		},
+		{
+			"id": "user-006",
+			"name": "Mike Johnson",
+			"department": "Engineering",
+			"workSchedule": {
+				"startTime": "10:00",
+				"endTime": "19:00"
+			}
+		},
+		{
+			"id": "user-007",
+			"name": "陳雅琪",
+			"department": "Operations",
+			"workSchedule": {
+				"startTime": "08:00",
+				"endTime": "17:00"
+			}
+		},
+		{
+			"id": "user-008",
+			"name": "林志豪",
+			"department": "Finance",
+			"workSchedule": {
+				"startTime": "09:00",
+				"endTime": "18:00"
+			}
+		},
+		{
+			"id": "user-009",
+			"name": "Amy Wilson",
+			"department": "Marketing",
+			"workSchedule": {
+				"startTime": "09:30",
+				"endTime": "18:30"
+			}
+		},
+		{
+			"id": "user-010",
+			"name": "黃建民",
+			"department": "Engineering",
+			"workSchedule": {
+				"startTime": "08:30",
+				"endTime": "17:30"
+			}
+		}
+	],
+	"attendanceRecords": [
+		{
+			"id": "att-user-001-2025-08-20",
+			"userId": "user-001",
+			"checkIn": "2025-08-20T01:27:02.629Z",
+			"workType": "office",
+			"date": "2025-08-20",
+			"status": "on_duty",
+			"startTime": "2025-08-20T01:00:00.000Z",
+			"endTime": "2025-08-20T10:00:00.000Z"
+		},
+		{
+			"id": "att-user-002-2025-08-20",
+			"userId": "user-002",
+			"checkIn": "2025-08-20T00:38:56.181Z",
+			"workType": "wfh",
+			"date": "2025-08-20",
+			"status": "wfh",
+			"startTime": "2025-08-20T00:30:00.000Z",
+			"endTime": "2025-08-20T09:30:00.000Z"
+		},
+		{
+			"id": "att-user-003-2025-08-20",
+			"userId": "user-003",
+			"workType": "office",
+			"date": "2025-08-20",
+			"status": "on_leave",
+			"startTime": "2025-08-20T01:30:00.000Z",
+			"endTime": "2025-08-20T10:30:00.000Z"
+		},
+		{
+			"id": "att-user-004-2025-08-20",
+			"userId": "user-004",
+			"workType": "office",
+			"date": "2025-08-20",
+			"status": "off_duty",
+			"startTime": "2025-08-20T00:00:00.000Z",
+			"endTime": "2025-08-20T09:00:00.000Z"
+		},
+		{
+			"id": "att-user-005-2025-08-20",
+			"userId": "user-005",
+			"checkIn": "2025-08-20T01:09:47.293Z",
+			"workType": "office",
+			"date": "2025-08-20",
+			"status": "on_duty",
+			"startTime": "2025-08-20T01:00:00.000Z",
+			"endTime": "2025-08-20T10:00:00.000Z"
+		},
+		{
+			"id": "att-user-006-2025-08-20",
+			"userId": "user-006",
+			"checkIn": "2025-08-20T02:02:48.299Z",
+			"workType": "office",
+			"date": "2025-08-20",
+			"status": "on_duty",
+			"startTime": "2025-08-20T02:00:00.000Z",
+			"endTime": "2025-08-20T11:00:00.000Z"
+		},
+		{
+			"id": "att-user-007-2025-08-20",
+			"userId": "user-007",
+			"checkIn": "2025-08-20T00:29:59.318Z",
+			"workType": "office",
+			"date": "2025-08-20",
+			"status": "on_duty",
+			"startTime": "2025-08-20T00:00:00.000Z",
+			"endTime": "2025-08-20T09:00:00.000Z"
+		},
+		{
+			"id": "att-user-008-2025-08-20",
+			"userId": "user-008",
+			"checkIn": "2025-08-20T01:11:14.867Z",
+			"workType": "wfh",
+			"date": "2025-08-20",
+			"status": "wfh",
+			"startTime": "2025-08-20T01:00:00.000Z",
+			"endTime": "2025-08-20T10:00:00.000Z"
+		},
+		{
+			"id": "att-user-009-2025-08-20",
+			"userId": "user-009",
+			"workType": "office",
+			"date": "2025-08-20",
+			"status": "on_leave",
+			"startTime": "2025-08-20T01:30:00.000Z",
+			"endTime": "2025-08-20T10:30:00.000Z"
+		},
+		{
+			"id": "att-user-010-2025-08-20",
+			"userId": "user-010",
+			"workType": "office",
+			"date": "2025-08-20",
+			"status": "off_duty",
+			"startTime": "2025-08-20T00:30:00.000Z",
+			"endTime": "2025-08-20T09:30:00.000Z"
+		}
+	],
+	"calendarEvents": [
+		{
+			"id": "event-user-001-0-1755677752644",
+			"userId": "user-001",
+			"title": "Quarterly Planning",
+			"startTime": "2025-08-20T08:30:00.000Z",
+			"endTime": "2025-08-20T09:30:00.000Z",
+			"status": "scheduled",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-002-0-1755677752644",
+			"userId": "user-002",
+			"title": "Client Review",
+			"startTime": "2025-08-20T03:45:00.000Z",
+			"endTime": "2025-08-20T05:15:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-003-0-1755677752644",
+			"userId": "user-003",
+			"title": "Sprint Planning",
+			"startTime": "2025-08-20T04:45:00.000Z",
+			"endTime": "2025-08-20T06:15:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-004-0-1755677752644",
+			"userId": "user-004",
+			"title": "Code Review",
+			"startTime": "2025-08-20T04:30:00.000Z",
+			"endTime": "2025-08-20T05:00:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-004-1-1755677752644",
+			"userId": "user-004",
+			"title": "Quarterly Planning",
+			"startTime": "2025-08-20T05:00:00.000Z",
+			"endTime": "2025-08-20T06:30:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-005-0-1755677752644",
+			"userId": "user-005",
+			"title": "Code Review",
+			"startTime": "2025-08-20T02:30:00.000Z",
+			"endTime": "2025-08-20T03:00:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-006-0-1755677752644",
+			"userId": "user-006",
+			"title": "Quarterly Planning",
+			"startTime": "2025-08-20T01:15:00.000Z",
+			"endTime": "2025-08-20T01:45:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-006-1-1755677752644",
+			"userId": "user-006",
+			"title": "Sprint Planning",
+			"startTime": "2025-08-20T02:15:00.000Z",
+			"endTime": "2025-08-20T03:15:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-007-0-1755677752644",
+			"userId": "user-007",
+			"title": "Quarterly Planning",
+			"startTime": "2025-08-20T06:00:00.000Z",
+			"endTime": "2025-08-20T06:30:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-008-0-1755677752644",
+			"userId": "user-008",
+			"title": "Product Demo",
+			"startTime": "2025-08-20T04:30:00.000Z",
+			"endTime": "2025-08-20T05:00:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-008-1-1755677752644",
+			"userId": "user-008",
+			"title": "Sprint Planning",
+			"startTime": "2025-08-20T06:15:00.000Z",
+			"endTime": "2025-08-20T07:45:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-009-0-1755677752644",
+			"userId": "user-009",
+			"title": "Sprint Planning",
+			"startTime": "2025-08-20T02:15:00.000Z",
+			"endTime": "2025-08-20T02:45:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-010-0-1755677752644",
+			"userId": "user-010",
+			"title": "Architecture Discussion",
+			"startTime": "2025-08-20T07:30:00.000Z",
+			"endTime": "2025-08-20T08:30:00.000Z",
+			"status": "ongoing",
+			"eventStatus": "meeting"
+		},
+		{
+			"id": "event-user-010-1-1755677752644",
+			"userId": "user-010",
+			"title": "Team Sync",
+			"startTime": "2025-08-20T05:45:00.000Z",
+			"endTime": "2025-08-20T06:45:00.000Z",
+			"status": "completed",
+			"eventStatus": "meeting"
+		}
+	],
+	"userStatuses": [
+		{
+			"userId": "user-001",
+			"name": "張小華",
+			"currentStatus": "meeting",
+			"statusDetail": "Ad-hoc discussion",
+			"lastUpdated": "2025-08-20T08:15:52.644Z",
+			"expiresAt": "2025-08-20T08:35:03.480Z",
+			"timeSlots": [
+				{
+					"id": "ai-user-001-1755677752644",
+					"startTime": "2025-08-20T07:22:31.835Z",
+					"endTime": "2025-08-20T08:35:03.480Z",
+					"status": "meeting",
+					"statusDetail": "Ad-hoc discussion",
+					"source": "ai_modified",
+					"priority": 3,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T08:35:03.480Z"
+				},
+				{
+					"id": "leave-user-001-2025-08-20",
+					"startTime": "2025-08-20T01:00:00.000Z",
+					"endTime": "2025-08-20T10:00:00.000Z",
+					"status": "on_leave",
+					"source": "attendance",
+					"priority": 2,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T10:00:00.000Z"
+				},
+				{
+					"id": "meeting-user-001-0-2025-08-20",
+					"startTime": "2025-08-20T08:45:00.000Z",
+					"endTime": "2025-08-20T09:45:00.000Z",
+					"status": "meeting",
+					"statusDetail": "Sprint Planning",
+					"source": "calendar",
+					"priority": 1,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:45:00.000Z"
+				}
+			]
+		},
+		{
+			"userId": "user-002",
+			"name": "李大明",
+			"currentStatus": "meeting",
+			"statusDetail": "Ad-hoc discussion",
+			"lastUpdated": "2025-08-20T08:15:52.644Z",
+			"expiresAt": "2025-08-20T11:48:43.845Z",
+			"timeSlots": [
+				{
+					"id": "ai-user-002-1755677752645",
+					"startTime": "2025-08-20T08:03:33.421Z",
+					"endTime": "2025-08-20T11:48:43.845Z",
+					"status": "meeting",
+					"statusDetail": "Ad-hoc discussion",
+					"source": "ai_modified",
+					"priority": 3,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T11:48:43.845Z"
+				},
+				{
+					"id": "att-user-002-2025-08-20",
+					"startTime": "2025-08-20T00:57:12.971Z",
+					"endTime": "2025-08-20T09:30:00.000Z",
+					"status": "wfh",
+					"statusDetail": "Working from home",
+					"source": "attendance",
+					"priority": 2,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:30:00.000Z"
+				}
+			]
+		},
+		{
+			"userId": "user-003",
+			"name": "王美玲",
+			"currentStatus": "on_duty",
+			"lastUpdated": "2025-08-20T08:15:52.644Z",
+			"expiresAt": "2025-08-20T09:30:00.000Z",
+			"timeSlots": [
+				{
+					"id": "att-user-003-2025-08-20",
+					"startTime": "2025-08-20T01:49:10.904Z",
+					"endTime": "2025-08-20T10:30:00.000Z",
+					"status": "on_duty",
+					"source": "attendance",
+					"priority": 2,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:30:00.000Z"
+				}
+			]
+		},
+		{
+			"userId": "user-004",
+			"name": "John Smith",
+			"currentStatus": "wfh",
+			"statusDetail": "Working from home",
+			"lastUpdated": "2025-08-20T08:15:52.644Z",
+			"expiresAt": "2025-08-20T09:30:00.000Z",
+			"timeSlots": [
+				{
+					"id": "ai-user-004-1755677752645",
+					"startTime": "2025-08-20T06:16:13.001Z",
+					"endTime": "2025-08-20T10:30:29.562Z",
+					"status": "wfh",
+					"statusDetail": "Working from home",
+					"source": "ai_modified",
+					"priority": 3,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:30:00.000Z"
+				},
+				{
+					"id": "att-user-004-2025-08-20",
+					"startTime": "2025-08-20T00:00:42.349Z",
+					"endTime": "2025-08-20T09:00:00.000Z",
+					"status": "on_duty",
+					"source": "attendance",
+					"priority": 2,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:30:00.000Z"
+				},
+				{
+					"id": "meeting-user-004-0-2025-08-20",
+					"startTime": "2025-08-20T06:45:00.000Z",
+					"endTime": "2025-08-20T08:15:00.000Z",
+					"status": "meeting",
+					"statusDetail": "Sprint Planning",
+					"source": "calendar",
+					"priority": 1,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T08:15:00.000Z"
+				}
+			]
+		},
+		{
+			"userId": "user-005",
+			"name": "Sarah Connor",
+			"currentStatus": "on_leave",
+			"lastUpdated": "2025-08-20T08:15:52.644Z",
+			"expiresAt": "2025-08-20T10:00:00.000Z",
+			"timeSlots": [
+				{
+					"id": "leave-user-005-2025-08-20",
+					"startTime": "2025-08-20T01:00:00.000Z",
+					"endTime": "2025-08-20T10:00:00.000Z",
+					"status": "on_leave",
+					"source": "attendance",
+					"priority": 2,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T10:00:00.000Z"
+				},
+				{
+					"id": "meeting-user-005-0-2025-08-20",
+					"startTime": "2025-08-20T06:00:00.000Z",
+					"endTime": "2025-08-20T07:00:00.000Z",
+					"status": "meeting",
+					"statusDetail": "Team Sync",
+					"source": "calendar",
+					"priority": 1,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T07:00:00.000Z"
+				}
+			]
+		},
+		{
+			"userId": "user-006",
+			"name": "Mike Johnson",
+			"currentStatus": "out",
+			"statusDetail": "Client meeting",
+			"lastUpdated": "2025-08-20T08:15:52.644Z",
+			"expiresAt": "2025-08-20T09:30:00.000Z",
+			"timeSlots": [
+				{
+					"id": "ai-user-006-1755677752645",
+					"startTime": "2025-08-20T08:10:50.585Z",
+					"endTime": "2025-08-20T11:50:52.307Z",
+					"status": "out",
+					"statusDetail": "Client meeting",
+					"source": "ai_modified",
+					"priority": 3,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:30:00.000Z"
+				},
+				{
+					"id": "att-user-006-2025-08-20",
+					"startTime": "2025-08-20T02:18:35.270Z",
+					"endTime": "2025-08-20T11:00:00.000Z",
+					"status": "wfh",
+					"statusDetail": "Working from home",
+					"source": "attendance",
+					"priority": 2,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:30:00.000Z"
+				},
+				{
+					"id": "meeting-user-006-0-2025-08-20",
+					"startTime": "2025-08-20T09:45:00.000Z",
+					"endTime": "2025-08-20T10:45:00.000Z",
+					"status": "meeting",
+					"statusDetail": "Daily Standup",
+					"source": "calendar",
+					"priority": 1,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T10:45:00.000Z"
+				}
+			]
+		},
+		{
+			"userId": "user-007",
+			"name": "陳雅琪",
+			"currentStatus": "wfh",
+			"statusDetail": "Working from home",
+			"lastUpdated": "2025-08-20T08:15:52.644Z",
+			"expiresAt": "2025-08-20T09:30:00.000Z",
+			"timeSlots": [
+				{
+					"id": "att-user-007-2025-08-20",
+					"startTime": "2025-08-20T00:23:19.501Z",
+					"endTime": "2025-08-20T09:00:00.000Z",
+					"status": "wfh",
+					"statusDetail": "Working from home",
+					"source": "attendance",
+					"priority": 2,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:30:00.000Z"
+				},
+				{
+					"id": "meeting-user-007-1-2025-08-20",
+					"startTime": "2025-08-20T05:30:00.000Z",
+					"endTime": "2025-08-20T06:00:00.000Z",
+					"status": "meeting",
+					"statusDetail": "Client Review",
+					"source": "calendar",
+					"priority": 1,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T06:00:00.000Z"
+				},
+				{
+					"id": "meeting-user-007-0-2025-08-20",
+					"startTime": "2025-08-20T07:00:00.000Z",
+					"endTime": "2025-08-20T07:30:00.000Z",
+					"status": "meeting",
+					"statusDetail": "Sprint Planning",
+					"source": "calendar",
+					"priority": 1,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T07:30:00.000Z"
+				}
+			]
+		},
+		{
+			"userId": "user-008",
+			"name": "林志豪",
+			"currentStatus": "on_duty",
+			"lastUpdated": "2025-08-20T08:15:52.644Z",
+			"expiresAt": "2025-08-20T09:30:00.000Z",
+			"timeSlots": [
+				{
+					"id": "att-user-008-2025-08-20",
+					"startTime": "2025-08-20T01:11:42.344Z",
+					"endTime": "2025-08-20T10:00:00.000Z",
+					"status": "on_duty",
+					"source": "attendance",
+					"priority": 2,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:30:00.000Z"
+				}
+			]
+		},
+		{
+			"userId": "user-009",
+			"name": "Amy Wilson",
+			"currentStatus": "on_duty",
+			"lastUpdated": "2025-08-20T08:15:52.644Z",
+			"expiresAt": "2025-08-20T09:30:00.000Z",
+			"timeSlots": [
+				{
+					"id": "att-user-009-2025-08-20",
+					"startTime": "2025-08-20T01:35:45.388Z",
+					"endTime": "2025-08-20T10:30:00.000Z",
+					"status": "on_duty",
+					"source": "attendance",
+					"priority": 2,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:30:00.000Z"
+				}
+			]
+		},
+		{
+			"userId": "user-010",
+			"name": "黃建民",
+			"currentStatus": "on_leave",
+			"lastUpdated": "2025-08-20T08:15:52.644Z",
+			"expiresAt": "2025-08-20T09:30:00.000Z",
+			"timeSlots": [
+				{
+					"id": "leave-user-010-2025-08-20",
+					"startTime": "2025-08-20T00:30:00.000Z",
+					"endTime": "2025-08-20T09:30:00.000Z",
+					"status": "on_leave",
+					"source": "attendance",
+					"priority": 2,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T09:30:00.000Z"
+				},
+				{
+					"id": "meeting-user-010-0-2025-08-20",
+					"startTime": "2025-08-20T00:15:00.000Z",
+					"endTime": "2025-08-20T01:45:00.000Z",
+					"status": "meeting",
+					"statusDetail": "Daily Standup",
+					"source": "calendar",
+					"priority": 1,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T01:45:00.000Z"
+				},
+				{
+					"id": "meeting-user-010-1-2025-08-20",
+					"startTime": "2025-08-20T05:00:00.000Z",
+					"endTime": "2025-08-20T06:00:00.000Z",
+					"status": "meeting",
+					"statusDetail": "Sprint Planning",
+					"source": "calendar",
+					"priority": 1,
+					"createdAt": "2025-08-20T08:15:52.644Z",
+					"expiresAt": "2025-08-20T06:00:00.000Z"
+				}
+			]
+		}
+	],
+	"authSession": {
+		"currentUserId": "user-001",
+		"isLoggedIn": true,
+		"loginTime": "2025-08-25T02:47:55.677Z"
+	}
 }

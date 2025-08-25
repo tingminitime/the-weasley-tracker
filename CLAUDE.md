@@ -59,13 +59,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Success Criteria**: AI can understand and process status queries/updates in natural language
 
 ### Phase 5: User Interface 🎨
-**Goal**: Create intuitive user interface
-- [ ] Main dashboard with real-time status display
-- [ ] AI chat interface for conversations
-- [ ] Manual synchronization controls
+**Goal**: Create intuitive user interface with 4-page routing system
+- [x] Login page (`/login`) - User authentication and switching
+- [ ] Chat interface (`/chat`) - AI conversation page (default after login)
+- [x] Dashboard page (`/dashboard`) - Real-time status display for all colleagues
+- [ ] Home redirect (`/`) - Automatically redirects to `/chat`
+- [ ] Manual synchronization controls integration
 - [ ] Status history and timeline views
+- [ ] Navigation guards for authentication
 
-**Success Criteria**: Complete UI allows all core functionality to be accessed intuitively
+**Success Criteria**: Complete 4-page UI system with intuitive navigation between chat and dashboard views
 
 ### Phase 6: Testing & Polish 🔧
 **Goal**: Ensure reliability and performance
@@ -95,7 +98,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Architecture
 
 This is an Electron application built with the following stack:
-- **Frontend**: Vue 3 with TypeScript
+- **Frontend**: Vue 3 (TypeScript) + Vue Router v4 + Pinia
 - **Styling**: Tailwind CSS v4 with better-tailwindcss ESLint plugin
 - **Build System**: electron-vite (combines Vite with Electron tooling)
 - **Main Process**: TypeScript (`src/main/index.ts`)
@@ -134,6 +137,10 @@ The `electron.vite.config.ts` file configures:
 ### Frontend Architecture
 - **State Management**: Pinia store setup in `src/renderer/src/main.ts`
 - **Routing**: Vue Router with hash-based navigation configured in `src/renderer/src/router/`
+  - `/` - Home page, redirects to `/chat`
+  - `/login` - Login page, redirected to if user not authenticated
+  - `/chat` - AI conversation page, default page after login
+  - `/dashboard` - Status overview page showing all colleagues' status
 - **Styling**: Tailwind CSS v4 with custom theme and component classes in `src/renderer/src/assets/main.css`
 - **Icons**: @egoist/tailwindcss-icons plugin for icon support
 - **Composition Utilities**: VueUse composables (@vueuse/core) for reactive utilities, DOM manipulation, and lifecycle management
@@ -296,7 +303,5 @@ interface TimeSlot {
 
 ## Related Project Documentation
 - **`/docs/查勤魔法(The_Weasley_Tracker)_專案規劃.md`** - Project planning document with MVP objectives, features, and technical design
-
 - **`/docs/查勤魔法(The_Weasley_Tracker)_資料更新流程_mermaid.md`** - Data update workflow flowchart
-
 - **`/docs/查勤魔法(The_Weasley_Tracker)_介面互動流程_mermaid.md`** - User interface interaction flowchart

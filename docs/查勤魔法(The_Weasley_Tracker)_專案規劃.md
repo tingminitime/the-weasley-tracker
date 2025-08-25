@@ -220,6 +220,7 @@ interface TimeSlot {
 
 ### 使用技術
 - **前端框架**：Electron (electron-vite v4.0.0) + Vue3 + TailwindCSS (v4)
+- **前端路由**：Vue Router v4
 - **資料儲存**：electron-store
 - **開發語言**：TypeScript + Node.js
 - **AI 整合**：@modelcontextprotocol/sdk

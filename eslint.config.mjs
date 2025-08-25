@@ -71,6 +71,11 @@ export default antfu(
           argsIgnorePattern: '^_',
         },
       ],
+      '@stylistic/no-tabs': [
+        'error',
+        { allowIndentationTabs: true },
+      ],
+      'jsonc/indent': ['off'],
     },
   },
 )
