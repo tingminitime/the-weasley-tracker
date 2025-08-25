@@ -34,6 +34,8 @@
     "@egoist/tailwindcss-icons": "^1.9.0",
     "@electron-toolkit/eslint-config-ts": "^3.1.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
+    "@iconify-json/carbon": "^1.2.13",
+    "@iconify-json/material-symbols": "^1.2.33",
     "@modelcontextprotocol/sdk": "^1.17.3",
     "@tailwindcss/vite": "^4.1.12",
     "@types/node": "^24.3.0",

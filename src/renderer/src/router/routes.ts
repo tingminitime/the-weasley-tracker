@@ -2,12 +2,17 @@ export const routes = [
   {
     path: '/',
     name: 'home',
-    redirect: '/dashboard',
+    redirect: '/chat',
   },
   {
     path: '/login',
     name: 'login',
     component: () => import('@renderer/pages/Login.vue'),
+  },
+  {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('@renderer/pages/Chat.vue'),
   },
   {
     path: '/dashboard',

@@ -82,6 +82,22 @@ export interface LoginResponse {
   error?: string
 }
 
+// Chat types
+export interface ChatMessage {
+  id: string
+  content: string
+  type: 'user' | 'ai'
+  timestamp: Date
+  isTyping?: boolean
+}
+
+export interface ChatSession {
+  id: string
+  messages: ChatMessage[]
+  createdAt: Date
+  lastMessageAt: Date
+}
+
 // Store data structure
 export interface AppData {
   users: MockUser[]

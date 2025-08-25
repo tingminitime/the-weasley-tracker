@@ -21,7 +21,7 @@ onMounted(async () => {
     users.value = dataStore.users
 
     if (authStore.isAuthenticated) {
-      router.push('/dashboard')
+      router.push('/chat')
     }
   }
   catch (err) {
@@ -42,7 +42,7 @@ async function handleLogin() {
   try {
     const result = await authStore.login(selectedUserId.value)
     if (result.success) {
-      router.push('/dashboard')
+      router.push('/chat')
     }
     else {
       error.value = result.error || '登入失敗'
@@ -76,15 +76,20 @@ async function handleInitializeData() {
 
 <template>
   <div
-    class="
-      flex min-h-screen items-center justify-center bg-gradient-to-br
-      from-blue-50 to-indigo-100
-    "
+    class="flex min-h-screen items-center justify-center bg-gray-100"
   >
     <div class="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg">
       <div class="text-center">
-        <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
-          🕐 The Weasley Tracker
+        <h2
+          class="
+            mt-6 flex items-center justify-center gap-x-2 text-3xl
+            font-extrabold text-gray-900
+          "
+        >
+          <span
+            class="i-material-symbols-alarm-on-rounded text-emerald-500"
+          ></span>
+          The Weasley Tracker
         </h2>
         <p class="mt-2 text-sm text-gray-600">
           查勤魔法 - 選擇用戶登入
@@ -114,7 +119,7 @@ async function handleInitializeData() {
             class="
               mt-1 block w-full rounded-md border border-gray-300 px-3 py-2
               shadow-sm
-              focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none
+              focus:border-emerald-500 focus:ring-emerald-500 focus:outline-none
             "
             :disabled="loading"
           >
@@ -136,10 +141,10 @@ async function handleInitializeData() {
             :disabled="!selectedUserId || loading"
             class="
               group relative flex w-full justify-center rounded-md border
-              border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium
+              border-transparent bg-emerald-600 px-4 py-2 text-sm font-medium
               text-white
-              hover:bg-indigo-700
-              focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+              hover:bg-emerald-700
+              focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2
               focus:outline-none
               disabled:cursor-not-allowed disabled:opacity-50
             "
@@ -150,7 +155,7 @@ async function handleInitializeData() {
               class="absolute inset-y-0 left-0 flex items-center pl-3"
             >
               <svg
-                class="h-5 w-5 animate-spin text-indigo-300"
+                class="h-5 w-5 animate-spin text-emerald-300"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -178,8 +183,8 @@ async function handleInitializeData() {
           <button
             :disabled="loading"
             class="
-              text-sm text-indigo-600
-              hover:text-indigo-500
+              text-sm text-emerald-600
+              hover:text-emerald-500
               disabled:opacity-50
             "
             @click="handleInitializeData"

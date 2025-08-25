@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import StatusDisplay from '../components/StatusDisplay.vue'
-import UserSwitcher from '../components/UserSwitcher.vue'
+import UserMenu from '../components/UserMenu.vue'
 import { useAuthStore } from '../stores/auth'
 import { useDataStore } from '../stores/data'
 
@@ -59,17 +59,51 @@ async function refreshData() {
   <div class="min-h-screen bg-gray-50">
     <!-- Header -->
     <header
-      class="sticky top-0 z-10 border-b border-gray-200 bg-white shadow-sm"
+      class="sticky top-0 z-10 border-b border-gray-200 bg-white shadow-lg"
     >
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
           <div class="flex items-center">
-            <h1 class="text-xl font-semibold text-gray-900">
-              🕐 查勤魔法 (The Weasley Tracker)
+            <h1
+              class="
+                flex items-center gap-x-2 text-2xl font-extrabold text-gray-900
+              "
+            >
+              <span
+                class="i-material-symbols-alarm-on-rounded text-emerald-500"
+              ></span>
+              The Weasley Tracker
             </h1>
           </div>
 
           <div class="flex items-center space-x-4">
+            <router-link
+              to="/chat"
+              class="
+                inline-flex items-center rounded-md border border-gray-300
+                bg-white px-3 py-2 text-sm font-medium text-gray-700
+                transition-colors
+                hover:bg-gray-50
+                focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+                focus:outline-none
+              "
+            >
+              <svg
+                class="mr-2 h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
+              </svg>
+              <span class="font-semibold">AI 對話</span>
+            </router-link>
+
             <button
               :disabled="loading"
               class="
@@ -99,7 +133,7 @@ async function refreshData() {
               <span class="font-semibold">{{ loading ? '更新中...' : '重新整理' }}</span>
             </button>
 
-            <UserSwitcher />
+            <UserMenu />
           </div>
         </div>
       </div>
