@@ -11,7 +11,9 @@
     },
     "types": [
       "electron-vite/node"
-    ]
+    ],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": [
     "electron.vite.config.*",

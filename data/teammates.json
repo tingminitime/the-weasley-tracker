@@ -1,0 +1,137 @@
+[
+  {
+    "id": "user-001",
+    "name": "阿信",
+    "department": "Engineering",
+    "workSchedule": {
+      "startTime": "09:00",
+      "endTime": "18:00"
+    }
+  },
+  {
+    "id": "user-002",
+    "name": "Emily",
+    "department": "Software Engineer",
+    "workSchedule": {
+      "startTime": "08:30",
+      "endTime": "17:30"
+    }
+  },
+  {
+    "id": "user-003",
+    "name": "Evan",
+    "department": "IT Engineer",
+    "workSchedule": {
+      "startTime": "09:30",
+      "endTime": "18:30"
+    }
+  },
+  {
+    "id": "user-004",
+    "name": "Jen",
+    "department": "Product Manager",
+    "workSchedule": {
+      "startTime": "08:00",
+      "endTime": "17:00"
+    }
+  },
+  {
+    "id": "user-005",
+    "name": "Kevin(小k)",
+    "department": "Software Engineer",
+    "workSchedule": {
+      "startTime": "09:00",
+      "endTime": "18:00"
+    }
+  },
+  {
+    "id": "user-006",
+    "name": "Kevin(伯穎)",
+    "department": "Software Engineer",
+    "workSchedule": {
+      "startTime": "10:00",
+      "endTime": "19:00"
+    }
+  },
+  {
+    "id": "user-007",
+    "name": "Frank",
+    "department": "Software Engineer",
+    "workSchedule": {
+      "startTime": "08:00",
+      "endTime": "17:00"
+    }
+  },
+  {
+    "id": "user-008",
+    "name": "姿穎",
+    "department": "Manager",
+    "workSchedule": {
+      "startTime": "09:00",
+      "endTime": "18:00"
+    }
+  },
+  {
+    "id": "user-009",
+    "name": "照瑩",
+    "department": "Software Engineer",
+    "workSchedule": {
+      "startTime": "09:30",
+      "endTime": "18:30"
+    }
+  },
+  {
+    "id": "user-010",
+    "name": "志勇",
+    "department": "Software Engineer",
+    "workSchedule": {
+      "startTime": "08:30",
+      "endTime": "17:30"
+    }
+  },
+  {
+    "id": "user-011",
+    "name": "江江",
+    "department": "Product Manager",
+    "workSchedule": {
+      "startTime": "08:30",
+      "endTime": "17:30"
+    }
+  },
+  {
+    "id": "user-012",
+    "name": "丞翔",
+    "department": "Software Engineer",
+    "workSchedule": {
+      "startTime": "08:30",
+      "endTime": "17:30"
+    }
+  },
+  {
+    "id": "user-013",
+    "name": "皓澤",
+    "department": "Software Engineer",
+    "workSchedule": {
+      "startTime": "08:30",
+      "endTime": "17:30"
+    }
+  },
+  {
+    "id": "user-014",
+    "name": "威爾哥",
+    "department": "IT Engineer",
+    "workSchedule": {
+      "startTime": "08:30",
+      "endTime": "17:30"
+    }
+  },
+  {
+    "id": "user-015",
+    "name": "Tim",
+    "department": "Software Engineer",
+    "workSchedule": {
+      "startTime": "08:30",
+      "endTime": "17:30"
+    }
+  }
+]

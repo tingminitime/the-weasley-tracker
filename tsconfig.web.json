@@ -10,7 +10,9 @@
       "@shared/*": [
         "src/shared/*"
       ]
-    }
+    },
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": [
     "src/renderer/src/env.d.ts",

@@ -6,100 +6,10 @@ import type {
   TimeSlot,
   UserStatus,
 } from './types'
+import teammates from '../../data/teammates.json'
 
 export function generateMockUsers(): MockUser[] {
-  return [
-    {
-      id: 'user-001',
-      name: '張小華',
-      department: 'Engineering',
-      workSchedule: {
-        startTime: '09:00',
-        endTime: '18:00',
-      },
-    },
-    {
-      id: 'user-002',
-      name: '李大明',
-      department: 'Product',
-      workSchedule: {
-        startTime: '08:30',
-        endTime: '17:30',
-      },
-    },
-    {
-      id: 'user-003',
-      name: '王美玲',
-      department: 'Design',
-      workSchedule: {
-        startTime: '09:30',
-        endTime: '18:30',
-      },
-    },
-    {
-      id: 'user-004',
-      name: 'John Smith',
-      department: 'Marketing',
-      workSchedule: {
-        startTime: '08:00',
-        endTime: '17:00',
-      },
-    },
-    {
-      id: 'user-005',
-      name: 'Sarah Connor',
-      department: 'HR',
-      workSchedule: {
-        startTime: '09:00',
-        endTime: '18:00',
-      },
-    },
-    {
-      id: 'user-006',
-      name: 'Mike Johnson',
-      department: 'Engineering',
-      workSchedule: {
-        startTime: '10:00',
-        endTime: '19:00',
-      },
-    },
-    {
-      id: 'user-007',
-      name: '陳雅琪',
-      department: 'Operations',
-      workSchedule: {
-        startTime: '08:00',
-        endTime: '17:00',
-      },
-    },
-    {
-      id: 'user-008',
-      name: '林志豪',
-      department: 'Finance',
-      workSchedule: {
-        startTime: '09:00',
-        endTime: '18:00',
-      },
-    },
-    {
-      id: 'user-009',
-      name: 'Amy Wilson',
-      department: 'Marketing',
-      workSchedule: {
-        startTime: '09:30',
-        endTime: '18:30',
-      },
-    },
-    {
-      id: 'user-010',
-      name: '黃建民',
-      department: 'Engineering',
-      workSchedule: {
-        startTime: '08:30',
-        endTime: '17:30',
-      },
-    },
-  ]
+  return teammates as MockUser[]
 }
 
 export function generateTodayAttendanceRecords(users: MockUser[]): AttendanceRecord[] {

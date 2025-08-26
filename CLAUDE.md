@@ -50,22 +50,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Success Criteria**: Status updates, conflicts, and expiration work correctly
 
 ### Phase 4: Chat Interface & Mock AI 🎨
-**Goal**: Create chat interface with mock AI conversation system
+**Goal**: Create chat interface with basic mock AI conversation system
 - [x] Chat interface (`/chat`) - AI conversation page (default after login)
 - [x] ChatMessage component - Display user and AI messages
 - [x] ChatInput component - User input with keyboard shortcuts
-- [x] Mock AI processing logic - Simulate natural language understanding
-- [x] Status query functionality - Single and batch user queries
-- [x] Status update commands - AI-driven status modifications
+- [x] Mock AI processing logic - Basic random response simulation
+- [ ] Status query functionality - Single and batch user queries (moved to Phase 5)
+- [ ] Status update commands - AI-driven status modifications (moved to Phase 5)
 - [x] Home redirect (`/`) - Automatically redirects to `/chat`
 - [x] Navigation between chat and dashboard pages
 
-**Success Criteria**: Complete chat interface with mock AI that can process status queries and updates
+**Success Criteria**: Complete chat interface with basic mock AI that provides generic responses
 
 ### Phase 5: Real AI Integration & MCP Tools 🤖
 **Goal**: Replace mock AI with real AI service integration  
 - [ ] MCP SDK integration (@modelcontextprotocol/sdk)
 - [ ] Replace mock AI responses with real AI processing
+- [ ] Status query functionality - Single and batch user queries
+- [ ] Status update commands - AI-driven status modifications
 - [ ] Enhanced natural language query processing
 - [ ] Improved batch query functionality
 - [ ] Advanced status update parsing and validation

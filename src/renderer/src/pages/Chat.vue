@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import AppHeader from '../components/AppHeader.vue'
 import ChatInput from '../components/ChatInput.vue'
 import ChatMessage from '../components/ChatMessage.vue'
-import UserMenu from '../components/UserMenu.vue'
 import { useAuthStore } from '../stores/auth'
 import { useChatStore } from '../stores/chat'
 import { useDataStore } from '../stores/data'
@@ -54,58 +54,35 @@ function goToDashboard() {
 <template>
   <div class="flex h-screen overflow-hidden bg-gray-50">
     <div class="flex w-full flex-col">
-      <!-- Header -->
-      <header
-        class="z-10 flex-shrink-0 border-b border-gray-200 bg-white shadow-lg"
-      >
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div class="flex h-16 items-center justify-between">
-            <div class="flex items-center">
-              <h1
-                class="
-                  flex items-center gap-x-2 text-2xl font-extrabold
-                  text-gray-900
-                "
-              >
-                <span
-                  class="i-material-symbols-alarm-on-rounded text-emerald-500"
-                ></span>
-                The Weasley Tracker
-              </h1>
-            </div>
-
-            <div class="flex items-center space-x-4">
-              <button
-                class="
-                  inline-flex items-center rounded-md border border-gray-300
-                  bg-white px-3 py-2 text-sm font-medium text-gray-700
-                  hover:bg-gray-50
-                  focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-                  focus:outline-none
-                "
-                @click="goToDashboard"
-              >
-                <svg
-                  class="mr-2 h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                  />
-                </svg>
-                狀態看板
-              </button>
-
-              <UserMenu />
-            </div>
-          </div>
-        </div>
-      </header>
+      <AppHeader>
+        <template #actions>
+          <button
+            class="
+              inline-flex items-center rounded-md border border-gray-300
+              bg-white px-3 py-2 text-sm font-medium text-gray-700
+              hover:bg-gray-50
+              focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+              focus:outline-none
+            "
+            @click="goToDashboard"
+          >
+            <svg
+              class="mr-2 h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+            狀態看板
+          </button>
+        </template>
+      </AppHeader>
 
       <!-- Chat Container -->
       <main class="flex flex-1 flex-col overflow-hidden">
