@@ -25,10 +25,10 @@ function sendMessage() {
   }
 }
 
-function handleKeydown(event: KeyboardEvent) {
+function handleEnter(event: KeyboardEvent) {
   // Enter without Shift = send message
   // Shift + Enter = new line
-  if (event.key === 'Enter' && !event.shiftKey) {
+  if (!event.shiftKey) {
     event.preventDefault()
     sendMessage()
   }
@@ -57,13 +57,9 @@ function adjustTextareaHeight() {
             placeholder:tracking-wider
             focus:outline-none
           "
-          :class="{
-            'cursor-not-allowed bg-gray-50': disabled || loading,
-            'bg-white': !(disabled || loading),
-          }"
           rows="1"
-          :disabled="disabled || loading"
-          @keydown="handleKeydown"
+          :disabled="disabled"
+          @keydown.enter="handleEnter"
           @input="adjustTextareaHeight"
         ></textarea>
       </div>

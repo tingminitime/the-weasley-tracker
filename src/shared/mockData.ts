@@ -200,7 +200,6 @@ export function generateInitialUserStatuses(users: MockUser[]): UserStatus[] {
       userId: user.id,
       name: user.name,
       currentStatus: resolvedStatus.status,
-      statusDetail: resolvedStatus.detail,
       lastUpdated: now,
       expiresAt: resolvedStatus.expiresAt,
       timeSlots,
@@ -234,7 +233,6 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
       startTime: checkInTime,
       endTime: workEnd,
       status: attendanceStatus,
-      statusDetail: attendanceStatus === 'wfh' ? 'Working from home' : undefined,
       source: 'attendance',
       priority: 2,
       createdAt: currentTime,
@@ -257,7 +255,6 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
 
   // Generate random meeting slots (priority 1)
   const numMeetings = Math.floor(Math.random() * 3) // 0-2 meetings
-  const meetingTitles = ['Daily Standup', 'Sprint Planning', 'Client Review', 'Team Sync']
 
   for (let i = 0; i < numMeetings; i++) {
     const meetingStart = new Date(workStart)
@@ -278,7 +275,6 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
         startTime: meetingStart,
         endTime: meetingEnd,
         status: 'meeting',
-        statusDetail: meetingTitles[Math.floor(Math.random() * meetingTitles.length)],
         source: 'calendar',
         priority: 1,
         createdAt: currentTime,
@@ -300,7 +296,6 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
       startTime: aiStart,
       endTime: aiEnd,
       status: 'meeting',
-      statusDetail: 'Ad-hoc discussion',
       source: 'ai_modified',
       priority: 3,
       createdAt: currentTime,
@@ -316,7 +311,6 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
       startTime: aiStart,
       endTime: aiEnd,
       status: 'out',
-      statusDetail: 'Client meeting',
       source: 'ai_modified',
       priority: 3,
       createdAt: currentTime,
@@ -332,7 +326,6 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
       startTime: aiStart,
       endTime: aiEnd,
       status: 'wfh',
-      statusDetail: 'Working from home',
       source: 'ai_modified',
       priority: 3,
       createdAt: currentTime,
@@ -351,7 +344,6 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
       startTime: aiStart,
       endTime: aiEnd,
       status: aiStatus,
-      statusDetail: aiStatus === 'out' ? 'Client meeting' : aiStatus === 'meeting' ? 'Ad-hoc discussion' : 'Working from home',
       source: 'ai_modified',
       priority: 3,
       createdAt: currentTime,
@@ -370,7 +362,6 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
 
 function resolveStatusFromTimeSlots(timeSlots: TimeSlot[], user: MockUser, currentTime: Date): {
   status: StatusType
-  detail?: string
   expiresAt: Date
 } {
   // Find active time slot (highest priority slot that's currently active)
@@ -383,7 +374,6 @@ function resolveStatusFromTimeSlots(timeSlots: TimeSlot[], user: MockUser, curre
   if (activeSlot) {
     return {
       status: activeSlot.status,
-      detail: activeSlot.statusDetail,
       expiresAt: activeSlot.expiresAt,
     }
   }

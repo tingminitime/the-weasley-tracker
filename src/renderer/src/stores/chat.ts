@@ -1,8 +1,8 @@
 import type { ChatMessage } from '@shared/types'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-export const useChatStore = defineStore('chat', () => {
 
+export const useChatStore = defineStore('chat', () => {
   const messages = ref<ChatMessage[]>([])
   const isTyping = ref(false)
 
@@ -64,8 +64,6 @@ export const useChatStore = defineStore('chat', () => {
 
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)]
   }
-
-
 
   function clearMessages() {
     messages.value = []

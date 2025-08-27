@@ -26,6 +26,12 @@ export default antfu(
         'warn',
         {
           detectComponentClasses: true,
+          ignore: [
+            'scrollbar-thin',
+            'scrollbar-track-gray-100',
+            'scrollbar-thumb-gray-300',
+            'scrollbar-hidden',
+          ],
         },
       ],
     },

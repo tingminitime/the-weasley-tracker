@@ -29,7 +29,7 @@ function formatTime(date: Date): string {
     >
       <div class="order-2">
         <div
-          class="max-w-xs rounded-lg bg-emerald-500/35 px-4 py-2 lg:max-w-md"
+          class="max-w-xs rounded-lg bg-emerald-500/30 px-4 py-2 lg:max-w-md"
         >
           <p class="text-base">
             {{ message.content }}

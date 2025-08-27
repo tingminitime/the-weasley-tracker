@@ -192,6 +192,26 @@ export const useDataStore = defineStore('data', () => {
     }
   }
 
+  async function updateUserTag(userId: string, tag: string) {
+    try {
+      const result = await window.api.updateUserTag(userId, tag)
+      if (result.success) {
+        // Update local state
+        const userIndex = users.value.findIndex(u => u.id === userId)
+        if (userIndex >= 0) {
+          users.value[userIndex] = { ...users.value[userIndex], tag }
+        }
+        return { success: true }
+      }
+      else {
+        return { success: false, error: result.error || 'Failed to update tag' }
+      }
+    }
+    catch (err) {
+      return { success: false, error: String(err) }
+    }
+  }
+
   return {
     // State
     users,
@@ -213,6 +233,7 @@ export const useDataStore = defineStore('data', () => {
     refreshData,
     updateUserStatus,
     resetData,
+    updateUserTag,
 
     // Getters
     getUserById,

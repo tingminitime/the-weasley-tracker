@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AttendanceRecord, CalendarEvent, MockUser, UserStatus } from '@shared/types'
 import { computed } from 'vue'
+import { statusConfig } from '../utils/statusConfig'
 
 interface Props {
   user: MockUser
@@ -10,45 +11,6 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-
-const statusConfig = {
-  on_duty: {
-    text: '上班中',
-    class: 'bg-green-100 text-green-800',
-    dotClass: 'bg-green-400',
-    avatarClass: 'bg-green-500',
-  },
-  off_duty: {
-    text: '下班',
-    class: 'bg-gray-100 text-gray-800',
-    dotClass: 'bg-gray-400',
-    avatarClass: 'bg-gray-500',
-  },
-  on_leave: {
-    text: '請假',
-    class: 'bg-yellow-100 text-yellow-800',
-    dotClass: 'bg-yellow-400',
-    avatarClass: 'bg-yellow-500',
-  },
-  wfh: {
-    text: '遠端上班',
-    class: 'bg-blue-100 text-blue-800',
-    dotClass: 'bg-blue-400',
-    avatarClass: 'bg-blue-500',
-  },
-  out: {
-    text: '外出',
-    class: 'bg-purple-100 text-purple-800',
-    dotClass: 'bg-purple-400',
-    avatarClass: 'bg-purple-500',
-  },
-  meeting: {
-    text: '會議中',
-    class: 'bg-red-100 text-red-800',
-    dotClass: 'bg-red-400',
-    avatarClass: 'bg-red-500',
-  },
-}
 
 const currentStatus = computed(() => {
   return props.status?.currentStatus || 'off_duty'
@@ -163,10 +125,10 @@ function formatTime(time: string | Date): string {
     </div>
 
     <div
-      v-if="status?.statusDetail"
+      v-if="user.tag"
       class="mt-3 text-sm text-gray-600"
     >
-      {{ status.statusDetail }}
+      {{ user.tag }}
     </div>
 
     <div class="mt-3 text-sm text-gray-400">

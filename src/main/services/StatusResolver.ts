@@ -18,7 +18,6 @@ export interface StatusResolutionContext {
 
 export interface StatusResolutionResult {
   currentStatus: StatusType
-  statusDetail?: string
   lastUpdated: Date
   expiresAt: Date
   timeSlots: TimeSlot[]
@@ -49,7 +48,6 @@ export class StatusResolver {
 
     return {
       currentStatus: currentStatus.status,
-      statusDetail: currentStatus.detail,
       lastUpdated: now,
       expiresAt,
       timeSlots: cleanedTimeSlots,
@@ -112,7 +110,6 @@ export class StatusResolver {
         startTime: record.checkIn,
         endTime: workEnd,
         status: record.status as StatusType,
-        statusDetail: record.workType === 'wfh' ? 'Working from home' : undefined,
         source: 'attendance',
         priority: 2,
         createdAt: currentTime,
@@ -136,7 +133,6 @@ export class StatusResolver {
       startTime: event.startTime,
       endTime: event.endTime,
       status: 'meeting',
-      statusDetail: event.title,
       source: 'calendar',
       priority: 1,
       createdAt: currentTime,
@@ -171,7 +167,7 @@ export class StatusResolver {
     timeSlots: TimeSlot[],
     user: MockUser,
     currentTime: Date,
-  ): { status: StatusType, detail?: string } {
+  ): { status: StatusType } {
     const activeSlot = timeSlots.find(slot =>
       currentTime >= slot.startTime && currentTime <= slot.endTime,
     )
@@ -179,7 +175,6 @@ export class StatusResolver {
     if (activeSlot) {
       return {
         status: activeSlot.status,
-        detail: activeSlot.statusDetail,
       }
     }
 
@@ -205,7 +200,7 @@ export class StatusResolver {
 
   private static calculateStatusExpiration(
     timeSlots: TimeSlot[],
-    currentStatus: { status: StatusType, detail?: string },
+    currentStatus: { status: StatusType },
     user: MockUser,
     currentTime: Date,
   ): Date {
@@ -247,7 +242,6 @@ export class StatusResolver {
 
       if (!newSlot
         || oldSlot.status !== newSlot.status
-        || oldSlot.statusDetail !== newSlot.statusDetail
         || oldSlot.startTime.getTime() !== newSlot.startTime.getTime()
         || oldSlot.endTime.getTime() !== newSlot.endTime.getTime()) {
         return true
@@ -259,7 +253,6 @@ export class StatusResolver {
 
   static createAIModifiedTimeSlot(
     status: StatusType,
-    statusDetail: string | undefined,
     startTime: Date,
     endTime: Date,
     user: MockUser,
@@ -274,7 +267,6 @@ export class StatusResolver {
       startTime,
       endTime,
       status,
-      statusDetail,
       source: 'ai_modified',
       priority: 3,
       createdAt: now,

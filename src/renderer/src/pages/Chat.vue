@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import AppHeader from '../components/AppHeader.vue'
 import ChatInput from '../components/ChatInput.vue'
 import ChatMessage from '../components/ChatMessage.vue'
+import TeammatesList from '../components/TeammatesList.vue'
 import { useAuthStore } from '../stores/auth'
 import { useChatStore } from '../stores/chat'
 import { useDataStore } from '../stores/data'
@@ -84,12 +85,15 @@ function goToDashboard() {
         </template>
       </AppHeader>
 
+      <!-- Teammates List -->
+      <TeammatesList class="fixed top-24 left-4 z-40" />
+
       <!-- Chat Container -->
       <main class="flex flex-1 flex-col overflow-hidden">
         <!-- Messages Area -->
         <div class="flex-1 overflow-hidden">
           <div
-            class="mx-auto flex h-full max-w-4xl flex-col px-4 sm:px-6 lg:px-8"
+            class="mx-auto flex h-full max-w-2xl flex-col px-4 sm:px-6 lg:px-8"
           >
             <div
               id="chat-container"

@@ -41,6 +41,8 @@ const api = {
   // Utility APIs
   initializeMockData: () => ipcRenderer.invoke('data:initializeMockData'),
   resetData: () => ipcRenderer.invoke('data:reset'),
+  updateUserTag: (userId: string, tag: string) => ipcRenderer.invoke('data:updateUserTag', userId, tag),
+  getUserTag: (userId: string) => ipcRenderer.invoke('data:getUserTag', userId),
 
   // Status Management APIs
   statusUpdateUserStatus: (request: any) => ipcRenderer.invoke('status:updateUserStatus', request),

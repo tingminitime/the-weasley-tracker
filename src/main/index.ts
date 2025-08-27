@@ -1,4 +1,3 @@
-import fs from 'node:fs'
 import { join } from 'node:path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { initializeMockData } from '@shared/mockData'
@@ -14,34 +13,6 @@ debug()
 // Initialize business logic services
 const statusManager = new StatusManager(dataStore)
 const dataSynchronizer = new DataSynchronizer(dataStore, statusManager)
-
-function shouldDisableGPU() {
-  // 1. 明確的環境變數控制
-  if (process.env.ELECTRON_DISABLE_GPU === '1') {
-    return true
-  }
-
-  // 2. 自動檢測 WSL
-  if (process.platform === 'linux') {
-    try {
-      const version = fs.readFileSync('/proc/version', 'utf8')
-      if (version.toLowerCase().includes('microsoft')
-        || version.toLowerCase().includes('wsl')) {
-        console.log('檢測到 WSL 環境，自動禁用 GPU 加速')
-        return true
-      }
-    }
-    catch {
-      // 無法讀取，不做處理
-    }
-  }
-
-  return false
-}
-
-if (shouldDisableGPU()) {
-  app.disableHardwareAcceleration()
-}
 
 function createWindow(): void {
   const display = screen.getPrimaryDisplay()
@@ -77,8 +48,6 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
-
-app.disableHardwareAcceleration()
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -172,6 +141,14 @@ app.whenReady().then(() => {
     catch (error) {
       return { success: false, error: String(error) }
     }
+  })
+
+  ipcMain.handle('data:updateUserTag', (_, userId: string, tag: string) => {
+    return dataStore.updateUserTag(userId, tag)
+  })
+
+  ipcMain.handle('data:getUserTag', (_, userId: string) => {
+    return dataStore.getUserTag(userId)
   })
 
   // Status Management IPC handlers

@@ -100,7 +100,8 @@ onUnmounted(() => {
           <button
             :disabled="loading"
             class="
-              group flex w-full items-center px-4 py-2 text-sm text-red-700
+              group flex w-full cursor-pointer items-center px-4 py-2 text-sm
+              text-red-700
               hover:bg-red-50 hover:text-red-900
               disabled:cursor-not-allowed disabled:opacity-50
             "

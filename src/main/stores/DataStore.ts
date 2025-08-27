@@ -203,6 +203,31 @@ export class DataStore {
     return this.getUserById(session.currentUserId) || null
   }
 
+  // Tag operations
+  updateUserTag(userId: string, tag: string): DataOperationResult<MockUser> {
+    try {
+      const users = this.getUsers()
+      const userIndex = users.findIndex(user => user.id === userId)
+
+      if (userIndex === -1) {
+        return { success: false, error: 'User not found' }
+      }
+
+      users[userIndex] = { ...users[userIndex], tag }
+      this.setUsers(users)
+
+      return { success: true, data: users[userIndex] }
+    }
+    catch (error) {
+      return { success: false, error: String(error) }
+    }
+  }
+
+  getUserTag(userId: string): string | undefined {
+    const user = this.getUserById(userId)
+    return user?.tag
+  }
+
   // Utility operations
   clear(): void {
     this.store.clear()

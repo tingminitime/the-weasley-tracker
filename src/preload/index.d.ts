@@ -31,6 +31,8 @@ declare global {
       // Utility APIs
       initializeMockData: () => Promise<any>
       resetData: () => Promise<any>
+      updateUserTag: (userId: string, tag: string) => Promise<any>
+      getUserTag: (userId: string) => Promise<string | undefined>
     }
   }
 }

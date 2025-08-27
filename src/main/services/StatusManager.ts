@@ -12,7 +12,6 @@ import { StatusResolver } from './StatusResolver'
 export interface StatusUpdateRequest {
   userId: string
   status: StatusType
-  statusDetail?: string
   startTime?: Date
   endTime?: Date
   duration?: number // Duration in minutes
@@ -59,7 +58,6 @@ export class StatusManager {
 
       const newTimeSlot = StatusResolver.createAIModifiedTimeSlot(
         request.status,
-        request.statusDetail,
         startTime,
         endTime,
         user,
@@ -90,7 +88,6 @@ export class StatusManager {
         userId: request.userId,
         name: user.name,
         currentStatus: resolution.currentStatus,
-        statusDetail: resolution.statusDetail,
         lastUpdated: resolution.lastUpdated,
         expiresAt: resolution.expiresAt,
         timeSlots: resolution.timeSlots,
@@ -132,7 +129,6 @@ export class StatusManager {
         userId,
         name: user.name,
         currentStatus: resolution.currentStatus,
-        statusDetail: resolution.statusDetail,
         lastUpdated: resolution.lastUpdated,
         expiresAt: resolution.expiresAt,
         timeSlots: resolution.timeSlots,
@@ -197,7 +193,6 @@ export class StatusManager {
       if (!query.includeDetails) {
         filteredStatuses = filteredStatuses.map(status => ({
           ...status,
-          statusDetail: undefined,
           timeSlots: [],
         }))
       }
@@ -284,7 +279,6 @@ export class StatusManager {
       const updatedStatus: UserStatus = {
         ...userStatus,
         currentStatus: resolution.currentStatus,
-        statusDetail: resolution.statusDetail,
         lastUpdated: resolution.lastUpdated,
         expiresAt: resolution.expiresAt,
         timeSlots: resolution.timeSlots,
