@@ -2,7 +2,7 @@
   {
     "id": "user-001",
     "name": "阿信",
-    "department": "Engineering",
+    "department": "Software Engineer",
     "tag": "",
     "workSchedule": {
       "startTime": "09:00",

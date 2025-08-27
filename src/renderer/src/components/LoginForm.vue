@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import type { MockUser } from '@shared/types'
-import { onMounted, ref } from 'vue'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@renderer/components/ui/select'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { useDataStore } from '../stores/data'
@@ -13,6 +22,10 @@ const selectedUserId = ref('')
 const users = ref<MockUser[]>([])
 const loading = ref(false)
 const error = ref('')
+
+const groupedUsers = computed(() => {
+  return Object.groupBy(users.value, user => user.department)
+})
 
 onMounted(async () => {
   loading.value = true
@@ -91,12 +104,12 @@ async function handleInitializeData() {
           ></span>
           The Weasley Tracker
         </h2>
-        <p class="mt-2 text-sm text-gray-600">
-          查勤魔法 - 選擇用戶登入
+        <p class="mt-2 text-xl font-semibold tracking-widest text-emerald-600">
+          查勤魔法
         </p>
       </div>
 
-      <div class="mt-8 space-y-6">
+      <div class="space-y-6">
         <div
           v-if="error"
           class="rounded-md bg-red-50 p-4"
@@ -107,33 +120,34 @@ async function handleInitializeData() {
         </div>
 
         <div>
-          <label
-            for="user-select"
-            class="block text-sm font-medium text-gray-700"
-          >
-            選擇用戶
-          </label>
-          <select
-            id="user-select"
+          <div class="text-center tracking-wide text-gray-700">
+            選擇使用者登入
+          </div>
+          <Select
             v-model="selectedUserId"
-            class="
-              mt-1 block w-full rounded-md border border-gray-300 px-3 py-2
-              shadow-sm
-              focus:border-emerald-500 focus:ring-emerald-500 focus:outline-none
-            "
             :disabled="loading"
           >
-            <option value="">
-              -- 請選擇用戶 --
-            </option>
-            <option
-              v-for="user in users"
-              :key="user.id"
-              :value="user.id"
-            >
-              {{ user.name }} ({{ user.department }})
-            </option>
-          </select>
+            <SelectTrigger class="mt-1 w-full">
+              <SelectValue placeholder="-- 請選擇用戶 --" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup
+                v-for="(departmentUsers, department) in groupedUsers"
+                :key="department"
+              >
+                <SelectLabel class="font-semibold text-emerald-700">
+                  {{ department }}
+                </SelectLabel>
+                <SelectItem
+                  v-for="user in departmentUsers"
+                  :key="user.id"
+                  :value="user.id"
+                >
+                  {{ user.name }} (&nbsp;{{ user.department }}&nbsp;)
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
 
         <div>
@@ -175,7 +189,7 @@ async function handleInitializeData() {
                 />
               </svg>
             </span>
-            {{ loading ? '登入中...' : '登入' }}
+            <span class="text-base font-bold tracking-widest">{{ loading ? '登入中...' : '登入' }}</span>
           </button>
         </div>
 

@@ -93,7 +93,11 @@ function goToDashboard() {
         <!-- Messages Area -->
         <div class="flex-1 overflow-hidden">
           <div
-            class="mx-auto flex h-full max-w-2xl flex-col px-4 sm:px-6 lg:px-8"
+            class="
+              mx-auto flex h-full max-w-[60%] flex-col px-4
+              sm:px-6
+              lg:px-8
+            "
           >
             <div
               id="chat-container"
@@ -142,7 +146,7 @@ function goToDashboard() {
               </div>
 
               <!-- Chat Input Area -->
-              <div class="mt-4 flex-shrink-0">
+              <div class="my-4 flex-shrink-0">
                 <ChatInput
                   :loading="isLoading"
                   @send-message="handleSendMessage"
