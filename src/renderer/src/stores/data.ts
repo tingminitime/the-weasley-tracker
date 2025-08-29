@@ -212,6 +212,95 @@ export const useDataStore = defineStore('data', () => {
     }
   }
 
+  async function getUserCustomTags(userId: string) {
+    try {
+      return await window.api.getUserCustomTags(userId)
+    }
+    catch (err) {
+      console.error('Failed to get user custom tags:', err)
+      return []
+    }
+  }
+
+  async function addUserCustomTag(userId: string, tag: string) {
+    try {
+      const result = await window.api.addUserCustomTag(userId, tag)
+      if (result.success) {
+        // Update local state
+        const userIndex = users.value.findIndex(u => u.id === userId)
+        if (userIndex >= 0) {
+          const currentTags = users.value[userIndex].customTags || []
+          users.value[userIndex] = {
+            ...users.value[userIndex],
+            customTags: [...currentTags, tag],
+          }
+        }
+        return { success: true }
+      }
+      else {
+        return { success: false, error: result.error || 'Failed to add custom tag' }
+      }
+    }
+    catch (err) {
+      return { success: false, error: String(err) }
+    }
+  }
+
+  async function updateUserCustomTag(userId: string, oldTag: string, newTag: string) {
+    try {
+      const result = await window.api.updateUserCustomTag(userId, oldTag, newTag)
+      if (result.success) {
+        // Update local state
+        const userIndex = users.value.findIndex(u => u.id === userId)
+        if (userIndex >= 0) {
+          const currentTags = users.value[userIndex].customTags || []
+          const tagIndex = currentTags.indexOf(oldTag)
+          if (tagIndex >= 0) {
+            const updatedTags = [...currentTags]
+            updatedTags[tagIndex] = newTag
+            users.value[userIndex] = {
+              ...users.value[userIndex],
+              customTags: updatedTags,
+              tag: users.value[userIndex].tag === oldTag ? newTag : users.value[userIndex].tag,
+            }
+          }
+        }
+        return { success: true }
+      }
+      else {
+        return { success: false, error: result.error || 'Failed to update custom tag' }
+      }
+    }
+    catch (err) {
+      return { success: false, error: String(err) }
+    }
+  }
+
+  async function deleteUserCustomTag(userId: string, tag: string) {
+    try {
+      const result = await window.api.deleteUserCustomTag(userId, tag)
+      if (result.success) {
+        // Update local state
+        const userIndex = users.value.findIndex(u => u.id === userId)
+        if (userIndex >= 0) {
+          const currentTags = users.value[userIndex].customTags || []
+          users.value[userIndex] = {
+            ...users.value[userIndex],
+            customTags: currentTags.filter(t => t !== tag),
+            tag: users.value[userIndex].tag === tag ? undefined : users.value[userIndex].tag,
+          }
+        }
+        return { success: true }
+      }
+      else {
+        return { success: false, error: result.error || 'Failed to delete custom tag' }
+      }
+    }
+    catch (err) {
+      return { success: false, error: String(err) }
+    }
+  }
+
   return {
     // State
     users,
@@ -234,6 +323,10 @@ export const useDataStore = defineStore('data', () => {
     updateUserStatus,
     resetData,
     updateUserTag,
+    getUserCustomTags,
+    addUserCustomTag,
+    updateUserCustomTag,
+    deleteUserCustomTag,
 
     // Getters
     getUserById,

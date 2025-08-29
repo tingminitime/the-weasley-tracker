@@ -33,6 +33,12 @@ declare global {
       resetData: () => Promise<any>
       updateUserTag: (userId: string, tag: string) => Promise<any>
       getUserTag: (userId: string) => Promise<string | undefined>
+
+      // Custom Tags APIs
+      getUserCustomTags: (userId: string) => Promise<string[]>
+      addUserCustomTag: (userId: string, tag: string) => Promise<any>
+      updateUserCustomTag: (userId: string, oldTag: string, newTag: string) => Promise<any>
+      deleteUserCustomTag: (userId: string, tag: string) => Promise<any>
     }
   }
 }

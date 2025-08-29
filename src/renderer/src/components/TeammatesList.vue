@@ -23,6 +23,7 @@ const teammates = computed(() => {
       user,
       statusConfig: statusConfig[status?.currentStatus || 'off_duty'],
       isInactive: status?.currentStatus === 'on_leave' || status?.currentStatus === 'off_duty',
+      customTag: user.tag,
     }))
 })
 
@@ -62,20 +63,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <div class="relative max-w-sm">
+  <div class="w-80 flex-shrink-0">
+    <div class="relative">
       <!-- 滾動容器 -->
       <div
         ref="scrollContainer"
-        class="relative max-h-80 w-3xs overflow-y-auto"
+        class="relative max-h-80 overflow-y-auto"
         :class="{ 'scrollbar-hidden': !isScrolling }"
       >
         <div class="space-y-2 px-1">
           <button
-            v-for="{ user, statusConfig: userStatusConfig, isInactive } in teammates"
+            v-for="{ user, statusConfig: userStatusConfig, isInactive, customTag } in teammates"
             :key="user.id"
             class="
-              flex cursor-pointer items-center space-x-3 rounded-lg px-3 py-2
+              flex cursor-pointer items-center space-x-2 rounded-lg px-3 py-2
               transition duration-150
               hover:bg-gray-200
             "
@@ -84,8 +85,8 @@ onMounted(() => {
             <!-- Avatar -->
             <div
               class="
-                flex h-6 w-6 items-center justify-center rounded-full text-xs
-                font-semibold text-white select-none
+                flex h-6 w-6 shrink-0 items-center justify-center rounded-full
+                text-xs font-semibold text-white select-none
               "
               :class="userStatusConfig.avatarClass"
             >
@@ -95,7 +96,7 @@ onMounted(() => {
             <!-- Name -->
             <div
               class="
-                w-[8ch] truncate text-left text-sm font-medium text-gray-700
+                w-[7ch] truncate text-left text-sm font-medium text-gray-700
               "
             >
               {{ user.name }}
@@ -104,8 +105,8 @@ onMounted(() => {
             <!-- Status Badge -->
             <span
               class="
-                inline-flex items-center rounded-full px-2 py-0.5 text-xs
-                font-medium select-none
+                inline-flex shrink-0 items-center rounded-full px-2 py-0.5
+                text-xs font-medium select-none
               "
               :class="userStatusConfig.class"
             >
@@ -114,6 +115,18 @@ onMounted(() => {
                 :class="userStatusConfig.dotClass"
               ></span>
               {{ userStatusConfig.text }}
+            </span>
+
+            <!-- Custom Tag -->
+            <span
+              v-if="customTag"
+              class="
+                custom-tag inline-flex shrink-0 items-center bg-gray-200 py-0.5
+                pr-2 pl-3 text-xs font-medium text-gray-900 select-none
+              "
+              :title="customTag"
+            >
+              {{ customTag.length > 6 ? `${customTag.slice(0, 6)}...` : customTag }}
             </span>
           </button>
 
@@ -193,5 +206,11 @@ onMounted(() => {
 
 :not(.scrollbar-hidden)::-webkit-scrollbar-thumb:hover {
   background-color: #9ca3af;
+}
+
+/* Custom tag with triangle */
+.custom-tag {
+  position: relative;
+  clip-path: polygon(8px 0%, 100% 0%, 100% 100%, 8px 100%, 0% 50%);
 }
 </style>

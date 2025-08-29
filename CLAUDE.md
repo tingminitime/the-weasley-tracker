@@ -55,8 +55,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - [x] ChatMessage component - Display user and AI messages
 - [x] ChatInput component - User input with keyboard shortcuts
 - [x] Mock AI processing logic - Basic random response simulation
-- [ ] Status query functionality - Single and batch user queries (moved to Phase 5)
-- [ ] Status update commands - AI-driven status modifications (moved to Phase 5)
 - [x] Home redirect (`/`) - Automatically redirects to `/chat`
 - [x] Navigation between chat and dashboard pages
 
@@ -172,9 +170,11 @@ interface MockUser {
   id: string
   name: string
   department: string
+  tag?: string
+  customTags?: string[]
   workSchedule: {
     startTime: string // Default "08:30"
-    endTime: string   // Default "17:30"
+    endTime: string // Default "17:30"
   }
 }
 ```

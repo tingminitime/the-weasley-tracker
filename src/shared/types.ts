@@ -4,7 +4,8 @@ export interface MockUser {
   id: string
   name: string
   department: string
-  tag: string
+  tag?: string
+  customTags?: string[]
   workSchedule: {
     startTime: string // Default "08:30"
     endTime: string // Default "17:30"

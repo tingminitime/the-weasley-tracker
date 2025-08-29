@@ -213,6 +213,13 @@ export class DataStore {
         return { success: false, error: 'User not found' }
       }
 
+      // Validate that the tag exists in user's custom tags (if they have any)
+      // Allow empty string (clear tag) or validate against custom tags
+      const user = users[userIndex]
+      if (tag && user.customTags && user.customTags.length > 0 && !user.customTags.includes(tag)) {
+        return { success: false, error: 'Tag not found in user custom tags' }
+      }
+
       users[userIndex] = { ...users[userIndex], tag }
       this.setUsers(users)
 
@@ -226,6 +233,131 @@ export class DataStore {
   getUserTag(userId: string): string | undefined {
     const user = this.getUserById(userId)
     return user?.tag
+  }
+
+  // Custom Tags operations
+  getUserCustomTags(userId: string): string[] {
+    const user = this.getUserById(userId)
+    return user?.customTags || []
+  }
+
+  addUserCustomTag(userId: string, tag: string): DataOperationResult<string> {
+    try {
+      const users = this.getUsers()
+      const userIndex = users.findIndex(user => user.id === userId)
+
+      if (userIndex === -1) {
+        return { success: false, error: 'User not found' }
+      }
+
+      const user = users[userIndex]
+      const customTags = user.customTags || []
+
+      // Check if tag already exists
+      if (customTags.includes(tag)) {
+        return { success: false, error: 'Tag already exists' }
+      }
+
+      // Check tag is not empty
+      if (!tag.trim()) {
+        return { success: false, error: 'Tag cannot be empty' }
+      }
+
+      const updatedTags = [...customTags, tag.trim()]
+      users[userIndex] = { ...user, customTags: updatedTags }
+      this.setUsers(users)
+
+      return { success: true, data: tag.trim() }
+    }
+    catch (error) {
+      return { success: false, error: String(error) }
+    }
+  }
+
+  updateUserCustomTag(userId: string, oldTag: string, newTag: string): DataOperationResult<string> {
+    try {
+      const users = this.getUsers()
+      const userIndex = users.findIndex(user => user.id === userId)
+
+      if (userIndex === -1) {
+        return { success: false, error: 'User not found' }
+      }
+
+      const user = users[userIndex]
+      const customTags = user.customTags || []
+
+      // Check if old tag exists
+      const tagIndex = customTags.indexOf(oldTag)
+      if (tagIndex === -1) {
+        return { success: false, error: 'Tag not found' }
+      }
+
+      // Check new tag is not empty
+      if (!newTag.trim()) {
+        return { success: false, error: 'Tag cannot be empty' }
+      }
+
+      // Check if new tag already exists (and is different from old tag)
+      if (newTag.trim() !== oldTag && customTags.includes(newTag.trim())) {
+        return { success: false, error: 'Tag already exists' }
+      }
+
+      // Update the tag
+      const updatedTags = [...customTags]
+      updatedTags[tagIndex] = newTag.trim()
+
+      // Update user's selected tag if it matches the old tag
+      const updatedUser = {
+        ...user,
+        customTags: updatedTags,
+        tag: user.tag === oldTag ? newTag.trim() : user.tag,
+      }
+
+      users[userIndex] = updatedUser
+      this.setUsers(users)
+
+      return { success: true, data: newTag.trim() }
+    }
+    catch (error) {
+      return { success: false, error: String(error) }
+    }
+  }
+
+  deleteUserCustomTag(userId: string, tag: string): DataOperationResult<void> {
+    try {
+      const users = this.getUsers()
+      const userIndex = users.findIndex(user => user.id === userId)
+
+      if (userIndex === -1) {
+        return { success: false, error: 'User not found' }
+      }
+
+      const user = users[userIndex]
+      const customTags = user.customTags || []
+
+      // Check if tag exists
+      if (!customTags.includes(tag)) {
+        return { success: false, error: 'Tag not found' }
+      }
+
+      // Remove the tag
+      const updatedTags = customTags.filter(t => t !== tag)
+
+      // Clear user's selected tag if it matches the deleted tag
+      const updatedUser = {
+        ...user,
+        customTags: updatedTags,
+        tag: user.tag === tag ? undefined : user.tag,
+      }
+
+      users[userIndex] = updatedUser
+      this.setUsers(users)
+
+      return { success: true }
+    }
+    catch (error) {
+      return { success: false, error: String(error) }
+    }
   }
 
   // Utility operations

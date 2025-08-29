@@ -86,18 +86,16 @@ function goToDashboard() {
       </AppHeader>
 
       <!-- Teammates List -->
-      <TeammatesList class="fixed top-24 left-4 z-40" />
+      <!-- <TeammatesList class="fixed top-24 left-4 z-40" /> -->
 
       <!-- Chat Container -->
-      <main class="flex flex-1 flex-col overflow-hidden">
+      <main class="flex flex-1 overflow-hidden">
+        <!-- Teammates List -->
+        <TeammatesList class="mt-8" />
         <!-- Messages Area -->
         <div class="flex-1 overflow-hidden">
           <div
-            class="
-              mx-auto flex h-full max-w-[60%] flex-col px-4
-              sm:px-6
-              lg:px-8
-            "
+            class="flex h-full w-full flex-col px-4 sm:px-6 lg:max-w-3xl"
           >
             <div
               id="chat-container"

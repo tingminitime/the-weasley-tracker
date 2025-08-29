@@ -31,6 +31,7 @@ export default antfu(
             'scrollbar-track-gray-100',
             'scrollbar-thumb-gray-300',
             'scrollbar-hidden',
+            'custom-tag',
           ],
         },
       ],

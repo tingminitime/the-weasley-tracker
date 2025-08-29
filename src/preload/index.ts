@@ -44,6 +44,12 @@ const api = {
   updateUserTag: (userId: string, tag: string) => ipcRenderer.invoke('data:updateUserTag', userId, tag),
   getUserTag: (userId: string) => ipcRenderer.invoke('data:getUserTag', userId),
 
+  // Custom Tags APIs
+  getUserCustomTags: (userId: string): Promise<string[]> => ipcRenderer.invoke('data:getUserCustomTags', userId),
+  addUserCustomTag: (userId: string, tag: string) => ipcRenderer.invoke('data:addUserCustomTag', userId, tag),
+  updateUserCustomTag: (userId: string, oldTag: string, newTag: string) => ipcRenderer.invoke('data:updateUserCustomTag', userId, oldTag, newTag),
+  deleteUserCustomTag: (userId: string, tag: string) => ipcRenderer.invoke('data:deleteUserCustomTag', userId, tag),
+
   // Status Management APIs
   statusUpdateUserStatus: (request: any) => ipcRenderer.invoke('status:updateUserStatus', request),
   statusRefreshUserStatus: (userId: string) => ipcRenderer.invoke('status:refreshUserStatus', userId),

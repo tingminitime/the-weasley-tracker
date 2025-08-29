@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import { join } from 'node:path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { initializeMockData } from '@shared/mockData'
@@ -13,6 +14,34 @@ debug()
 // Initialize business logic services
 const statusManager = new StatusManager(dataStore)
 const dataSynchronizer = new DataSynchronizer(dataStore, statusManager)
+
+function shouldDisableGPU() {
+  // 1. 明確的環境變數控制
+  if (process.env.ELECTRON_DISABLE_GPU === '1') {
+    return true
+  }
+
+  // 2. 自動檢測 WSL
+  if (process.platform === 'linux') {
+    try {
+      const version = fs.readFileSync('/proc/version', 'utf8')
+      if (version.toLowerCase().includes('microsoft')
+        || version.toLowerCase().includes('wsl')) {
+        console.log('檢測到 WSL 環境，自動禁用 GPU 加速')
+        return true
+      }
+    }
+    catch {
+      // 無法讀取，不做處理
+    }
+  }
+
+  return false
+}
+
+if (shouldDisableGPU()) {
+  app.disableHardwareAcceleration()
+}
 
 function createWindow(): void {
   const display = screen.getPrimaryDisplay()
@@ -149,6 +178,23 @@ app.whenReady().then(() => {
 
   ipcMain.handle('data:getUserTag', (_, userId: string) => {
     return dataStore.getUserTag(userId)
+  })
+
+  // Custom Tags IPC handlers
+  ipcMain.handle('data:getUserCustomTags', (_, userId: string) => {
+    return dataStore.getUserCustomTags(userId)
+  })
+
+  ipcMain.handle('data:addUserCustomTag', (_, userId: string, tag: string) => {
+    return dataStore.addUserCustomTag(userId, tag)
+  })
+
+  ipcMain.handle('data:updateUserCustomTag', (_, userId: string, oldTag: string, newTag: string) => {
+    return dataStore.updateUserCustomTag(userId, oldTag, newTag)
+  })
+
+  ipcMain.handle('data:deleteUserCustomTag', (_, userId: string, tag: string) => {
+    return dataStore.deleteUserCustomTag(userId, tag)
   })
 
   // Status Management IPC handlers
