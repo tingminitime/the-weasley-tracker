@@ -1,5 +1,5 @@
 ---
-title: 查勤魔法 The Weasley Tracker ( 介面互動流程 - 修改版 )
+title: 查勤魔法 The Weasley Tracker ( 介面互動流程 )
 ---
 flowchart TD
     %% 應用程式啟動與路由

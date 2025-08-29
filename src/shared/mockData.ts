@@ -192,8 +192,8 @@ export function generateTodayCalendarEvents(users: MockUser[]): CalendarEvent[] 
 export function generateInitialUserStatuses(users: MockUser[]): UserStatus[] {
   const now = new Date()
 
-  return users.map((user) => {
-    const timeSlots = generateInitialTimeSlots(user, now)
+  return users.map((user, index) => {
+    const timeSlots = generateInitialTimeSlots(user, index, now)
     const resolvedStatus = resolveStatusFromTimeSlots(timeSlots, user, now)
 
     return {
@@ -207,7 +207,7 @@ export function generateInitialUserStatuses(users: MockUser[]): UserStatus[] {
   })
 }
 
-function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[] {
+function generateInitialTimeSlots(user: MockUser, userIndex: number, currentTime: Date): TimeSlot[] {
   const slots: TimeSlot[] = []
   const today = currentTime.toISOString().split('T')[0]
 
@@ -220,11 +220,37 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
   const [endHour, endMinute] = user.workSchedule.endTime.split(':').map(Number)
   workEnd.setHours(endHour, endMinute, 0, 0)
 
-  // Simulate attendance-based time slot (priority 2)
-  const attendanceScenarios = ['on_duty', 'wfh', 'on_leave']
-  const attendanceStatus = attendanceScenarios[Math.floor(Math.random() * attendanceScenarios.length)] as StatusType
+  // Use same scenario logic as generateTodayAttendanceRecords to ensure consistency
+  const scenario = userIndex % 6
+  let attendanceStatus: StatusType
+  let hasCheckIn = false
 
-  if (attendanceStatus !== 'on_leave' && currentTime >= workStart) {
+  switch (scenario) {
+    case 0: // Normal office work - checked in
+      attendanceStatus = 'on_duty'
+      hasCheckIn = true
+      break
+    case 1: // WFH - checked in
+      attendanceStatus = 'wfh'
+      hasCheckIn = true
+      break
+    case 2: // On leave
+      attendanceStatus = 'on_leave'
+      hasCheckIn = false
+      break
+    case 3: // Off duty - not checked in yet
+      attendanceStatus = 'off_duty'
+      hasCheckIn = false
+      break
+    case 4: // Normal office work for meeting status (will be overridden by AI)
+    case 5: // Normal office work for out status (will be overridden by AI)
+    default:
+      attendanceStatus = 'on_duty'
+      hasCheckIn = true
+      break
+  }
+
+  if (attendanceStatus !== 'on_leave' && attendanceStatus !== 'off_duty' && hasCheckIn && currentTime >= workStart) {
     // Only add work slot if user has checked in and it's after work start
     const checkInTime = new Date(workStart.getTime() + Math.random() * 30 * 60000) // Within 30 minutes
 
@@ -250,6 +276,19 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
       priority: 2,
       createdAt: currentTime,
       expiresAt: workEnd,
+    })
+  }
+  else if (attendanceStatus === 'off_duty') {
+    // Add off_duty time slot
+    slots.push({
+      id: `leave-${user.id}-${today}`,
+      startTime: workStart,
+      endTime: workEnd,
+      status: 'off_duty',
+      source: 'attendance',
+      priority: 2,
+      createdAt: currentTime,
+      expiresAt: calculateExpirationTime('off_duty', workEnd),
     })
   }
 
@@ -284,8 +323,6 @@ function generateInitialTimeSlots(user: MockUser, currentTime: Date): TimeSlot[]
   }
 
   // Add AI-modified status for specific users to ensure all status types are covered
-  const userIndex = Number.parseInt(user.id.split('-')[1]) - 1 // Extract index from user-001, user-002, etc.
-
   // Ensure specific users get specific AI-modified statuses
   if (userIndex === 0) { // user-001 gets meeting status
     const aiStart = new Date(currentTime.getTime() - Math.random() * 2 * 60 * 60000)

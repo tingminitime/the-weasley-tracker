@@ -126,7 +126,7 @@ function formatTime(time: string | Date): string {
 
     <div
       v-if="user.tag"
-      class="mt-3 text-sm text-gray-600"
+      class="mt-3 w-max bg-gray-200 px-2 py-1 text-sm text-gray-900"
     >
       {{ user.tag }}
     </div>
