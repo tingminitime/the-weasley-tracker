@@ -60,20 +60,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Success Criteria**: Complete chat interface with basic mock AI that provides generic responses
 
-### Phase 5: Real AI Integration & MCP Tools 🤖
-**Goal**: Replace mock AI with real AI service integration  
+### Phase 5: MCP Server Foundation & Basic Integration 🏗️
+**Goal**: Set up MCP server infrastructure and establish basic AI communication
 - [ ] MCP SDK integration (@modelcontextprotocol/sdk)
-- [ ] Replace mock AI responses with real AI processing
+- [ ] Set up independent MCP server infrastructure (separate from `pnpm dev`)
+- [ ] Implement MCP server connection status display in frontend
+- [ ] Create IPC communication layer for MCP server integration
+- [ ] Add OpenAI API Key input interface with secure storage
+- [ ] Replace mock AI responses with basic MCP-powered processing
+
+**Success Criteria**: MCP server runs independently, connects successfully, and basic AI responses work
+
+### Phase 6: Advanced AI Features & Status Management 🤖
+**Goal**: Implement comprehensive AI-powered status queries and updates
 - [ ] Status query functionality - Single and batch user queries
 - [ ] Status update commands - AI-driven status modifications
-- [ ] Enhanced natural language query processing
-- [ ] Improved batch query functionality
+- [ ] Enhanced natural language query processing with error handling
 - [ ] Advanced status update parsing and validation
-- [ ] Error handling and edge cases for AI responses
+- [ ] Batch operations support ("有誰正在會議中?" queries)
+- [ ] AI conversation context and memory management
 
-**Success Criteria**: Real AI service can understand and process status queries/updates in natural language
+**Success Criteria**: AI can accurately understand and process all status queries/updates in natural language
 
-### Phase 6: UI Enhancement & Testing 🔧
+### Phase 7: UI Enhancement & Testing 🔧
 **Goal**: Complete remaining UI features and ensure reliability
 - [ ] Manual synchronization controls integration
 - [ ] Status history and timeline views
