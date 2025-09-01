@@ -1004,8 +1004,7 @@
 		}
 	],
 	"authSession": {
-		"currentUserId": "user-001",
-		"isLoggedIn": true,
-		"loginTime": "2025-08-29T08:56:00.255Z"
+		"currentUserId": null,
+		"isLoggedIn": false
 	}
 }

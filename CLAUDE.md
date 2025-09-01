@@ -226,7 +226,6 @@ interface UserStatus {
   
   // Current effective status (calculated by priority)
   currentStatus: StatusType
-  statusDetail?: string
   lastUpdated: Date
   expiresAt: Date
   
@@ -239,7 +238,6 @@ interface TimeSlot {
   startTime: Date
   endTime: Date
   status: StatusType
-  statusDetail?: string
   source: 'attendance' | 'calendar' | 'ai_modified'
   priority: number // 3=AI modified, 2=attendance, 1=calendar
   createdAt: Date

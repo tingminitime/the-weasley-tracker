@@ -117,7 +117,6 @@ interface UserStatus {
 
   // 當前有效狀態（經過優先級計算後的結果）
   currentStatus: StatusType
-  statusDetail?: string
   lastUpdated: Date
   expiresAt: Date
 
@@ -130,7 +129,6 @@ interface TimeSlot {
   startTime: Date
   endTime: Date
   status: StatusType
-  statusDetail?: string
   source: 'attendance' | 'calendar' | 'ai_modified'
   priority: number // 3=AI修改, 2=出勤, 1=行事曆
   createdAt: Date
