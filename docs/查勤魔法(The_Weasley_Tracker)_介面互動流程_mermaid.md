@@ -8,8 +8,8 @@ flowchart TD
     RouteCheck --> |已登入| HomePage["首頁<br/>自動導向 /chat"]
     
     %% 登入頁面
-    LoginPage --> |使用者登入<br/>Mock Data| InitSync[初始化同步<br/>當日出勤 + 行事曆紀錄]
-    InitSync --> HomePage
+    LoginPage --> |使用者登入<br/>Mock Data| InitializeApp[初始化應用程式<br/>載入基本資料和狀態<br/>執行跨日檢查]
+    InitializeApp --> HomePage
     
     %% 首頁自動導向
     HomePage --> |自動導向| ChatPage["/chat AI 對話頁面"]
@@ -29,40 +29,43 @@ flowchart TD
     %% 查詢功能分支
     QueryType --> |狀態查詢| StatusQuery[查詢同仁狀態<br/>單人或多人批量查詢]
     QueryType --> |狀態更新| StatusUpdate[更新狀態要求<br/>調用 MCP Tools]
+    QueryType --> |其他對話| GeneralChat[一般對話回應]
 
     %% 狀態查詢處理
-    StatusQuery --> MCPQueryTools[MCP Tools 調用<br/>查詢方法]
-    MCPQueryTools --> Database[("輕量資料庫<br/>electron-store<br/>UserStatus Interface")]
+    StatusQuery --> QueryDatabase[查詢資料庫]
+    QueryDatabase --> Database[("輕量資料庫<br/>electron-store<br/>UserStatus Interface")]
     Database --> QueryResult[回傳查詢結果]
     QueryResult --> AIResponse[AI 回覆使用者]
 
     %% 狀態更新處理
-    StatusUpdate --> MCPTools[MCP Tools 調用]
-    MCPTools --> ConflictCheck{檢查時段衝突}
-    ConflictCheck --> |有衝突| OverwriteConfirm[後進先出原則<br/>覆蓋並詢問歷史保留]
-    ConflictCheck --> |無衝突| DirectUpdate[直接更新狀態]
+    StatusUpdate --> ValidateStatusUpdate{驗證狀態更新}
+    ValidateStatusUpdate --> |有效更新| DirectUpdate[直接更新當前狀態]
+    ValidateStatusUpdate --> |無效請求| InvalidResponse[回覆無效請求訊息]
 
-    OverwriteConfirm --> UpdateDatabase[更新主狀態表<br/>建立高優先級 TimeSlot]
-    DirectUpdate --> UpdateDatabase
+    DirectUpdate --> UpdateDatabase[更新用戶狀態<br/>記錄到 statusHistory]
     UpdateDatabase --> Database
     UpdateDatabase --> SuccessResponse[AI 確認更新成功]
+
+    %% 一般對話處理
+    GeneralChat --> AIResponse
 
     %% AI 回覆回到聊天頁面
     AIResponse --> ChatPage
     SuccessResponse --> ChatPage
+    InvalidResponse --> ChatPage
 
     %% /dashboard 頁面功能
-    DashboardPage --> StatusDisplay[同仁狀態顯示<br/>優先級排序]
-    DashboardPage --> ManualSyncBtn[手動同步按鈕]
+    DashboardPage --> StatusDisplay[同仁狀態顯示]
+    DashboardPage --> RefreshBtn[重新整理按鈕]
 
-    %% 手動同步功能 (僅在 dashboard 頁面)
-    ManualSyncBtn --> |觸發同步| SyncProcess[同步當日資料<br/>AttendanceRecord + CalendarEvent]
-    SyncProcess --> UpdateDisplay[更新狀態顯示]
+    %% 重新整理功能
+    RefreshBtn --> |觸發重新整理| RefreshProcess[執行跨日檢查<br/>執行時間邊界檢查<br/>重置為基本狀態]
+    RefreshProcess --> UpdateDisplay[更新狀態顯示]
     UpdateDisplay --> DashboardPage
 
     %% 使用者互動示例
     ChatPage --> |例如查詢| ExampleQuery["小王和小李現在在做什麼？"]
-    ChatPage --> |例如更新| ExampleUpdate["我有任務要外出，下午3點回來"]
+    ChatPage --> |例如更新| ExampleUpdate["我要外出，下午3點回來"]
 
     ExampleQuery --> AIChat
     ExampleUpdate --> AIChat
@@ -70,8 +73,8 @@ flowchart TD
     %% 資料流向 (兩個頁面都會讀取狀態)
     Database -.-> StatusDisplay
     Database -.-> AIResponse
-    StatusDisplay --> |顯示優先級| PriorityDisplay[AI修改 > 出勤 > 行事曆]
+    StatusDisplay --> |顯示當前狀態| CurrentStatusDisplay[顯示即時狀態]
 
     %% 頁面之間的資料同步
     UpdateDatabase -.-> |即時更新| StatusDisplay
-    SyncProcess -.-> |資料更新| Database
+    RefreshProcess -.-> |狀態重置| Database

@@ -15,10 +15,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Key Features
 - **6 Status Types**: `on_duty`, `off_duty`, `on_leave`, `wfh`, `out`, `meeting`
-- **Priority-Based Status Management**: AI modifications (highest) > attendance records > calendar events
-- **Automatic Status Expiration**: All statuses have expiration times with recovery mechanisms
+- **Simplified Status Management**: Time-based automatic status + persistent user-defined statuses
+- **Basic Time Boundary Logic**: Auto-switch between on_duty/off_duty based on 08:30-17:30 schedule
 - **Natural Language Interface**: AI understands and processes user requests via MCP Tools
 - **Real-Time Updates**: Immediate status changes through AI conversation
+- **Status History Tracking**: Complete record of all status changes with timestamps
 
 ## Development Phases
 
@@ -41,13 +42,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Success Criteria**: Users can log in/out and basic data operations work
 
 ### Phase 3: Core Business Logic 🧠
-**Goal**: Implement status management and business rules
-- [x] UserStatus and TimeSlot management system
-- [x] Priority-based status resolution (AI > attendance > calendar)
-- [x] Status expiration and automatic recovery mechanisms
-- [x] Data synchronization logic for attendance and calendar
+**Goal**: Implement simplified status management and business rules
+- [x] UserStatus and StatusHistory management system
+- [x] Time-based automatic status logic (08:30-17:30)
+- [x] Persistent user-defined status functionality
+- [x] Status refresh and history tracking
 
-**Success Criteria**: Status updates, conflicts, and expiration work correctly
+**Success Criteria**: Status updates, time boundaries, and history tracking work correctly
 
 ### Phase 4: Chat Interface & Mock AI 🎨
 **Goal**: Create chat interface with basic mock AI conversation system
@@ -182,39 +183,12 @@ interface MockUser {
   tag?: string
   customTags?: string[]
   workSchedule: {
-    startTime: string // Default "08:30"
-    endTime: string // Default "17:30"
+    startTime: string // Fixed at "08:30"
+    endTime: string // Fixed at "17:30"
   }
 }
 ```
 
-#### AttendanceRecord (Mock Data - Read-only)
-```typescript
-interface AttendanceRecord {
-  id: string
-  userId: string
-  checkIn?: Date     // Check-in time (both office and wfh)
-  checkOut?: Date    // Check-out time (both office and wfh)
-  workType: 'office' | 'wfh'
-  date: string       // YYYY-MM-DD
-  status: 'on_duty' | 'off_duty' | 'on_leave' | 'wfh'
-  startTime: Date    // Scheduled start time
-  endTime: Date      // Scheduled end time
-}
-```
-
-#### CalendarEvent (Mock Data - Read-only)
-```typescript
-interface CalendarEvent {
-  id: string
-  userId: string
-  title: string
-  startTime: Date
-  endTime: Date
-  status: 'scheduled' | 'ongoing' | 'completed' | 'canceled'
-  eventStatus: 'meeting'
-}
-```
 
 #### UserStatus (Main Status Table - Read/Write)
 ```typescript
@@ -224,51 +198,60 @@ interface UserStatus {
   userId: string
   name: string
   
-  // Current effective status (calculated by priority)
+  // Current status
   currentStatus: StatusType
+  statusDetail?: string // Optional status description
   lastUpdated: Date
-  expiresAt: Date
+  initializedDate: string // Initialization date (YYYY-MM-DD)
   
-  // All time slots (sorted by priority and time)
-  timeSlots: TimeSlot[]
+  // Daily status change history
+  statusHistory: StatusHistoryEntry[]
 }
 
-interface TimeSlot {
+interface StatusHistoryEntry {
   id: string
-  startTime: Date
-  endTime: Date
   status: StatusType
-  source: 'attendance' | 'calendar' | 'ai_modified'
-  priority: number // 3=AI modified, 2=attendance, 1=calendar
-  createdAt: Date
-  expiresAt: Date
+  statusDetail?: string // Optional status description
+  timestamp: Date // Change timestamp
+  source: 'system' | 'ai_modified' // system auto or AI modified
 }
 ```
 
 ## Business Logic
 
-### Status Priority System
-1. **AI Modified** (Priority 3) - Highest priority, user-requested changes
-2. **Attendance Records** (Priority 2) - Official attendance data
-3. **Calendar Events** (Priority 1) - Meeting and event data
+### Simplified Status Management
+1. **Basic Status Logic**: Automatic time-based status assignment
+   - Current time < 08:30: `off_duty`
+   - 08:30 ≤ Current time ≤ 17:30: `on_duty`
+   - Current time > 17:30: `off_duty`
 
-### Status Expiration Rules
-- **Work statuses** (`on_duty`, `wfh`, `out`, `meeting`): Expire at 17:30 (end of workday)
-- **Off-duty status**: Expires at 08:30 next working day
-- **Leave status**: Expires at end of leave period
-- **Meeting status**: Expires at meeting end time
+2. **User-Defined Status**: AI-modified statuses override basic logic
+   - Users can set any status via AI conversation
+   - Set statuses persist until manually changed or refreshed
+   - All 6 status types supported: `on_duty`, `off_duty`, `on_leave`, `wfh`, `out`, `meeting`
 
-### Status Recovery Logic
-1. **Time boundary check**: Non-working hours → `off_duty`
-2. **High priority check**: Use unexpired high-priority TimeSlots
-3. **Current activity check**: Check for active leave/meeting/out status
-4. **Attendance check**: Based on check-in/out status and work type
-5. **Default**: `on_duty` during work hours, `off_duty` otherwise
+3. **Status Refresh**: Return to basic time boundary logic
+   - Triggered by "Refresh" button or specific user requests
+   - Clears user-defined status and applies time logic
+   - Records change in status history
 
-### Data Synchronization Strategy
-1. **App startup**: Auto-sync current day attendance and calendar data
-2. **Manual sync**: User-triggered refresh of source data
-3. **AI updates**: Real-time status changes via MCP Tools with conflict resolution
+### Status History Tracking
+- **Complete Record**: All status changes are logged with timestamps
+- **Source Tracking**: Distinguishes between system auto-changes and AI modifications
+- **Simple Structure**: No complex priorities or expiration times
+
+### Data Strategy
+1. **App Startup**: Load user data and current statuses
+   - **Cross-Day Check**: Compare current date with `initializedDate`
+   - If dates don't match: Re-initialize mock data and clear `statusHistory`
+   - Update `initializedDate` to current date
+2. **Status Refresh**: Apply basic time boundary logic with cross-day check
+3. **AI Updates**: Direct status changes via MCP Tools
+
+### Cross-Day Handling
+- **Status History Reset**: `statusHistory` only records current day changes, auto-cleared on new day
+- **Mock Data Regeneration**: Fresh initialization on first startup of each day
+- **Date Synchronization**: Ensure system status stays aligned with actual date
 
 ## Success Criteria & Validation
 
