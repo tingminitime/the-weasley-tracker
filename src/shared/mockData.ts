@@ -1,9 +1,7 @@
 import type {
-  AttendanceRecord,
-  CalendarEvent,
   MockUser,
+  StatusHistoryEntry,
   StatusType,
-  TimeSlot,
   UserStatus,
 } from './types'
 import teammates from '../../data/teammates.json'
@@ -12,410 +10,38 @@ export function generateMockUsers(): MockUser[] {
   return teammates as MockUser[]
 }
 
-export function generateTodayAttendanceRecords(users: MockUser[]): AttendanceRecord[] {
-  const today = new Date()
-  const todayStr = today.toISOString().split('T')[0]
-  const records: AttendanceRecord[] = []
-
-  users.forEach((user, index) => {
-    const startTime = new Date(today)
-    const [startHour, startMinute] = user.workSchedule.startTime.split(':').map(Number)
-    startTime.setHours(startHour, startMinute, 0, 0)
-
-    const endTime = new Date(today)
-    const [endHour, endMinute] = user.workSchedule.endTime.split(':').map(Number)
-    endTime.setHours(endHour, endMinute, 0, 0)
-
-    // Simulate different scenarios - expanded to cover more status types
-    const scenario = index % 6
-    let record: AttendanceRecord
-
-    switch (scenario) {
-      case 0: { // Normal office work - checked in
-        record = {
-          id: `att-${user.id}-${todayStr}`,
-          userId: user.id,
-          checkIn: new Date(startTime.getTime() + Math.random() * 30 * 60000), // Within 30 minutes
-          workType: 'office',
-          date: todayStr,
-          status: 'on_duty',
-          startTime,
-          endTime,
-        }
-        break
-      }
-
-      case 1: { // WFH - checked in
-        record = {
-          id: `att-${user.id}-${todayStr}`,
-          userId: user.id,
-          checkIn: new Date(startTime.getTime() + Math.random() * 15 * 60000), // Within 15 minutes
-          workType: 'wfh',
-          date: todayStr,
-          status: 'wfh',
-          startTime,
-          endTime,
-        }
-        break
-      }
-
-      case 2: { // On leave
-        record = {
-          id: `att-${user.id}-${todayStr}`,
-          userId: user.id,
-          workType: 'office',
-          date: todayStr,
-          status: 'on_leave',
-          startTime,
-          endTime,
-        }
-        break
-      }
-
-      case 3: { // Off duty - not checked in yet
-        record = {
-          id: `att-${user.id}-${todayStr}`,
-          userId: user.id,
-          workType: 'office',
-          date: todayStr,
-          status: 'off_duty',
-          startTime,
-          endTime,
-        }
-        break
-      }
-
-      case 4: { // Normal office work for meeting status (will be overridden by AI)
-        record = {
-          id: `att-${user.id}-${todayStr}`,
-          userId: user.id,
-          checkIn: new Date(startTime.getTime() + Math.random() * 20 * 60000),
-          workType: 'office',
-          date: todayStr,
-          status: 'on_duty',
-          startTime,
-          endTime,
-        }
-        break
-      }
-
-      case 5: { // Normal office work for out status (will be overridden by AI)
-        record = {
-          id: `att-${user.id}-${todayStr}`,
-          userId: user.id,
-          checkIn: new Date(startTime.getTime() + Math.random() * 25 * 60000),
-          workType: 'office',
-          date: todayStr,
-          status: 'on_duty',
-          startTime,
-          endTime,
-        }
-        break
-      }
-
-      default: {
-        record = {
-          id: `att-${user.id}-${todayStr}`,
-          userId: user.id,
-          workType: 'office',
-          date: todayStr,
-          status: 'off_duty',
-          startTime,
-          endTime,
-        }
-        break
-      }
-    }
-
-    records.push(record)
-  })
-
-  return records
-}
-
-export function generateTodayCalendarEvents(users: MockUser[]): CalendarEvent[] {
-  const today = new Date()
-  const events: CalendarEvent[] = []
-  const meetingTitles = [
-    'Daily Standup',
-    'Sprint Planning',
-    'Client Review',
-    'Team Sync',
-    'Product Demo',
-    'Code Review',
-    'Architecture Discussion',
-    'Quarterly Planning',
-  ]
-
-  // Generate 2-3 meetings per user
-  users.forEach((user) => {
-    const numMeetings = Math.floor(Math.random() * 2) + 1 // 1-2 meetings
-
-    for (let i = 0; i < numMeetings; i++) {
-      const startHour = 9 + Math.floor(Math.random() * 8) // 9 AM to 5 PM
-      const startMinute = Math.floor(Math.random() * 4) * 15 // 0, 15, 30, or 45
-      const duration = [30, 60, 90][Math.floor(Math.random() * 3)] // 30, 60, or 90 minutes
-
-      const startTime = new Date(today)
-      startTime.setHours(startHour, startMinute, 0, 0)
-
-      const endTime = new Date(startTime.getTime() + duration * 60000)
-
-      const now = new Date()
-      let status: 'scheduled' | 'ongoing' | 'completed' | 'canceled'
-
-      if (endTime < now) {
-        status = 'completed'
-      }
-      else if (startTime <= now && now <= endTime) {
-        status = 'ongoing'
-      }
-      else {
-        status = 'scheduled'
-      }
-
-      events.push({
-        id: `event-${user.id}-${i}-${today.getTime()}`,
-        userId: user.id,
-        title: meetingTitles[Math.floor(Math.random() * meetingTitles.length)],
-        startTime,
-        endTime,
-        status,
-        eventStatus: 'meeting',
-      })
-    }
-  })
-
-  return events
-}
-
 export function generateInitialUserStatuses(users: MockUser[]): UserStatus[] {
   const now = new Date()
+  const today = now.toISOString().split('T')[0]
 
   return users.map((user, index) => {
-    const timeSlots = generateInitialTimeSlots(user, index, now)
-    const resolvedStatus = resolveStatusFromTimeSlots(timeSlots, user, now)
+    const { status: currentStatus, statusDetail } = determineBasicTimeStatus(user, now, index)
+
+    // Create initial status history entry
+    const initialHistoryEntry: StatusHistoryEntry = {
+      id: `init-${user.id}-${today}`,
+      status: currentStatus,
+      statusDetail,
+      timestamp: now,
+      source: statusDetail ? 'ai_modified' : 'system',
+    }
 
     return {
       userId: user.id,
       name: user.name,
-      currentStatus: resolvedStatus.status,
+      currentStatus,
+      statusDetail,
       lastUpdated: now,
-      expiresAt: resolvedStatus.expiresAt,
-      timeSlots,
+      initializedDate: today,
+      statusHistory: [initialHistoryEntry],
     }
   })
 }
 
-function generateInitialTimeSlots(user: MockUser, userIndex: number, currentTime: Date): TimeSlot[] {
-  const slots: TimeSlot[] = []
-  const today = currentTime.toISOString().split('T')[0]
-
-  // Create work schedule time slot from attendance
-  const workStart = new Date(currentTime)
-  const [startHour, startMinute] = user.workSchedule.startTime.split(':').map(Number)
-  workStart.setHours(startHour, startMinute, 0, 0)
-
-  const workEnd = new Date(currentTime)
-  const [endHour, endMinute] = user.workSchedule.endTime.split(':').map(Number)
-  workEnd.setHours(endHour, endMinute, 0, 0)
-
-  // Use same scenario logic as generateTodayAttendanceRecords to ensure consistency
-  const scenario = userIndex % 6
-  let attendanceStatus: StatusType
-  let hasCheckIn = false
-
-  switch (scenario) {
-    case 0: // Normal office work - checked in
-      attendanceStatus = 'on_duty'
-      hasCheckIn = true
-      break
-    case 1: // WFH - checked in
-      attendanceStatus = 'wfh'
-      hasCheckIn = true
-      break
-    case 2: // On leave
-      attendanceStatus = 'on_leave'
-      hasCheckIn = false
-      break
-    case 3: // Off duty - not checked in yet
-      attendanceStatus = 'off_duty'
-      hasCheckIn = false
-      break
-    case 4: // Normal office work for meeting status (will be overridden by AI)
-    case 5: // Normal office work for out status (will be overridden by AI)
-    default:
-      attendanceStatus = 'on_duty'
-      hasCheckIn = true
-      break
-  }
-
-  if (attendanceStatus !== 'on_leave' && attendanceStatus !== 'off_duty' && hasCheckIn && currentTime >= workStart) {
-    // Only add work slot if user has checked in and it's after work start
-    const checkInTime = new Date(workStart.getTime() + Math.random() * 30 * 60000) // Within 30 minutes
-
-    slots.push({
-      id: `att-${user.id}-${today}`,
-      startTime: checkInTime,
-      endTime: workEnd,
-      status: attendanceStatus,
-      source: 'attendance',
-      priority: 2,
-      createdAt: currentTime,
-      expiresAt: calculateExpirationTime(attendanceStatus, workEnd),
-    })
-  }
-  else if (attendanceStatus === 'on_leave') {
-    // Add leave time slot for the whole day
-    slots.push({
-      id: `leave-${user.id}-${today}`,
-      startTime: workStart,
-      endTime: workEnd,
-      status: 'on_leave',
-      source: 'attendance',
-      priority: 2,
-      createdAt: currentTime,
-      expiresAt: workEnd,
-    })
-  }
-  else if (attendanceStatus === 'off_duty') {
-    // Add off_duty time slot
-    slots.push({
-      id: `leave-${user.id}-${today}`,
-      startTime: workStart,
-      endTime: workEnd,
-      status: 'off_duty',
-      source: 'attendance',
-      priority: 2,
-      createdAt: currentTime,
-      expiresAt: calculateExpirationTime('off_duty', workEnd),
-    })
-  }
-
-  // Generate random meeting slots (priority 1)
-  const numMeetings = Math.floor(Math.random() * 3) // 0-2 meetings
-
-  for (let i = 0; i < numMeetings; i++) {
-    const meetingStart = new Date(workStart)
-    meetingStart.setHours(
-      workStart.getHours() + Math.floor(Math.random() * 8), // Random hour during work day
-      Math.floor(Math.random() * 4) * 15, // 0, 15, 30, or 45 minutes
-      0,
-      0,
-    )
-
-    const meetingDuration = [30, 60, 90][Math.floor(Math.random() * 3)] // 30, 60, or 90 minutes
-    const meetingEnd = new Date(meetingStart.getTime() + meetingDuration * 60000)
-
-    // Only add meeting if it's within work hours
-    if (meetingEnd <= workEnd) {
-      slots.push({
-        id: `meeting-${user.id}-${i}-${today}`,
-        startTime: meetingStart,
-        endTime: meetingEnd,
-        status: 'meeting',
-        source: 'calendar',
-        priority: 1,
-        createdAt: currentTime,
-        expiresAt: meetingEnd,
-      })
-    }
-  }
-
-  // Add AI-modified status for specific users to ensure all status types are covered
-  // Ensure specific users get specific AI-modified statuses
-  if (userIndex === 0) { // user-001 gets meeting status
-    const aiStart = new Date(currentTime.getTime() - Math.random() * 2 * 60 * 60000)
-    const aiEnd = new Date(aiStart.getTime() + (1 + Math.random() * 2) * 60 * 60000)
-
-    slots.push({
-      id: `ai-${user.id}-${Date.now()}`,
-      startTime: aiStart,
-      endTime: aiEnd,
-      status: 'meeting',
-      source: 'ai_modified',
-      priority: 3,
-      createdAt: currentTime,
-      expiresAt: calculateExpirationTime('meeting', aiEnd),
-    })
-  }
-  else if (userIndex === 5) { // user-006 gets out status
-    const aiStart = new Date(currentTime.getTime() - Math.random() * 1 * 60 * 60000)
-    const aiEnd = new Date(aiStart.getTime() + (2 + Math.random() * 2) * 60 * 60000)
-
-    slots.push({
-      id: `ai-${user.id}-${Date.now()}`,
-      startTime: aiStart,
-      endTime: aiEnd,
-      status: 'out',
-      source: 'ai_modified',
-      priority: 3,
-      createdAt: currentTime,
-      expiresAt: calculateExpirationTime('out', aiEnd),
-    })
-  }
-  else if (userIndex === 3) { // user-004 gets wfh AI override
-    const aiStart = new Date(currentTime.getTime() - Math.random() * 2 * 60 * 60000)
-    const aiEnd = new Date(aiStart.getTime() + (3 + Math.random() * 2) * 60 * 60000)
-
-    slots.push({
-      id: `ai-${user.id}-${Date.now()}`,
-      startTime: aiStart,
-      endTime: aiEnd,
-      status: 'wfh',
-      source: 'ai_modified',
-      priority: 3,
-      createdAt: currentTime,
-      expiresAt: calculateExpirationTime('wfh', aiEnd),
-    })
-  }
-  else if (Math.random() < 0.2) { // 20% chance for other users to get random AI status
-    const aiStatuses = ['out', 'meeting', 'wfh']
-    const aiStatus = aiStatuses[Math.floor(Math.random() * aiStatuses.length)] as StatusType
-
-    const aiStart = new Date(currentTime.getTime() - Math.random() * 2 * 60 * 60000)
-    const aiEnd = new Date(aiStart.getTime() + (1 + Math.random() * 3) * 60 * 60000)
-
-    slots.push({
-      id: `ai-${user.id}-${Date.now()}`,
-      startTime: aiStart,
-      endTime: aiEnd,
-      status: aiStatus,
-      source: 'ai_modified',
-      priority: 3,
-      createdAt: currentTime,
-      expiresAt: calculateExpirationTime(aiStatus, aiEnd),
-    })
-  }
-
-  return slots.sort((a, b) => {
-    // Sort by priority (highest first), then by start time
-    if (a.priority !== b.priority) {
-      return b.priority - a.priority
-    }
-    return a.startTime.getTime() - b.startTime.getTime()
-  })
-}
-
-function resolveStatusFromTimeSlots(timeSlots: TimeSlot[], user: MockUser, currentTime: Date): {
+function determineBasicTimeStatus(user: MockUser, currentTime: Date, userIndex: number): {
   status: StatusType
-  expiresAt: Date
+  statusDetail?: string
 } {
-  // Find active time slot (highest priority slot that's currently active)
-  const activeSlot = timeSlots.find(slot =>
-    currentTime >= slot.startTime
-    && currentTime <= slot.endTime
-    && slot.expiresAt > currentTime,
-  )
-
-  if (activeSlot) {
-    return {
-      status: activeSlot.status,
-      expiresAt: activeSlot.expiresAt,
-    }
-  }
-
-  // No active slot - determine based on work hours
   const workStart = new Date(currentTime)
   const [startHour, startMinute] = user.workSchedule.startTime.split(':').map(Number)
   workStart.setHours(startHour, startMinute, 0, 0)
@@ -424,71 +50,133 @@ function resolveStatusFromTimeSlots(timeSlots: TimeSlot[], user: MockUser, curre
   const [endHour, endMinute] = user.workSchedule.endTime.split(':').map(Number)
   workEnd.setHours(endHour, endMinute, 0, 0)
 
-  const isWorkingHours = currentTime >= workStart && currentTime <= workEnd
-  const isWorkingDay = currentTime.getDay() >= 1 && currentTime.getDay() <= 5
+  // Basic time boundary logic
+  const basicStatus = getBasicTimeStatus(currentTime, workStart, workEnd)
 
-  if (isWorkingDay && isWorkingHours) {
-    return {
-      status: 'on_duty',
-      expiresAt: workEnd,
-    }
+  // Add some example AI-modified statuses for demo purposes
+  const aiModifiedExamples = getAIModifiedExamples(userIndex, basicStatus)
+
+  return aiModifiedExamples || { status: basicStatus }
+}
+
+function getBasicTimeStatus(currentTime: Date, workStart: Date, workEnd: Date): StatusType {
+  if (currentTime < workStart) {
+    return 'off_duty' // Before work hours
+  }
+  else if (currentTime >= workStart && currentTime <= workEnd) {
+    return 'on_duty' // During work hours
   }
   else {
-    // Off duty - expires at next work day start
-    const nextWorkDay = new Date(currentTime)
-    nextWorkDay.setDate(nextWorkDay.getDate() + 1)
-    while (nextWorkDay.getDay() === 0 || nextWorkDay.getDay() === 6) {
-      nextWorkDay.setDate(nextWorkDay.getDate() + 1)
-    }
-    nextWorkDay.setHours(startHour, startMinute, 0, 0)
-
-    return {
-      status: 'off_duty',
-      expiresAt: nextWorkDay,
-    }
+    return 'off_duty' // After work hours
   }
 }
 
-function calculateExpirationTime(status: StatusType, endTime: Date): Date {
-  switch (status) {
-    case 'meeting':
-      return endTime // Meetings expire at their end time
-    case 'on_leave':
-      return endTime // Leave expires at specified end time
-    case 'off_duty': {
-      // Off duty expires at next work day start (simplified - using end time + 1 day)
-      const nextDay = new Date(endTime)
-      nextDay.setDate(nextDay.getDate() + 1)
-      nextDay.setHours(8, 30, 0, 0) // Default start time
-      return nextDay
-    }
-    case 'on_duty':
-    case 'wfh':
-    case 'out':
-    default: {
-      // Work statuses expire at end of work day
-      const workDayEnd = new Date(endTime)
-      workDayEnd.setHours(17, 30, 0, 0) // Default end time
-      return workDayEnd
-    }
+function getAIModifiedExamples(userIndex: number, _basicStatus: StatusType): { status: StatusType, statusDetail?: string } | null {
+  // Add some variety for demo - specific users get AI-modified statuses
+  switch (userIndex % 6) {
+    case 0: // First user - in meeting
+      return {
+        status: 'meeting',
+        statusDetail: '與客戶進行產品展示會議',
+      }
+    case 1: // Second user - working from home
+      return {
+        status: 'wfh',
+        statusDetail: '今日遠端工作',
+      }
+    case 2: // Third user - on leave
+      return {
+        status: 'on_leave',
+        statusDetail: '請假一日',
+      }
+    case 3: // Fourth user - out
+      return {
+        status: 'out',
+        statusDetail: '外出拜訪客戶，下午3點回來',
+      }
+    case 4: // Fifth user - AI set off_duty (early leave or sick)
+      return {
+        status: 'off_duty',
+        statusDetail: '身體不適，提早下班休息',
+      }
+    case 5: // Sixth user - AI set on_duty (overtime or special situation)
+      return {
+        status: 'on_duty',
+        statusDetail: '處理緊急事務，需要加班',
+      }
   }
+
+  return null
 }
 
 export function initializeMockData(): {
   users: MockUser[]
-  attendanceRecords: AttendanceRecord[]
-  calendarEvents: CalendarEvent[]
   userStatuses: UserStatus[]
 } {
   const users = generateMockUsers()
-  const attendanceRecords = generateTodayAttendanceRecords(users)
-  const calendarEvents = generateTodayCalendarEvents(users)
   const userStatuses = generateInitialUserStatuses(users)
 
   return {
     users,
-    attendanceRecords,
-    calendarEvents,
     userStatuses,
+  }
+}
+
+// Helper function to update user status with cross-day check
+export function updateUserStatusWithCrossDayCheck(
+  existingStatus: UserStatus,
+  user: MockUser,
+  currentTime: Date = new Date(),
+): UserStatus {
+  const today = currentTime.toISOString().split('T')[0]
+  const needsCrossDayReset = existingStatus.initializedDate !== today
+
+  if (needsCrossDayReset) {
+    // Cross-day reset: clear statusHistory and reinitialize
+    const { status: currentStatus, statusDetail } = determineBasicTimeStatus(user, currentTime, 0)
+
+    const resetHistoryEntry: StatusHistoryEntry = {
+      id: `reset-${user.id}-${today}`,
+      status: currentStatus,
+      statusDetail,
+      timestamp: currentTime,
+      source: 'system',
+    }
+
+    return {
+      ...existingStatus,
+      currentStatus,
+      statusDetail,
+      lastUpdated: currentTime,
+      initializedDate: today,
+      statusHistory: [resetHistoryEntry],
+    }
+  }
+
+  return existingStatus
+}
+
+// Helper function to add status change to history
+export function addStatusChangeToHistory(
+  userStatus: UserStatus,
+  newStatus: StatusType,
+  statusDetail: string | undefined,
+  source: 'system' | 'ai_modified',
+  timestamp: Date = new Date(),
+): UserStatus {
+  const historyEntry: StatusHistoryEntry = {
+    id: `${source}-${userStatus.userId}-${Date.now()}`,
+    status: newStatus,
+    statusDetail,
+    timestamp,
+    source,
+  }
+
+  return {
+    ...userStatus,
+    currentStatus: newStatus,
+    statusDetail,
+    lastUpdated: timestamp,
+    statusHistory: [...userStatus.statusHistory, historyEntry],
   }
 }

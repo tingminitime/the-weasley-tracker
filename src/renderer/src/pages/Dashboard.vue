@@ -165,8 +165,6 @@ async function refreshData() {
             <StatusDisplay
               :user="currentUserData.user"
               :status="currentUserData.status"
-              :attendance="currentUserData.attendance"
-              :calendar="currentUserData.calendar"
             />
           </div>
           <div
@@ -194,8 +192,6 @@ async function refreshData() {
               :key="userData.user.id"
               :user="userData.user"
               :status="userData.status"
-              :attendance="userData.attendance"
-              :calendar="userData.calendar"
             />
           </div>
         </div>

@@ -12,50 +12,26 @@ export interface MockUser {
   }
 }
 
-export interface AttendanceRecord {
+export interface StatusHistoryEntry {
   id: string
-  userId: string
-  checkIn?: Date // Check-in time (both office and wfh)
-  checkOut?: Date // Check-out time (both office and wfh)
-  workType: 'office' | 'wfh'
-  date: string // YYYY-MM-DD
-  status: 'on_duty' | 'off_duty' | 'on_leave' | 'wfh'
-  startTime: Date // Scheduled start time
-  endTime: Date // Scheduled end time
-}
-
-export interface CalendarEvent {
-  id: string
-  userId: string
-  title: string
-  startTime: Date
-  endTime: Date
-  status: 'scheduled' | 'ongoing' | 'completed' | 'canceled'
-  eventStatus: 'meeting'
-}
-
-export interface TimeSlot {
-  id: string
-  startTime: Date
-  endTime: Date
   status: StatusType
-  source: 'attendance' | 'calendar' | 'ai_modified'
-  priority: number // 3=AI modified, 2=attendance, 1=calendar
-  createdAt: Date
-  expiresAt: Date
+  statusDetail?: string // Status description
+  timestamp: Date // Change timestamp
+  source: 'system' | 'ai_modified' // Change source: system auto or AI modified
 }
 
 export interface UserStatus {
   userId: string
   name: string
 
-  // Current effective status (calculated by priority)
+  // Current status
   currentStatus: StatusType
+  statusDetail?: string // Optional status description
   lastUpdated: Date
-  expiresAt: Date
+  initializedDate: string // Initialization date (YYYY-MM-DD)
 
-  // All time slots (sorted by priority and time)
-  timeSlots: TimeSlot[]
+  // Daily status change history
+  statusHistory: StatusHistoryEntry[]
 }
 
 // Authentication types
@@ -101,8 +77,6 @@ export interface ChatSession {
 // Store data structure
 export interface AppData {
   users: MockUser[]
-  attendanceRecords: AttendanceRecord[]
-  calendarEvents: CalendarEvent[]
   userStatuses: UserStatus[]
   authSession: AuthSession
 }

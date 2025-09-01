@@ -1,12 +1,10 @@
-import type { AttendanceRecord, CalendarEvent, MockUser, UserStatus } from '@shared/types'
+import type { MockUser, UserStatus } from '@shared/types'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 export const useDataStore = defineStore('data', () => {
   const users = ref<MockUser[]>([])
   const userStatuses = ref<UserStatus[]>([])
-  const attendanceRecords = ref<AttendanceRecord[]>([])
-  const calendarEvents = ref<CalendarEvent[]>([])
   const isInitialized = ref(false)
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -15,28 +13,6 @@ export const useDataStore = defineStore('data', () => {
     const map = new Map<string, UserStatus>()
     userStatuses.value.forEach((status) => {
       map.set(status.userId, status)
-    })
-    return map
-  })
-
-  const attendanceByUser = computed(() => {
-    const map = new Map<string, AttendanceRecord[]>()
-    attendanceRecords.value.forEach((record) => {
-      if (!map.has(record.userId)) {
-        map.set(record.userId, [])
-      }
-      map.get(record.userId)!.push(record)
-    })
-    return map
-  })
-
-  const calendarByUser = computed(() => {
-    const map = new Map<string, CalendarEvent[]>()
-    calendarEvents.value.forEach((event) => {
-      if (!map.has(event.userId)) {
-        map.set(event.userId, [])
-      }
-      map.get(event.userId)!.push(event)
     })
     return map
   })
@@ -76,17 +52,13 @@ export const useDataStore = defineStore('data', () => {
 
   async function loadAllData() {
     try {
-      const [usersData, statusesData, attendanceData, calendarData] = await Promise.all([
+      const [usersData, statusesData] = await Promise.all([
         window.api.getUsers(),
         window.api.getUserStatuses(),
-        window.api.getAttendanceRecords(),
-        window.api.getCalendarEvents(),
       ])
 
       users.value = usersData
       userStatuses.value = statusesData
-      attendanceRecords.value = attendanceData
-      calendarEvents.value = calendarData
     }
     catch (err) {
       error.value = String(err)
@@ -141,25 +113,13 @@ export const useDataStore = defineStore('data', () => {
     return userStatusMap.value.get(userId)
   }
 
-  function getAttendanceByUserId(userId: string): AttendanceRecord[] {
-    return attendanceByUser.value.get(userId) || []
-  }
-
-  function getCalendarByUserId(userId: string): CalendarEvent[] {
-    return calendarByUser.value.get(userId) || []
-  }
-
   function getUsersWithStatus() {
     return users.value.map((user) => {
       const status = getUserStatusById(user.id)
-      const attendance = getAttendanceByUserId(user.id)
-      const calendar = getCalendarByUserId(user.id)
 
       return {
         user,
         status,
-        attendance,
-        calendar,
       }
     })
   }
@@ -173,8 +133,6 @@ export const useDataStore = defineStore('data', () => {
       if (result.success) {
         users.value = []
         userStatuses.value = []
-        attendanceRecords.value = []
-        calendarEvents.value = []
         isInitialized.value = false
         return { success: true }
       }
@@ -305,16 +263,12 @@ export const useDataStore = defineStore('data', () => {
     // State
     users,
     userStatuses,
-    attendanceRecords,
-    calendarEvents,
     isInitialized,
     loading,
     error,
 
     // Computed
     userStatusMap,
-    attendanceByUser,
-    calendarByUser,
 
     // Actions
     initialize,
@@ -331,8 +285,6 @@ export const useDataStore = defineStore('data', () => {
     // Getters
     getUserById,
     getUserStatusById,
-    getAttendanceByUserId,
-    getCalendarByUserId,
     getUsersWithStatus,
   }
 })

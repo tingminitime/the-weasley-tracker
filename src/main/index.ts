@@ -5,15 +5,9 @@ import { initializeMockData } from '@shared/mockData'
 import { app, BrowserWindow, ipcMain, screen, shell } from 'electron'
 import debug from 'electron-debug'
 import icon from '../../resources/icon.png?asset'
-import { DataSynchronizer } from './services/DataSynchronizer'
-import { StatusManager } from './services/StatusManager'
 import { dataStore } from './stores/DataStore'
 
 debug()
-
-// Initialize business logic services
-const statusManager = new StatusManager(dataStore)
-const dataSynchronizer = new DataSynchronizer(dataStore, statusManager)
 
 function shouldDisableGPU() {
   // 1. 明確的環境變數控制
@@ -132,28 +126,10 @@ app.whenReady().then(() => {
     return dataStore.updateUserStatus(status)
   })
 
-  ipcMain.handle('data:getAttendanceRecords', () => {
-    return dataStore.getAttendanceRecords()
-  })
-
-  ipcMain.handle('data:getAttendanceRecordsByUserId', (_, userId: string) => {
-    return dataStore.getAttendanceRecordsByUserId(userId)
-  })
-
-  ipcMain.handle('data:getCalendarEvents', () => {
-    return dataStore.getCalendarEvents()
-  })
-
-  ipcMain.handle('data:getCalendarEventsByUserId', (_, userId: string) => {
-    return dataStore.getCalendarEventsByUserId(userId)
-  })
-
   ipcMain.handle('data:initializeMockData', () => {
     try {
       const mockData = initializeMockData()
       dataStore.setUsers(mockData.users)
-      dataStore.setAttendanceRecords(mockData.attendanceRecords)
-      dataStore.setCalendarEvents(mockData.calendarEvents)
       dataStore.setUserStatuses(mockData.userStatuses)
       return { success: true }
     }
@@ -197,114 +173,84 @@ app.whenReady().then(() => {
     return dataStore.deleteUserCustomTag(userId, tag)
   })
 
-  // Status Management IPC handlers
-  ipcMain.handle('status:updateUserStatus', (_, request) => {
-    return statusManager.updateUserStatus(request)
+  // Simplified status refresh handler
+  ipcMain.handle('data:refreshUserStatuses', () => {
+    try {
+      // Simple refresh: apply basic time boundary logic to all users
+      const users = dataStore.getUsers()
+      const now = new Date()
+      const today = now.toISOString().split('T')[0]
+
+      const refreshedStatuses = users.map((user) => {
+        const existingStatus = dataStore.getUserStatusById(user.id)
+
+        if (existingStatus && existingStatus.initializedDate === today) {
+          // Same day - just update to basic time status
+          const basicStatus = getBasicTimeStatus(now, user)
+          return {
+            ...existingStatus,
+            currentStatus: basicStatus,
+            statusDetail: undefined,
+            lastUpdated: now,
+            statusHistory: [...existingStatus.statusHistory, {
+              id: `refresh-${user.id}-${now.getTime()}`,
+              status: basicStatus,
+              timestamp: now,
+              source: 'system' as const,
+            }],
+          }
+        }
+        else {
+          // Cross-day or new status - reinitialize
+          const basicStatus = getBasicTimeStatus(now, user)
+          return {
+            userId: user.id,
+            name: user.name,
+            currentStatus: basicStatus,
+            lastUpdated: now,
+            initializedDate: today,
+            statusHistory: [{
+              id: `init-${user.id}-${today}`,
+              status: basicStatus,
+              timestamp: now,
+              source: 'system' as const,
+            }],
+          }
+        }
+      })
+
+      dataStore.setUserStatuses(refreshedStatuses)
+      return { success: true }
+    }
+    catch (error) {
+      return { success: false, error: String(error) }
+    }
   })
 
-  ipcMain.handle('status:refreshUserStatus', (_, userId: string) => {
-    return statusManager.refreshUserStatus(userId)
-  })
+  // Helper function for basic time status
+  function getBasicTimeStatus(currentTime: Date, user: any): 'on_duty' | 'off_duty' {
+    const workStart = new Date(currentTime)
+    const [startHour, startMinute] = user.workSchedule.startTime.split(':').map(Number)
+    workStart.setHours(startHour, startMinute, 0, 0)
 
-  ipcMain.handle('status:refreshAllUserStatuses', () => {
-    return statusManager.refreshAllUserStatuses()
-  })
+    const workEnd = new Date(currentTime)
+    const [endHour, endMinute] = user.workSchedule.endTime.split(':').map(Number)
+    workEnd.setHours(endHour, endMinute, 0, 0)
 
-  ipcMain.handle('status:queryUserStatuses', (_, query) => {
-    return statusManager.queryUserStatuses(query)
-  })
+    if (currentTime < workStart || currentTime > workEnd) {
+      return 'off_duty'
+    }
+    else {
+      return 'on_duty'
+    }
+  }
 
-  ipcMain.handle('status:cleanupExpiredStatuses', () => {
-    return statusManager.cleanupExpiredStatuses()
-  })
-
-  ipcMain.handle('status:getStatusHistory', (_, userId: string, days?: number) => {
-    return statusManager.getStatusHistory(userId, days)
-  })
-
-  ipcMain.handle('status:removeTimeSlot', (_, userId: string, timeSlotId: string) => {
-    return statusManager.removeTimeSlot(userId, timeSlotId)
-  })
-
-  ipcMain.handle('status:getActiveUsers', () => {
-    return statusManager.getActiveUsers()
-  })
-
-  ipcMain.handle('status:getUsersInMeetings', () => {
-    return statusManager.getUsersInMeetings()
-  })
-
-  ipcMain.handle('status:getUsersOnLeave', () => {
-    return statusManager.getUsersOnLeave()
-  })
-
-  ipcMain.handle('status:getWorkingFromHomeUsers', () => {
-    return statusManager.getWorkingFromHomeUsers()
-  })
-
-  ipcMain.handle('status:scheduleStatusUpdate', (_, request) => {
-    return statusManager.scheduleStatusUpdate(request)
-  })
-
-  // Data Synchronization IPC handlers
-  ipcMain.handle('sync:syncAllData', (_, options) => {
-    return dataSynchronizer.syncAllData(options)
-  })
-
-  ipcMain.handle('sync:syncAttendanceData', (_, options) => {
-    return dataSynchronizer.syncAttendanceData(options)
-  })
-
-  ipcMain.handle('sync:syncCalendarData', (_, options) => {
-    return dataSynchronizer.syncCalendarData(options)
-  })
-
-  ipcMain.handle('sync:refreshUserStatuses', (_, options) => {
-    return dataSynchronizer.refreshUserStatuses(options)
-  })
-
-  ipcMain.handle('sync:getLastSyncInfo', () => {
-    return dataSynchronizer.getLastSyncInfo()
-  })
-
-  ipcMain.handle('sync:validateDataConsistency', () => {
-    return dataSynchronizer.validateDataConsistency()
-  })
-
-  // Enhanced DataStore IPC handlers
-  ipcMain.handle('dataStore:addTimeSlotToUser', (_, userId: string, timeSlot) => {
-    return dataStore.addTimeSlotToUser(userId, timeSlot)
-  })
-
-  ipcMain.handle('dataStore:removeTimeSlotFromUser', (_, userId: string, timeSlotId: string) => {
-    return dataStore.removeTimeSlotFromUser(userId, timeSlotId)
-  })
-
-  ipcMain.handle('dataStore:updateTimeSlotInUser', (_, userId: string, timeSlot) => {
-    return dataStore.updateTimeSlotInUser(userId, timeSlot)
-  })
-
-  ipcMain.handle('dataStore:getTimeSlotsByUserId', (_, userId: string) => {
-    return dataStore.getTimeSlotsByUserId(userId)
-  })
-
-  ipcMain.handle('dataStore:getTimeSlotsBySource', (_, source) => {
-    return dataStore.getTimeSlotsBySource(source)
-  })
-
-  ipcMain.handle('dataStore:bulkUpdateUserStatuses', (_, statuses) => {
-    return dataStore.bulkUpdateUserStatuses(statuses)
-  })
-
-  ipcMain.handle('dataStore:cleanupExpiredTimeSlots', () => {
-    return dataStore.cleanupExpiredTimeSlots()
-  })
-
-  ipcMain.handle('dataStore:batchGetUserData', (_, userIds: string[]) => {
+  // Simplified batch data handler
+  ipcMain.handle('data:batchGetUserData', (_, userIds: string[]) => {
     return dataStore.batchGetUserData(userIds)
   })
 
-  ipcMain.handle('dataStore:getUserStatusStats', () => {
+  ipcMain.handle('data:getUserStatusStats', () => {
     return dataStore.getUserStatusStats()
   })
 
