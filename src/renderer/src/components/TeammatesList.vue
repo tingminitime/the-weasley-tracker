@@ -68,7 +68,7 @@ onMounted(() => {
       <!-- 滾動容器 -->
       <div
         ref="scrollContainer"
-        class="relative max-h-80 overflow-y-auto"
+        class="relative max-h-96 overflow-y-auto"
         :class="{ 'scrollbar-hidden': !isScrolling }"
       >
         <div class="space-y-2 px-1">
@@ -76,8 +76,8 @@ onMounted(() => {
             v-for="{ user, statusConfig: userStatusConfig, isInactive, customTag } in teammates"
             :key="user.id"
             class="
-              flex cursor-pointer items-center space-x-2 rounded-lg px-3 py-2
-              transition duration-150
+              flex w-full cursor-pointer items-center space-x-2 rounded-lg px-3
+              py-2 transition duration-150
               hover:bg-gray-200
             "
             :class="{ 'opacity-50': isInactive }"
@@ -106,7 +106,7 @@ onMounted(() => {
             <span
               class="
                 inline-flex shrink-0 items-center rounded-full px-2 py-0.5
-                text-xs font-medium select-none
+                text-sm font-medium select-none
               "
               :class="userStatusConfig.class"
             >
@@ -122,11 +122,11 @@ onMounted(() => {
               v-if="customTag"
               class="
                 custom-tag inline-flex shrink-0 items-center bg-gray-200 py-0.5
-                pr-2 pl-3 text-xs font-medium text-gray-900 select-none
+                pr-2 pl-3 text-sm font-medium text-gray-900 select-none
               "
               :title="customTag"
             >
-              {{ customTag.length > 6 ? `${customTag.slice(0, 6)}...` : customTag }}
+              {{ customTag.length > 8 ? `${customTag.slice(0, 8)}...` : customTag }}
             </span>
           </button>
 

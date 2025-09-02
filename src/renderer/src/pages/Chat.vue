@@ -85,9 +85,6 @@ function goToDashboard() {
         </template>
       </AppHeader>
 
-      <!-- Teammates List -->
-      <!-- <TeammatesList class="fixed top-24 left-4 z-40" /> -->
-
       <!-- Chat Container -->
       <main class="flex flex-1 overflow-hidden">
         <!-- Teammates List -->
