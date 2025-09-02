@@ -35,6 +35,13 @@ export const useDataStore = defineStore('data', () => {
           throw new Error(result.error || 'Failed to initialize mock data')
         }
       }
+      else {
+        // Data exists, check for cross-day reset
+        const refreshResult = await window.api.refreshUserStatuses()
+        if (!refreshResult.success) {
+          console.warn('Failed to refresh user statuses:', refreshResult.error)
+        }
+      }
 
       // Load all data
       await loadAllData()

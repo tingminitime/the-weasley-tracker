@@ -1,3 +1,4 @@
+import type { StatusType, UserStatus } from '@shared/types'
 import fs from 'node:fs'
 import { join } from 'node:path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
@@ -131,6 +132,7 @@ app.whenReady().then(() => {
       const mockData = initializeMockData()
       dataStore.setUsers(mockData.users)
       dataStore.setUserStatuses(mockData.userStatuses)
+      dataStore.setInitializedDate(mockData.initializedDate)
       return { success: true }
     }
     catch (error) {
@@ -176,18 +178,29 @@ app.whenReady().then(() => {
   // Simplified status refresh handler
   ipcMain.handle('data:refreshUserStatuses', () => {
     try {
-      // Simple refresh: apply basic time boundary logic to all users
+      // Check for cross-day reset first
+      const needsCrossDayReset = dataStore.checkAndHandleCrossDayReset()
+
+      if (needsCrossDayReset) {
+        // Full regeneration needed
+        const mockData = initializeMockData()
+        dataStore.setUsers(mockData.users)
+        dataStore.setUserStatuses(mockData.userStatuses)
+        return { success: true }
+      }
+
+      // Same day - just refresh to basic time boundary logic
       const users = dataStore.getUsers()
       const now = new Date()
-      const today = now.toISOString().split('T')[0]
 
-      const refreshedStatuses = users.map((user) => {
+      const refreshedStatuses: UserStatus[] = []
+
+      users.forEach((user) => {
         const existingStatus = dataStore.getUserStatusById(user.id)
 
-        if (existingStatus && existingStatus.initializedDate === today) {
-          // Same day - just update to basic time status
+        if (existingStatus) {
           const basicStatus = getBasicTimeStatus(now, user)
-          return {
+          const refreshedStatus: UserStatus = {
             ...existingStatus,
             currentStatus: basicStatus,
             statusDetail: undefined,
@@ -199,23 +212,7 @@ app.whenReady().then(() => {
               source: 'system' as const,
             }],
           }
-        }
-        else {
-          // Cross-day or new status - reinitialize
-          const basicStatus = getBasicTimeStatus(now, user)
-          return {
-            userId: user.id,
-            name: user.name,
-            currentStatus: basicStatus,
-            lastUpdated: now,
-            initializedDate: today,
-            statusHistory: [{
-              id: `init-${user.id}-${today}`,
-              status: basicStatus,
-              timestamp: now,
-              source: 'system' as const,
-            }],
-          }
+          refreshedStatuses.push(refreshedStatus)
         }
       })
 
@@ -228,7 +225,7 @@ app.whenReady().then(() => {
   })
 
   // Helper function for basic time status
-  function getBasicTimeStatus(currentTime: Date, user: any): 'on_duty' | 'off_duty' {
+  function getBasicTimeStatus(currentTime: Date, user: any): StatusType {
     const workStart = new Date(currentTime)
     const [startHour, startMinute] = user.workSchedule.startTime.split(':').map(Number)
     workStart.setHours(startHour, startMinute, 0, 0)

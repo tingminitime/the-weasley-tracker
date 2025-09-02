@@ -202,7 +202,6 @@ interface UserStatus {
   currentStatus: StatusType
   statusDetail?: string // Optional status description
   lastUpdated: Date
-  initializedDate: string // Initialization date (YYYY-MM-DD)
   
   // Daily status change history
   statusHistory: StatusHistoryEntry[]
@@ -242,16 +241,18 @@ interface StatusHistoryEntry {
 
 ### Data Strategy
 1. **App Startup**: Load user data and current statuses
-   - **Cross-Day Check**: Compare current date with `initializedDate`
-   - If dates don't match: Re-initialize mock data and clear `statusHistory`
-   - Update `initializedDate` to current date
+   - **Cross-Day Check**: Compare current date with top-level `initializedDate` in AppData
+   - If dates don't match: Re-initialize all mock data and update `initializedDate`
+   - All users share the same initialization date for consistent daily resets
 2. **Status Refresh**: Apply basic time boundary logic with cross-day check
 3. **AI Updates**: Direct status changes via MCP Tools
 
 ### Cross-Day Handling
-- **Status History Reset**: `statusHistory` only records current day changes, auto-cleared on new day
-- **Mock Data Regeneration**: Fresh initialization on first startup of each day
-- **Date Synchronization**: Ensure system status stays aligned with actual date
+- **Single Date Management**: One `initializedDate` at top-level of data structure
+- **Unified Reset**: All users reset together when crossing day boundary
+- **Status History Reset**: All `statusHistory` arrays cleared on new day
+- **Mock Data Regeneration**: Complete regeneration when date mismatch detected
+- **Date Synchronization**: Single source of truth for initialization date
 
 ## Success Criteria & Validation
 

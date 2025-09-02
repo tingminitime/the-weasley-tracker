@@ -23,6 +23,7 @@ export class DataStore {
           currentUserId: null,
           isLoggedIn: false,
         },
+        initializedDate: new Date().toISOString().split('T')[0],
       },
     })
   }
@@ -311,6 +312,7 @@ export class DataStore {
         currentUserId: null,
         isLoggedIn: false,
       },
+      initializedDate: new Date().toISOString().split('T')[0],
     }
   }
 
@@ -359,6 +361,29 @@ export class DataStore {
     })
 
     return { totalUsers, statusCounts }
+  }
+
+  // Initialization date operations
+  getInitializedDate(): string {
+    return this.store.get('initializedDate', new Date().toISOString().split('T')[0])
+  }
+
+  setInitializedDate(date: string): void {
+    this.store.set('initializedDate', date)
+  }
+
+  // Check for cross-day reset and handle data regeneration
+  checkAndHandleCrossDayReset(): boolean {
+    const currentDate = new Date().toISOString().split('T')[0]
+    const storedDate = this.getInitializedDate()
+
+    if (currentDate !== storedDate) {
+      // Cross-day reset needed
+      this.setInitializedDate(currentDate)
+      return true
+    }
+
+    return false
   }
 
   // Get all data (for debugging)

@@ -39,6 +39,13 @@ declare global {
       addUserCustomTag: (userId: string, tag: string) => Promise<any>
       updateUserCustomTag: (userId: string, oldTag: string, newTag: string) => Promise<any>
       deleteUserCustomTag: (userId: string, tag: string) => Promise<any>
+
+      // Status Management APIs
+      refreshUserStatuses: () => Promise<any>
+
+      // Batch operation APIs
+      batchGetUserData: (userIds: string[]) => Promise<any>
+      getUserStatusStats: () => Promise<any>
     }
   }
 }

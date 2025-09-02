@@ -92,7 +92,6 @@ interface UserStatus {
   currentStatus: StatusType
   statusDetail?: string     // 狀態詳細描述
   lastUpdated: Date
-  initializedDate: string   // 初始化日期 (YYYY-MM-DD)
 
   // 當日狀態變更歷史記錄
   statusHistory: StatusHistoryEntry[]
@@ -138,14 +137,14 @@ interface StatusHistoryEntry {
 ### 簡化的資料策略
 1. **應用程式啟動**
 - 載入用戶基本資料和當前狀態
-- **跨日檢查**：比較當前日期與 `initializedDate`
-  - 如果日期不符，重新初始化 mock data 並清空 `statusHistory`
-  - 更新 `initializedDate` 為當前日期
+- **跨日檢查**：比較當前日期與頂層 `initializedDate`
+  - 如果日期不符，重新初始化所有 mock data 並更新 `initializedDate`
+  - 所有用戶共用同一個初始化日期，確保一致性的每日重置
 - 根據當前時間執行基本狀態檢查
 
 2. **狀態重新整理**
 - 使用者點擊「重新整理」按鈕觸發
-- 執行跨日檢查邏輯
+- 執行跨日檢查邏輯（若需要則完全重新生成資料）
 - 清除用戶自定義狀態，回歸基本時間邊界邏輯
 - 記錄狀態變更到歷史中
 
@@ -155,9 +154,11 @@ interface StatusHistoryEntry {
 - 新狀態直接覆蓋當前狀態，保持簡單明確的邏輯
 
 ### 跨日處理機制
-- **狀態歷史重置**：`statusHistory` 僅記錄當日的狀態變更，跨日時自動清空
-- **Mock Data 重新生成**：每日首次啟動時重新初始化用戶狀態
-- **日期同步**：確保系統狀態與實際日期保持一致
+- **單一日期管理**：頂層資料結構中的單一 `initializedDate` 
+- **統一重置**：所有用戶在跨日邊界時一起重置
+- **狀態歷史重置**：所有 `statusHistory` 陣列在新的一天清空
+- **Mock Data 重新生成**：偵測到日期不匹配時完全重新生成
+- **日期同步**：初始化日期的單一真相來源
 
 ### 狀態更新邏輯
 #### 簡化的更新原則

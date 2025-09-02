@@ -32,7 +32,6 @@ export function generateInitialUserStatuses(users: MockUser[]): UserStatus[] {
       currentStatus,
       statusDetail,
       lastUpdated: now,
-      initializedDate: today,
       statusHistory: [initialHistoryEntry],
     }
   })
@@ -112,48 +111,42 @@ function getAIModifiedExamples(userIndex: number, _basicStatus: StatusType): { s
 export function initializeMockData(): {
   users: MockUser[]
   userStatuses: UserStatus[]
+  initializedDate: string
 } {
   const users = generateMockUsers()
   const userStatuses = generateInitialUserStatuses(users)
+  const initializedDate = new Date().toISOString().split('T')[0]
 
   return {
     users,
     userStatuses,
+    initializedDate,
   }
 }
 
-// Helper function to update user status with cross-day check
-export function updateUserStatusWithCrossDayCheck(
+// Helper function for refreshing user status (time boundary logic)
+export function refreshUserStatusToTimeBasedLogic(
   existingStatus: UserStatus,
   user: MockUser,
   currentTime: Date = new Date(),
 ): UserStatus {
-  const today = currentTime.toISOString().split('T')[0]
-  const needsCrossDayReset = existingStatus.initializedDate !== today
+  const { status: currentStatus } = determineBasicTimeStatus(user, currentTime, 0)
 
-  if (needsCrossDayReset) {
-    // Cross-day reset: clear statusHistory and reinitialize
-    const { status: currentStatus, statusDetail } = determineBasicTimeStatus(user, currentTime, 0)
-
-    const resetHistoryEntry: StatusHistoryEntry = {
-      id: `reset-${user.id}-${today}`,
-      status: currentStatus,
-      statusDetail,
-      timestamp: currentTime,
-      source: 'system',
-    }
-
-    return {
-      ...existingStatus,
-      currentStatus,
-      statusDetail,
-      lastUpdated: currentTime,
-      initializedDate: today,
-      statusHistory: [resetHistoryEntry],
-    }
+  const refreshHistoryEntry: StatusHistoryEntry = {
+    id: `refresh-${user.id}-${Date.now()}`,
+    status: currentStatus,
+    statusDetail: undefined, // Clear any AI-set details on refresh
+    timestamp: currentTime,
+    source: 'system',
   }
 
-  return existingStatus
+  return {
+    ...existingStatus,
+    currentStatus,
+    statusDetail: undefined, // Clear status detail on refresh
+    lastUpdated: currentTime,
+    statusHistory: [...existingStatus.statusHistory, refreshHistoryEntry],
+  }
 }
 
 // Helper function to add status change to history

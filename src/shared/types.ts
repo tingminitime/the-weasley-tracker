@@ -28,7 +28,6 @@ export interface UserStatus {
   currentStatus: StatusType
   statusDetail?: string // Optional status description
   lastUpdated: Date
-  initializedDate: string // Initialization date (YYYY-MM-DD)
 
   // Daily status change history
   statusHistory: StatusHistoryEntry[]
@@ -79,4 +78,5 @@ export interface AppData {
   users: MockUser[]
   userStatuses: UserStatus[]
   authSession: AuthSession
+  initializedDate: string // Initialization date (YYYY-MM-DD)
 }
