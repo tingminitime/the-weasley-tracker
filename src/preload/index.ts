@@ -37,7 +37,8 @@ const api = {
   updateUserCustomTag: (userId: string, oldTag: string, newTag: string) => ipcRenderer.invoke('data:updateUserCustomTag', userId, oldTag, newTag),
   deleteUserCustomTag: (userId: string, tag: string) => ipcRenderer.invoke('data:deleteUserCustomTag', userId, tag),
 
-  // Simplified status refresh API
+  // Status management APIs
+  checkCrossDayReset: () => ipcRenderer.invoke('data:checkCrossDayReset'),
   refreshUserStatuses: () => ipcRenderer.invoke('data:refreshUserStatuses'),
 
   // Batch operations

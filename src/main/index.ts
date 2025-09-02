@@ -175,6 +175,17 @@ app.whenReady().then(() => {
     return dataStore.deleteUserCustomTag(userId, tag)
   })
 
+  // Cross-day reset check handler
+  ipcMain.handle('data:checkCrossDayReset', () => {
+    try {
+      const needsReset = dataStore.checkAndHandleCrossDayReset()
+      return { success: true, needsReset }
+    }
+    catch (error) {
+      return { success: false, error: String(error), needsReset: false }
+    }
+  })
+
   // Simplified status refresh handler
   ipcMain.handle('data:refreshUserStatuses', () => {
     try {

@@ -36,10 +36,14 @@ export const useDataStore = defineStore('data', () => {
         }
       }
       else {
-        // Data exists, check for cross-day reset
-        const refreshResult = await window.api.refreshUserStatuses()
-        if (!refreshResult.success) {
-          console.warn('Failed to refresh user statuses:', refreshResult.error)
+        // Data exists, only check for cross-day reset (don't refresh same-day statuses)
+        const crossDayResult = await window.api.checkCrossDayReset()
+        if (crossDayResult.needsReset) {
+          // Cross-day reset needed, regenerate mock data
+          const result = await window.api.initializeMockData()
+          if (!result.success) {
+            console.warn('Failed to regenerate mock data for cross-day reset:', result.error)
+          }
         }
       }
 

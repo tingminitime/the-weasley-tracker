@@ -41,6 +41,7 @@ declare global {
       deleteUserCustomTag: (userId: string, tag: string) => Promise<any>
 
       // Status Management APIs
+      checkCrossDayReset: () => Promise<any>
       refreshUserStatuses: () => Promise<any>
 
       // Batch operation APIs
