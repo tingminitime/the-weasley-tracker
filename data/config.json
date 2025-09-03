@@ -4,11 +4,14 @@
 			"id": "user-001",
 			"name": "阿信",
 			"department": "Software Engineer",
-			"tag": "",
+			"tag": "在機房",
 			"workSchedule": {
 				"startTime": "09:00",
 				"endTime": "18:00"
-			}
+			},
+			"customTags": [
+				"在機房"
+			]
 		},
 		{
 			"id": "user-002",
@@ -34,11 +37,14 @@
 			"id": "user-004",
 			"name": "Jen",
 			"department": "Product Manager",
-			"tag": "",
+			"tag": "找客戶討債",
 			"workSchedule": {
 				"startTime": "08:00",
 				"endTime": "17:00"
-			}
+			},
+			"customTags": [
+				"找客戶討債"
+			]
 		},
 		{
 			"id": "user-005",
@@ -64,11 +70,14 @@
 			"id": "user-007",
 			"name": "Frank",
 			"department": "Software Engineer",
-			"tag": "",
+			"tag": "我獨自開會",
 			"workSchedule": {
 				"startTime": "08:00",
 				"endTime": "17:00"
-			}
+			},
+			"customTags": [
+				"我獨自開會"
+			]
 		},
 		{
 			"id": "user-008",
@@ -144,26 +153,34 @@
 			"id": "user-015",
 			"name": "Tim",
 			"department": "Software Engineer",
-			"tag": "",
+			"tag": "Vibe coding",
 			"workSchedule": {
 				"startTime": "08:30",
 				"endTime": "17:30"
-			}
+			},
+			"customTags": [
+				"Vibe coding"
+			]
 		}
 	],
 	"userStatuses": [
 		{
 			"userId": "user-001",
 			"name": "阿信",
-			"currentStatus": "meeting",
-			"statusDetail": "與客戶進行產品展示會議",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"currentStatus": "on_duty",
+			"lastUpdated": "2025-09-03T03:42:29.939Z",
 			"statusHistory": [
 				{
-					"id": "init-user-001-2025-09-02",
+					"id": "init-user-001-2025-09-03",
 					"status": "meeting",
 					"statusDetail": "與客戶進行產品展示會議",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
+					"source": "ai_modified"
+				},
+				{
+					"id": "update-user-001-1756870949939",
+					"status": "on_duty",
+					"timestamp": "2025-09-03T03:42:29.939Z",
 					"source": "ai_modified"
 				}
 			]
@@ -173,13 +190,13 @@
 			"name": "Emily",
 			"currentStatus": "wfh",
 			"statusDetail": "今日遠端工作",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-002-2025-09-02",
+					"id": "init-user-002-2025-09-03",
 					"status": "wfh",
 					"statusDetail": "今日遠端工作",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -189,13 +206,13 @@
 			"name": "Evan",
 			"currentStatus": "on_leave",
 			"statusDetail": "請假一日",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-003-2025-09-02",
+					"id": "init-user-003-2025-09-03",
 					"status": "on_leave",
 					"statusDetail": "請假一日",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -205,13 +222,13 @@
 			"name": "Jen",
 			"currentStatus": "out",
 			"statusDetail": "外出拜訪客戶，下午3點回來",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-004-2025-09-02",
+					"id": "init-user-004-2025-09-03",
 					"status": "out",
 					"statusDetail": "外出拜訪客戶，下午3點回來",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -221,13 +238,13 @@
 			"name": "Kevin(小k)",
 			"currentStatus": "off_duty",
 			"statusDetail": "身體不適，提早下班休息",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-005-2025-09-02",
+					"id": "init-user-005-2025-09-03",
 					"status": "off_duty",
 					"statusDetail": "身體不適，提早下班休息",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -237,13 +254,13 @@
 			"name": "Kevin(伯穎)",
 			"currentStatus": "on_duty",
 			"statusDetail": "處理緊急事務，需要加班",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-006-2025-09-02",
+					"id": "init-user-006-2025-09-03",
 					"status": "on_duty",
 					"statusDetail": "處理緊急事務，需要加班",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -253,13 +270,13 @@
 			"name": "Frank",
 			"currentStatus": "meeting",
 			"statusDetail": "與客戶進行產品展示會議",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-007-2025-09-02",
+					"id": "init-user-007-2025-09-03",
 					"status": "meeting",
 					"statusDetail": "與客戶進行產品展示會議",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -269,13 +286,13 @@
 			"name": "姿穎",
 			"currentStatus": "wfh",
 			"statusDetail": "今日遠端工作",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-008-2025-09-02",
+					"id": "init-user-008-2025-09-03",
 					"status": "wfh",
 					"statusDetail": "今日遠端工作",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -285,13 +302,13 @@
 			"name": "照瑩",
 			"currentStatus": "on_leave",
 			"statusDetail": "請假一日",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-009-2025-09-02",
+					"id": "init-user-009-2025-09-03",
 					"status": "on_leave",
 					"statusDetail": "請假一日",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -301,13 +318,13 @@
 			"name": "志勇",
 			"currentStatus": "out",
 			"statusDetail": "外出拜訪客戶，下午3點回來",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-010-2025-09-02",
+					"id": "init-user-010-2025-09-03",
 					"status": "out",
 					"statusDetail": "外出拜訪客戶，下午3點回來",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -317,13 +334,13 @@
 			"name": "江江",
 			"currentStatus": "off_duty",
 			"statusDetail": "身體不適，提早下班休息",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-011-2025-09-02",
+					"id": "init-user-011-2025-09-03",
 					"status": "off_duty",
 					"statusDetail": "身體不適，提早下班休息",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -333,13 +350,13 @@
 			"name": "丞翔",
 			"currentStatus": "on_duty",
 			"statusDetail": "處理緊急事務，需要加班",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-012-2025-09-02",
+					"id": "init-user-012-2025-09-03",
 					"status": "on_duty",
 					"statusDetail": "處理緊急事務，需要加班",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -349,13 +366,13 @@
 			"name": "皓澤",
 			"currentStatus": "meeting",
 			"statusDetail": "與客戶進行產品展示會議",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-013-2025-09-02",
+					"id": "init-user-013-2025-09-03",
 					"status": "meeting",
 					"statusDetail": "與客戶進行產品展示會議",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -365,13 +382,13 @@
 			"name": "威爾哥",
 			"currentStatus": "wfh",
 			"statusDetail": "今日遠端工作",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-014-2025-09-02",
+					"id": "init-user-014-2025-09-03",
 					"status": "wfh",
 					"statusDetail": "今日遠端工作",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -381,13 +398,13 @@
 			"name": "Tim",
 			"currentStatus": "on_leave",
 			"statusDetail": "請假一日",
-			"lastUpdated": "2025-09-02T03:23:17.629Z",
+			"lastUpdated": "2025-09-03T03:29:57.592Z",
 			"statusHistory": [
 				{
-					"id": "init-user-015-2025-09-02",
+					"id": "init-user-015-2025-09-03",
 					"status": "on_leave",
 					"statusDetail": "請假一日",
-					"timestamp": "2025-09-02T03:23:17.629Z",
+					"timestamp": "2025-09-03T03:29:57.592Z",
 					"source": "ai_modified"
 				}
 			]
@@ -396,7 +413,7 @@
 	"authSession": {
 		"currentUserId": "user-015",
 		"isLoggedIn": true,
-		"loginTime": "2025-09-02T03:23:21.839Z"
+		"loginTime": "2025-09-03T05:26:06.943Z"
 	},
-	"initializedDate": "2025-09-02"
+	"initializedDate": "2025-09-03"
 }

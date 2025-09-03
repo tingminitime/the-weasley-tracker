@@ -4,7 +4,19 @@ import { useRouter } from 'vue-router'
 import AppHeader from '../components/AppHeader.vue'
 import ChatInput from '../components/ChatInput.vue'
 import ChatMessage from '../components/ChatMessage.vue'
+import McpStatus from '../components/McpStatus.vue'
 import TeammatesList from '../components/TeammatesList.vue'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../components/ui/alert-dialog'
 import { useAuthStore } from '../stores/auth'
 import { useChatStore } from '../stores/chat'
 import { useDataStore } from '../stores/data'
@@ -15,6 +27,7 @@ const dataStore = useDataStore()
 const chatStore = useChatStore()
 
 const messagesContainerRef = ref<HTMLElement>()
+const showClearDialog = ref(false)
 
 const messages = computed(() => chatStore.conversationHistory)
 const isLoading = computed(() => chatStore.isTyping)
@@ -50,6 +63,11 @@ function scrollToBottom() {
 function goToDashboard() {
   router.push('/dashboard')
 }
+
+async function handleClearChat() {
+  chatStore.clearCurrentUserChat()
+  showClearDialog.value = false
+}
 </script>
 
 <template>
@@ -57,31 +75,86 @@ function goToDashboard() {
     <div class="flex w-full flex-col">
       <AppHeader>
         <template #actions>
-          <button
-            class="
-              inline-flex items-center rounded-md border border-gray-300
-              bg-white px-3 py-2 text-sm font-medium text-gray-700
-              hover:bg-gray-50
-              focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-              focus:outline-none
-            "
-            @click="goToDashboard"
-          >
-            <svg
-              class="mr-2 h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div class="flex space-x-3">
+            <!-- Clear Chat Dialog -->
+            <AlertDialog
+              v-if="messages.length > 0"
+              v-model:open="showClearDialog"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              />
-            </svg>
-            狀態看板
-          </button>
+              <AlertDialogTrigger>
+                <button
+                  class="
+                    inline-flex items-center rounded-md border border-red-300
+                    bg-white px-3 py-2 text-sm font-medium text-red-600
+                    hover:border-red-400 hover:bg-red-50
+                    focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+                    focus:outline-none
+                  "
+                >
+                  <svg
+                    class="mr-2 h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                  清空對話
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>清空對話記錄</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    確定要清空當前對話記錄嗎？此操作無法復原。
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel @click="showClearDialog = false">
+                    取消
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    class="bg-red-600 hover:bg-red-700 focus:ring-red-500"
+                    @click="handleClearChat"
+                  >
+                    確定清空
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            <!-- Dashboard Button -->
+            <button
+              class="
+                inline-flex items-center rounded-md border border-gray-300
+                bg-white px-3 py-2 text-sm font-medium text-gray-700
+                hover:bg-gray-50
+                focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+                focus:outline-none
+              "
+              @click="goToDashboard"
+            >
+              <svg
+                class="mr-2 h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+              狀態看板
+            </button>
+          </div>
         </template>
       </AppHeader>
 
@@ -146,6 +219,10 @@ function goToDashboard() {
                   :loading="isLoading"
                   @send-message="handleSendMessage"
                 />
+                <!-- MCP Status -->
+                <div class="mt-2 flex justify-center">
+                  <McpStatus />
+                </div>
               </div>
             </div>
           </div>

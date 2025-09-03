@@ -63,23 +63,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Phase 5: MCP Server Foundation & Basic Integration 🏗️
 **Goal**: Set up MCP server infrastructure and establish basic AI communication
-- [ ] MCP SDK integration (@modelcontextprotocol/sdk)
-- [ ] Set up independent MCP server infrastructure (separate from `pnpm dev`)
-- [ ] Implement MCP server connection status display in frontend
-- [ ] Create IPC communication layer for MCP server integration
-- [ ] Add OpenAI API Key input interface with secure storage
-- [ ] Replace mock AI responses with basic MCP-powered processing
+- [x] MCP SDK integration (@modelcontextprotocol/sdk)
+- [x] Set up independent MCP server infrastructure (separate from `pnpm dev`)
+- [x] Implement MCP server connection status display in frontend
+- [x] Create IPC communication layer for MCP server integration
+- [x] Configure OpenAI API Key storage via `.env` file
+- [x] Replace mock AI responses with basic MCP-powered processing
 
 **Success Criteria**: MCP server runs independently, connects successfully, and basic AI responses work
 
 ### Phase 6: Advanced AI Features & Status Management 🤖
 **Goal**: Implement comprehensive AI-powered status queries and updates
-- [ ] Status query functionality - Single and batch user queries
-- [ ] Status update commands - AI-driven status modifications
-- [ ] Enhanced natural language query processing with error handling
-- [ ] Advanced status update parsing and validation
-- [ ] Batch operations support ("有誰正在會議中?" queries)
-- [ ] AI conversation context and memory management
+- [x] Status query functionality - Single and batch user queries
+- [x] Status update commands - AI-driven status modifications
+- [x] Enhanced natural language query processing with error handling
+- [x] Advanced status update parsing and validation
+- [x] Batch operations support ("有誰正在會議中?" queries)
+- [x] AI conversation context and memory management
 
 **Success Criteria**: AI can accurately understand and process all status queries/updates in natural language
 

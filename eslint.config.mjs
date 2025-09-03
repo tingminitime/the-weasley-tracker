@@ -5,6 +5,9 @@ export default antfu(
   {
     ignores: [
       '**/*.md',
+      '.claude/**',
+      '.serena/**',
+      'data/**',
     ],
   },
   {

@@ -18,6 +18,11 @@ export const useAuthStore = defineStore('auth', () => {
           currentUser.value = user
           isLoggedIn.value = true
           loginTime.value = session.loginTime ? new Date(session.loginTime) : null
+
+          // Initialize chat store for current user
+          const chatStore = await import('../stores/chat.js')
+          const chat = chatStore.useChatStore()
+          chat.initializeChat(user.id)
         }
       }
     }
@@ -35,6 +40,12 @@ export const useAuthStore = defineStore('auth', () => {
         currentUser.value = response.user
         isLoggedIn.value = true
         loginTime.value = new Date()
+
+        // Initialize chat store for new user
+        const chatStore = await import('../stores/chat.js')
+        const chat = chatStore.useChatStore()
+        chat.initializeChat(response.user.id)
+
         return { success: true }
       }
       else {
@@ -48,6 +59,14 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout() {
     try {
+      // Clear current user's chat data before logging out
+      if (currentUser.value) {
+        const chatStore = await import('../stores/chat.js')
+        const chat = chatStore.useChatStore()
+        // Note: We don't clear chat data on logout, just disconnect the user
+        chat.initializeChat(undefined) // Clear current user context
+      }
+
       const response = await window.api.logout()
       if (response.success) {
         currentUser.value = null
@@ -65,8 +84,17 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function switchUser(userId: string) {
+    // Store previous user for cleanup
+    const previousUserId = currentUser.value?.id
+
     await logout()
-    return await login(userId)
+    const loginResult = await login(userId)
+
+    if (loginResult.success && previousUserId !== userId) {
+      console.log(`Switched from user ${previousUserId} to user ${userId}`)
+    }
+
+    return loginResult
   }
 
   return {

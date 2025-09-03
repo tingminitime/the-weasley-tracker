@@ -6,7 +6,9 @@ import { initializeMockData } from '@shared/mockData'
 import { app, BrowserWindow, ipcMain, screen, shell } from 'electron'
 import debug from 'electron-debug'
 import icon from '../../resources/icon.png?asset'
+import { McpService } from './services/McpService'
 import { dataStore } from './stores/DataStore'
+import { Environment } from './utils/Environment'
 
 debug()
 
@@ -76,9 +78,27 @@ function createWindow(): void {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
+
+  // Initialize MCP Service
+  try {
+    const mcpService = McpService.getInstance()
+    const apiKey = Environment.getOpenAiApiKey()
+
+    await mcpService.initialize(apiKey)
+
+    if (apiKey) {
+      console.log('MCP Service initialized with OpenAI API key')
+    }
+    else {
+      console.log('MCP Service initialized without OpenAI API key (limited functionality)')
+    }
+  }
+  catch (error) {
+    console.error('Failed to initialize MCP Service:', error)
+  }
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -277,6 +297,14 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    // Clean up MCP Service
+    try {
+      const mcpService = McpService.getInstance()
+      mcpService.cleanup()
+    }
+    catch (error) {
+      console.error('Error during MCP Service cleanup:', error)
+    }
     app.quit()
   }
 })
