@@ -214,6 +214,16 @@ export const useChatStore = defineStore('chat', () => {
     }
   }
 
+  async function checkApiKeyStatus() {
+    try {
+      return await window.electron.ipcRenderer.invoke('settings:hasApiKey')
+    }
+    catch (error) {
+      console.error('Failed to check API key status:', error)
+      return false
+    }
+  }
+
   function clearCurrentUserChat() {
     if (!currentUserId.value)
       return
@@ -274,6 +284,7 @@ export const useChatStore = defineStore('chat', () => {
     clearCurrentUserChat,
     clearAllUserChats,
     getMcpConnectionStatus,
+    checkApiKeyStatus,
     initializeChat,
   }
 })

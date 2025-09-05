@@ -28,6 +28,7 @@ const chatStore = useChatStore()
 
 const messagesContainerRef = ref<HTMLElement>()
 const showClearDialog = ref(false)
+const hasApiKey = ref(true) // Assume true initially, check on mount
 
 const messages = computed(() => chatStore.conversationHistory)
 const isLoading = computed(() => chatStore.isTyping)
@@ -44,9 +45,17 @@ onMounted(async () => {
 
   // Initialize data store
   await dataStore.initialize()
+
+  // Check API Key status
+  hasApiKey.value = await chatStore.checkApiKeyStatus()
 })
 
 async function handleSendMessage(message: string) {
+  // Check API key before sending message
+  if (!hasApiKey.value) {
+    return
+  }
+
   await chatStore.sendUserMessage(message)
 
   // Scroll to bottom after message is added
@@ -180,9 +189,50 @@ async function handleClearChat() {
                   scrollbar-thumb-gray-300 flex-1 overflow-y-auto p-4
                 "
               >
+                <!-- API Key Warning -->
+                <div
+                  v-if="!hasApiKey"
+                  class="
+                    mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4
+                  "
+                >
+                  <div class="flex items-start gap-3">
+                    <span
+                      class="mt-0.5 i-fluent-warning-20-filled text-yellow-600"
+                    ></span>
+                    <div class="flex-1">
+                      <h3 class="text-sm font-medium text-yellow-800">
+                        需要設定 OpenAI API Key
+                      </h3>
+                      <div class="mt-2 text-sm text-yellow-700">
+                        <p>目前尚未設定 OpenAI API Key，AI 對話功能暫時無法使用。</p>
+                        <p class="mt-1">
+                          請前往設定頁面配置您的 API Key。
+                        </p>
+                      </div>
+                      <div class="mt-4">
+                        <button
+                          class="
+                            inline-flex items-center gap-2 rounded-md
+                            bg-yellow-600 px-3 py-2 text-sm font-medium
+                            text-white
+                            hover:bg-yellow-700
+                            focus:ring-2 focus:ring-yellow-500
+                            focus:ring-offset-2 focus:outline-none
+                          "
+                          @click="router.push('/settings')"
+                        >
+                          <span class="i-fluent-settings-20-regular"></span>
+                          前往設定
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- Welcome Message -->
                 <div
-                  v-if="messages.length === 0"
+                  v-if="messages.length === 0 && hasApiKey"
                   class="mb-4 flex justify-center"
                 >
                   <div class="max-w-md rounded-lg bg-blue-50 p-4 text-center">
@@ -216,9 +266,33 @@ async function handleClearChat() {
               <!-- Chat Input Area -->
               <div class="my-4 flex-shrink-0">
                 <ChatInput
+                  v-if="hasApiKey"
                   :loading="isLoading"
                   @send-message="handleSendMessage"
                 />
+                <div
+                  v-else
+                  class="
+                    rounded-lg border border-gray-200 bg-gray-50 p-4 text-center
+                  "
+                >
+                  <p class="mb-2 text-sm text-gray-500">
+                    請先設定 OpenAI API Key 以使用 AI 對話功能
+                  </p>
+                  <button
+                    class="
+                      inline-flex items-center gap-2 rounded-md bg-blue-600 px-3
+                      py-2 text-sm font-medium text-white
+                      hover:bg-blue-700
+                      focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                      focus:outline-none
+                    "
+                    @click="router.push('/settings')"
+                  >
+                    <span class="i-fluent-settings-20-regular"></span>
+                    前往設定
+                  </button>
+                </div>
                 <!-- MCP Status -->
                 <div class="mt-2 flex justify-center">
                   <McpStatus />

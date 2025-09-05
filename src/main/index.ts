@@ -85,7 +85,7 @@ app.whenReady().then(async () => {
   // Initialize MCP Service
   try {
     const mcpService = McpService.getInstance()
-    const apiKey = Environment.getOpenAiApiKey()
+    const apiKey = Environment.getOpenAiApiKey(dataStore)
 
     await mcpService.initialize(apiKey)
 
@@ -176,6 +176,59 @@ app.whenReady().then(async () => {
 
   ipcMain.handle('data:getUserTag', (_, userId: string) => {
     return dataStore.getUserTag(userId)
+  })
+
+  // Settings IPC handlers
+  ipcMain.handle('settings:hasApiKey', () => {
+    return dataStore.hasApiKey()
+  })
+
+  ipcMain.handle('settings:setApiKey', async (_, apiKey: string) => {
+    try {
+      dataStore.setApiKey(apiKey)
+
+      // Restart MCP service with new API key
+      const mcpService = McpService.getInstance()
+      await mcpService.initialize(apiKey)
+
+      return { success: true }
+    }
+    catch (error) {
+      console.error('Failed to set API key:', error)
+      throw error
+    }
+  })
+
+  ipcMain.handle('settings:clearApiKey', async () => {
+    try {
+      dataStore.clearApiKey()
+
+      // Restart MCP service without API key
+      const mcpService = McpService.getInstance()
+      await mcpService.initialize()
+
+      return { success: true }
+    }
+    catch (error) {
+      console.error('Failed to clear API key:', error)
+      throw error
+    }
+  })
+
+  ipcMain.handle('settings:testApiKey', async (_, apiKey: string) => {
+    try {
+      // Create a temporary OpenAI client to test the key
+      const { default: OpenAI } = await import('openai')
+      const testClient = new OpenAI({ apiKey })
+
+      // Make a simple request to validate the key
+      await testClient.models.list()
+      return true
+    }
+    catch (error) {
+      console.error('API key test failed:', error)
+      return false
+    }
   })
 
   // Custom Tags IPC handlers

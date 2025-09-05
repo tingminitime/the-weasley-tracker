@@ -20,6 +20,11 @@ export const routes = [
     component: () => import('@renderer/pages/Dashboard.vue'),
   },
   {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('@renderer/pages/Settings.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@renderer/pages/NotFound.vue'),

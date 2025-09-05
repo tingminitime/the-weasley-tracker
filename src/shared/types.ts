@@ -79,4 +79,5 @@ export interface AppData {
   userStatuses: UserStatus[]
   authSession: AuthSession
   initializedDate: string // Initialization date (YYYY-MM-DD)
+  apiKey?: string // Encrypted OpenAI API Key
 }

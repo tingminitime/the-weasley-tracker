@@ -492,8 +492,21 @@ onUnmounted(() => {
             </div>
           </div>
 
-          <!-- Logout button -->
+          <!-- Settings and Logout buttons -->
           <div class="border-t border-gray-100">
+            <button
+              :disabled="loading"
+              class="
+                group flex w-full cursor-pointer items-center px-4 py-2 text-sm
+                text-gray-700
+                hover:bg-gray-50 hover:text-gray-900
+                disabled:cursor-not-allowed disabled:opacity-50
+              "
+              @click="router.push('/settings'); closeDropdown()"
+            >
+              <span class="mr-3 i-fluent-settings-20-regular h-5 w-5"></span>
+              設定
+            </button>
             <button
               :disabled="loading"
               class="

@@ -7,6 +7,7 @@ import type {
   MockUser,
   UserStatus,
 } from '@shared/types'
+import { Buffer } from 'node:buffer'
 import path from 'node:path'
 import Store from 'electron-store'
 
@@ -389,6 +390,45 @@ export class DataStore {
   // Get all data (for debugging)
   getAllData(): AppData {
     return this.store.store
+  }
+
+  // API Key management methods
+  hasApiKey(): boolean {
+    const apiKey = this.store.get('apiKey', '')
+    return apiKey.length > 0
+  }
+
+  getApiKey(): string | null {
+    const apiKey = this.store.get('apiKey', '')
+    return apiKey || null
+  }
+
+  setApiKey(apiKey: string): void {
+    // Basic encryption - in production, consider using node:crypto for better encryption
+    const encrypted = Buffer.from(apiKey).toString('base64')
+    this.store.set('apiKey', encrypted)
+  }
+
+  clearApiKey(): void {
+    this.store.delete('apiKey')
+  }
+
+  private decryptApiKey(encrypted: string): string {
+    try {
+      return Buffer.from(encrypted, 'base64').toString('utf8')
+    }
+    catch {
+      return ''
+    }
+  }
+
+  getDecryptedApiKey(): string | null {
+    const encrypted = this.store.get('apiKey', '')
+    if (!encrypted)
+      return null
+
+    const decrypted = this.decryptApiKey(encrypted)
+    return decrypted || null
   }
 }
 

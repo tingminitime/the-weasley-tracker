@@ -16,7 +16,16 @@ export class Environment {
     console.log('Environment variables loaded')
   }
 
-  static getOpenAiApiKey(): string | undefined {
+  static getOpenAiApiKey(dataStore?: import('../stores/DataStore').DataStore): string | undefined {
+    // Priority 1: Check stored API Key (production mode)
+    if (dataStore) {
+      const storedApiKey = dataStore.getDecryptedApiKey()
+      if (storedApiKey) {
+        return storedApiKey
+      }
+    }
+
+    // Priority 2: Check .env file (development mode)
     this.load()
     return process.env.OPENAI_API_KEY
   }
