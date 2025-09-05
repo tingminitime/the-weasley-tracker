@@ -1,7 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { z } from 'zod'
 import {
-  bulkStatusUpdateTool, // Phase 6 Batch Tools
   handleBulkStatusUpdate, // Phase 6 Batch Tools
   handleGetAllUserStatuses, // Phase 5 Handlers
   handleGetUsersInStatus, // Phase 5 Handlers
@@ -11,8 +10,6 @@ import {
   handleRefreshAllStatuses, // Phase 5 Handlers
   handleRefreshUserStatus, // Phase 5 Handlers
   handleUpdateUserStatus, // Phase 5 Handlers
-  queryUsersByDepartmentTool, // Phase 6 Batch Tools
-  queryUsersByMultipleStatusesTool, // Phase 6 Batch Tools
 } from './tools/index.js'
 
 export class WeasleyTrackerMcpServer {

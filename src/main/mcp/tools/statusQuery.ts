@@ -1,9 +1,6 @@
 import type { Tool } from '@modelcontextprotocol/sdk/types.js'
 import type { StatusType } from '../../../shared/types.js'
-import { z } from 'zod'
 import { dataStore } from '../../stores/DataStore.js'
-
-const StatusTypeSchema = z.enum(['on_duty', 'off_duty', 'on_leave', 'wfh', 'out', 'meeting'])
 
 export const getUserStatusTool: Tool = {
   name: 'getUserStatus',
@@ -211,12 +208,3 @@ export async function handleQueryUsersByMultipleStatuses(args: { statuses: Statu
     }],
   }
 }
-
-// Phase 6 Tool Definitions
-export const queryUsersByDepartmentTool = z.object({
-  department: z.string().describe('Department name to filter users by'),
-})
-
-export const queryUsersByMultipleStatusesTool = z.object({
-  statuses: z.array(StatusTypeSchema).describe('Array of status types to filter by'),
-})

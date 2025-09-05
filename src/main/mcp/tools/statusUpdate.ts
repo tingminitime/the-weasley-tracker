@@ -1,6 +1,5 @@
 import type { Tool } from '@modelcontextprotocol/sdk/types.js'
 import type { MockUser, StatusType } from '../../../shared/types.js'
-import { z } from 'zod'
 import { dataStore } from '../../stores/DataStore.js'
 
 // Helper function for basic time status
@@ -364,10 +363,3 @@ export async function handleBulkStatusUpdate(args: { userIds: string[], status: 
     }],
   }
 }
-
-// Phase 6 Tool Definition
-export const bulkStatusUpdateTool = z.object({
-  userIds: z.array(z.string()).describe('Array of user IDs or names to update'),
-  status: z.enum(['on_duty', 'off_duty', 'on_leave', 'wfh', 'out', 'meeting']).describe('New status to set for all users'),
-  statusDetail: z.string().optional().describe('Optional description for all updates'),
-})
