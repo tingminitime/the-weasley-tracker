@@ -37,11 +37,15 @@
 			"id": "user-004",
 			"name": "Jen",
 			"department": "Product Manager",
-			"tag": "",
+			"tag": "找客戶討債",
 			"workSchedule": {
 				"startTime": "08:00",
 				"endTime": "17:00"
-			}
+			},
+			"customTags": [
+				"找客戶討債",
+				"和客戶喝咖啡"
+			]
 		},
 		{
 			"id": "user-005",
@@ -402,7 +406,7 @@
 	"authSession": {
 		"currentUserId": "user-015",
 		"isLoggedIn": true,
-		"loginTime": "2025-09-05T02:15:50.247Z"
+		"loginTime": "2025-09-05T04:10:56.518Z"
 	},
 	"initializedDate": "2025-09-05"
 }

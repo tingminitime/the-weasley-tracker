@@ -64,12 +64,14 @@ export async function handleGetUserStatus(args: { userId: string }) {
   }
 
   const user = dataStore.getUsers().find(u => u.id === userStatus.userId)
+  const userTag = dataStore.getUserTag(userStatus.userId)
+  const tagDisplay = userTag ? ` [TEMP_STATUS:${userTag}]` : ''
   const statusDetail = userStatus.statusDetail ? ` - ${userStatus.statusDetail}` : ''
 
   return {
     content: [{
       type: 'text' as const,
-      text: `${user?.name || userStatus.name} is currently ${userStatus.currentStatus.replace('_', ' ')}${statusDetail}. Last updated: ${userStatus.lastUpdated.toLocaleString()}`,
+      text: `${user?.name || userStatus.name}${tagDisplay} is currently ${userStatus.currentStatus.replace('_', ' ')}${statusDetail}. Last updated: ${userStatus.lastUpdated.toLocaleString()}`,
     }],
   }
 }
@@ -90,8 +92,10 @@ export async function handleGetUsersInStatus(args: { status: StatusType }) {
   }
 
   const userList = usersWithStatus.map((u) => {
+    const userTag = dataStore.getUserTag(u.userId)
+    const tagDisplay = userTag ? ` [TEMP_STATUS:${userTag}]` : ''
     const detail = u.statusDetail ? ` (${u.statusDetail})` : ''
-    return `• ${u.name}${detail}`
+    return `• ${u.name}${tagDisplay}${detail}`
   }).join('\n')
 
   return {
@@ -115,8 +119,10 @@ export async function handleGetAllUserStatuses() {
   }
 
   const statusList = userStatuses.map((u) => {
+    const userTag = dataStore.getUserTag(u.userId)
+    const tagDisplay = userTag ? ` [TEMP_STATUS:${userTag}]` : ''
     const detail = u.statusDetail ? ` - ${u.statusDetail}` : ''
-    return `• ${u.name}: ${u.currentStatus.replace('_', ' ')}${detail}`
+    return `• ${u.name}${tagDisplay}: ${u.currentStatus.replace('_', ' ')}${detail}`
   }).join('\n')
 
   return {
@@ -150,6 +156,8 @@ export async function handleQueryUsersByDepartment(args: { department: string })
   // Get status for each department user
   const departmentStatuses = departmentUsers.map((user) => {
     const userStatus = userStatuses.find(status => status.userId === user.id)
+    const userTag = dataStore.getUserTag(user.id)
+    const tagDisplay = userTag ? ` [TEMP_STATUS:${userTag}]` : ''
     return {
       userId: user.id,
       name: user.name,
@@ -157,6 +165,7 @@ export async function handleQueryUsersByDepartment(args: { department: string })
       currentStatus: userStatus?.currentStatus || 'unknown',
       statusDetail: userStatus?.statusDetail,
       lastUpdated: userStatus?.lastUpdated,
+      tagDisplay,
     }
   })
 
@@ -164,7 +173,7 @@ export async function handleQueryUsersByDepartment(args: { department: string })
     content: [{
       type: 'text' as const,
       text: `查詢到 ${department} 部門共 ${departmentUsers.length} 位員工:\n${departmentStatuses.map(user =>
-        `${user.name} (${user.userId}): ${user.currentStatus}${user.statusDetail ? ` - ${user.statusDetail}` : ''}`,
+        `${user.name}${user.tagDisplay} (${user.userId}): ${user.currentStatus}${user.statusDetail ? ` - ${user.statusDetail}` : ''}`,
       ).join('\n')}`,
     }],
   }
@@ -197,9 +206,11 @@ export async function handleQueryUsersByMultipleStatuses(args: { statuses: Statu
     }
   }
 
-  const userList = matchingUsers.map(status =>
-    `${status.name} (${status.userId}): ${status.currentStatus}${status.statusDetail ? ` - ${status.statusDetail}` : ''}`,
-  ).join('\n')
+  const userList = matchingUsers.map((status) => {
+    const userTag = dataStore.getUserTag(status.userId)
+    const tagDisplay = userTag ? ` [TEMP_STATUS:${userTag}]` : ''
+    return `${status.name}${tagDisplay} (${status.userId}): ${status.currentStatus}${status.statusDetail ? ` - ${status.statusDetail}` : ''}`
+  }).join('\n')
 
   return {
     content: [{

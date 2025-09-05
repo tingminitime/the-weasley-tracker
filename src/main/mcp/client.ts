@@ -88,6 +88,13 @@ STATUS TYPES (6 supported):
 - out (外出): Temporarily out of office
 - meeting (會議中): In a meeting
 
+TEMPORARY STATUS TAGS (臨時狀態標籤):
+- Tool responses may include [TEMP_STATUS:xxx] markers containing user-defined temporary status
+- These represent current specific activities, locations, or contextual information
+- Use this background information to provide natural, contextual responses
+- Incorporate the temporary status details naturally into your language without repeating the format
+- This information helps you understand the user's current situation better
+
 AVAILABLE TOOLS:
 1. getUserStatus - Get status of specific user by ID/name
 2. getUsersInStatus - Get all users with specific status
@@ -154,7 +161,7 @@ You must use the provided tools to gather information and make updates. Always c
         tools,
         tool_choice: 'auto',
         max_tokens: 1000,
-        temperature: 0.3,
+        temperature: 0.6,
       })
 
       const message = response.choices[0]?.message
@@ -196,7 +203,7 @@ You must use the provided tools to gather information and make updates. Always c
           model: 'gpt-4o-mini',
           messages,
           max_tokens: 800,
-          temperature: 0.3,
+          temperature: 0.6,
         })
 
         return followUpResponse.choices[0]?.message?.content || 'Unable to process tool results'

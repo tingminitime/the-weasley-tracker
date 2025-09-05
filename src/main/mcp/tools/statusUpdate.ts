@@ -112,13 +112,15 @@ export async function handleUpdateUserStatus(args: { userId: string, status: Sta
 
   const user = dataStore.getUsers().find(u => u.id === userStatus.userId)
   const userName = user?.name || userStatus.name
+  const userTag = dataStore.getUserTag(userStatus.userId)
+  const tagDisplay = userTag ? ` [TEMP_STATUS:${userTag}]` : ''
   const newDetail = statusDetail ? ` - ${statusDetail}` : ''
   const oldDetail = previousDetail ? ` - ${previousDetail}` : ''
 
   return {
     content: [{
       type: 'text' as const,
-      text: `Updated ${userName}'s status from ${previousStatus.replace('_', ' ')}${oldDetail} to ${status.replace('_', ' ')}${newDetail}.`,
+      text: `Updated ${userName}${tagDisplay}'s status from ${previousStatus.replace('_', ' ')}${oldDetail} to ${status.replace('_', ' ')}${newDetail}.`,
     }],
   }
 }
@@ -166,12 +168,14 @@ export async function handleRefreshUserStatus(args: { userId: string }) {
 
   dataStore.updateUserStatus(updatedStatus)
   const userName = user?.name || userStatus.name
+  const userTag = dataStore.getUserTag(userStatus.userId)
+  const tagDisplay = userTag ? ` [TEMP_STATUS:${userTag}]` : ''
 
   if (previousStatus === updatedStatus.currentStatus) {
     return {
       content: [{
         type: 'text' as const,
-        text: `${userName}'s status remains ${updatedStatus.currentStatus.replace('_', ' ')} after applying time-based logic.`,
+        text: `${userName}${tagDisplay}'s status remains ${updatedStatus.currentStatus.replace('_', ' ')} after applying time-based logic.`,
       }],
     }
   }
@@ -182,7 +186,7 @@ export async function handleRefreshUserStatus(args: { userId: string }) {
   return {
     content: [{
       type: 'text' as const,
-      text: `Refreshed ${userName}'s status from ${previousStatus.replace('_', ' ')}${oldDetail} to ${updatedStatus.currentStatus.replace('_', ' ')}${newDetail} based on current time.`,
+      text: `Refreshed ${userName}${tagDisplay}'s status from ${previousStatus.replace('_', ' ')}${oldDetail} to ${updatedStatus.currentStatus.replace('_', ' ')}${newDetail} based on current time.`,
     }],
   }
 }
@@ -235,9 +239,11 @@ export async function handleRefreshAllStatuses() {
   previousStatuses.forEach((prev) => {
     const updated = updatedStatuses.find(u => u.userId === prev.userId)
     if (updated && prev.status !== updated.currentStatus) {
+      const userTag = dataStore.getUserTag(prev.userId)
+      const tagDisplay = userTag ? ` [TEMP_STATUS:${userTag}]` : ''
       const oldDetail = prev.detail ? ` - ${prev.detail}` : ''
       const newDetail = updated.statusDetail ? ` - ${updated.statusDetail}` : ''
-      changes.push(`• ${prev.name}: ${prev.status.replace('_', ' ')}${oldDetail} → ${updated.currentStatus.replace('_', ' ')}${newDetail}`)
+      changes.push(`• ${prev.name}${tagDisplay}: ${prev.status.replace('_', ' ')}${oldDetail} → ${updated.currentStatus.replace('_', ' ')}${newDetail}`)
     }
   })
 
@@ -320,13 +326,15 @@ export async function handleBulkStatusUpdate(args: { userIds: string[], status: 
       const success = result.success
 
       if (success) {
+        const userTag = dataStore.getUserTag(user.id)
+        const tagDisplay = userTag ? ` [TEMP_STATUS:${userTag}]` : ''
         results.push({
           userId: user.id,
           name: user.name,
           success: true,
-          message: `成功更新 ${user.name} 的狀態為 ${status}${statusDetail ? ` (${statusDetail})` : ''}`,
+          message: `成功更新 ${user.name}${tagDisplay} 的狀態為 ${status}${statusDetail ? ` (${statusDetail})` : ''}`,
         })
-        updatedUsers.push(user.name)
+        updatedUsers.push(`${user.name}${tagDisplay}`)
       }
       else {
         results.push({
