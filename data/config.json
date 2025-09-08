@@ -155,15 +155,20 @@
 		{
 			"userId": "user-001",
 			"name": "阿信",
-			"currentStatus": "meeting",
-			"statusDetail": "與客戶進行產品展示會議",
-			"lastUpdated": "2025-09-08T08:14:34.249Z",
+			"currentStatus": "on_duty",
+			"lastUpdated": "2025-09-08T08:50:35.059Z",
 			"statusHistory": [
 				{
 					"id": "init-user-001-2025-09-08",
 					"status": "meeting",
 					"statusDetail": "與客戶進行產品展示會議",
 					"timestamp": "2025-09-08T08:14:34.249Z",
+					"source": "ai_modified"
+				},
+				{
+					"id": "update-user-001-1757321435059",
+					"status": "on_duty",
+					"timestamp": "2025-09-08T08:50:35.059Z",
 					"source": "ai_modified"
 				}
 			]
@@ -394,8 +399,10 @@
 		}
 	],
 	"authSession": {
-		"currentUserId": null,
-		"isLoggedIn": false
+		"currentUserId": "user-015",
+		"isLoggedIn": true,
+		"loginTime": "2025-09-08T08:31:00.044Z"
 	},
-	"initializedDate": "2025-09-08"
+	"initializedDate": "2025-09-08",
+	"apiKey": "c2stcHJvai1pbnZWMG1ldGxqM2xFbnBwdUkwSldDYl8zUkNiTnNwZEVfZ2laUmszZ3FJc19kRmNvbHY4aE96MHVMb0VnSGJzeElKdHVaTVpZclQzQmxia0ZKTEpfem9yMWVhRm52akZVT21ja1h2Ti1oSE95SkxuRmdJZUJNNnowel9zajk4WWl4YkhzNFlubUFfc1J5UElnWmVqTWFERzRRY0E="
 }

@@ -57,6 +57,10 @@ const throttledUpdateScrollState = useThrottleFn(() => {
 
 useEventListener(scrollContainer, 'scroll', throttledUpdateScrollState)
 
+function handleRefresh() {
+  dataStore.refreshData()
+}
+
 onMounted(() => {
   nextTick(updateScrollState)
 })
@@ -64,6 +68,30 @@ onMounted(() => {
 
 <template>
   <div class="w-80 flex-shrink-0">
+    <!-- 重新整理按鈕 -->
+    <div class="mb-3 flex items-center gap-x-2 px-4">
+      <div class="text-sm font-bold tracking-widest text-gray-700">
+        同仁列表
+      </div>
+      <button
+        :disabled="dataStore.loading"
+        class="
+          flex items-center space-x-1 rounded-md bg-gray-100 px-3 py-1.5 text-sm
+          font-medium text-gray-700 transition-colors
+          hover:bg-gray-200
+          disabled:cursor-not-allowed disabled:opacity-50
+        "
+        title="重新整理同仁狀態"
+        @click="handleRefresh"
+      >
+        <span
+          class="i-carbon-rotate-360 text-base"
+          :class="{ 'animate-spin': dataStore.loading }"
+        ></span>
+        <span>重新整理</span>
+      </button>
+    </div>
+
     <div class="relative">
       <!-- 滾動容器 -->
       <div
