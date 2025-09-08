@@ -13,11 +13,18 @@ asarUnpack:
   - resources/**
 win:
   executableName: the-weasley-tracker
+  target:
+    - target: nsis
+      arch: [x64, arm64]
+  publisherName: The Weasley Tracker
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
+  oneClick: false
+  allowToChangeInstallationDirectory: true
   createDesktopShortcut: always
+  createStartMenuShortcut: true
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:

@@ -97,19 +97,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-**Package Manager**: This project uses `pnpm`
-- Install dependencies: `pnpm install`
-- Start development: `pnpm dev`
-- Build for production: `pnpm build`
-- Type checking: `pnpm typecheck` (runs both node and web type checks)
-- Linting: `pnpm lint`
-- Preview built app: `pnpm start`
+**Package Manager**: This project uses `npm`
+- Install dependencies: `npm install`
+- Start development: `npm run dev`
+- Build for production: `npm run build`
+- Type checking: `npm run typecheck` (runs both node and web type checks)
+- Linting: `npm run lint`
+- Preview built app: `npm start`
 
 **Building for Distribution**:
-- Windows: `pnpm build:win`
-- macOS: `pnpm build:mac` 
-- Linux: `pnpm build:linux`
-- Unpacked build: `pnpm build:unpack`
+- Windows: `npm run build:win`
+- macOS: `npm run build:mac` 
+- Linux: `npm run build:linux`
+- Unpacked build: `npm run build:unpack`
 
 ## Architecture
 
