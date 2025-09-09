@@ -12,6 +12,7 @@ const emit = defineEmits<{
 
 const inputText = ref('')
 const textareaRef = ref<HTMLTextAreaElement>()
+const isComposing = ref(false)
 
 function sendMessage() {
   const message = inputText.value.trim()
@@ -28,7 +29,8 @@ function sendMessage() {
 function handleEnter(event: KeyboardEvent) {
   // Enter without Shift = send message
   // Shift + Enter = new line
-  if (!event.shiftKey) {
+  // Don't send message if IME is composing
+  if (!event.shiftKey && !isComposing.value) {
     event.preventDefault()
     sendMessage()
   }
@@ -61,6 +63,8 @@ function adjustTextareaHeight() {
           :disabled="disabled"
           @keydown.enter="handleEnter"
           @input="adjustTextareaHeight"
+          @compositionstart="isComposing = true"
+          @compositionend="isComposing = false"
         ></textarea>
       </div>
 
