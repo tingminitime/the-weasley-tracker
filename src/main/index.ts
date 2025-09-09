@@ -44,8 +44,8 @@ function createWindow(): void {
   const display = screen.getPrimaryDisplay()
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: Math.min(1600, Math.floor(display.workAreaSize.width * 0.8)), // 最大1200px，或螢幕寬度的80%
-    height: Math.min(900, Math.floor(display.workAreaSize.height * 0.85)), // 最大800px，或螢幕高度的85%
+    width: Math.min(1400, Math.floor(display.workAreaSize.width * 0.75)), // 最大1200px，或螢幕寬度的80%
+    height: Math.min(900, Math.floor(display.workAreaSize.height * 0.8)), // 最大800px，或螢幕高度的85%
     show: false,
     autoHideMenuBar: true,
     title: 'The Weasley Tracker',
