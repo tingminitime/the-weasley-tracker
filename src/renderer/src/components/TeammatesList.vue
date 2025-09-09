@@ -291,7 +291,7 @@ onMounted(() => {
                   <div class="text-sm font-semibold text-gray-900">
                     狀態：
                   </div>
-                  <div class="mt-1 flex items-center gap-2">
+                  <div class="flex items-center gap-2">
                     <span
                       class="h-1.5 w-1.5 rounded-full"
                       :class="userStatusConfig.dotClass"
@@ -305,7 +305,7 @@ onMounted(() => {
                   <div class="text-sm font-semibold text-gray-900">
                     臨時狀態：
                   </div>
-                  <div class="mt-1 text-sm text-gray-600">
+                  <div class="text-sm text-gray-600">
                     {{ customTag || '無' }}
                   </div>
                 </div>
@@ -315,7 +315,7 @@ onMounted(() => {
                   <div class="text-sm font-semibold text-gray-900">
                     狀態詳細描述：
                   </div>
-                  <p class="mt-1 text-sm text-gray-600">
+                  <p class="text-sm text-gray-600">
                     {{ statusDetail || '無' }}
                   </p>
                 </div>
