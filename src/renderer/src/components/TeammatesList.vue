@@ -67,36 +67,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-80 flex-shrink-0">
+  <div class="h-dvh w-80 flex-shrink-0">
     <!-- 重新整理按鈕 -->
-    <div class="mb-3 flex items-center gap-x-2 px-4">
-      <div class="text-sm font-bold tracking-widest text-gray-700">
-        同仁列表
-      </div>
+    <div class="mb-3 flex items-center justify-start gap-x-2 px-4">
       <button
         :disabled="dataStore.loading"
         class="
-          flex items-center space-x-1 rounded-md bg-gray-100 px-3 py-1.5 text-sm
-          font-medium text-gray-700 transition-colors
+          flex size-10 items-center justify-center rounded-md bg-white p-2
+          font-medium text-gray-900 shadow-sm transition-colors
           hover:bg-gray-200
           disabled:cursor-not-allowed disabled:opacity-50
         "
-        title="重新整理同仁狀態"
+        aria-label="重新整理同仁狀態"
         @click="handleRefresh"
       >
         <span
-          class="i-carbon-rotate-360 text-base"
+          class="i-carbon-rotate-360 text-xl"
           :class="{ 'animate-spin': dataStore.loading }"
         ></span>
-        <span>重新整理</span>
       </button>
     </div>
 
-    <div class="relative">
+    <div class="relative h-2/3">
       <!-- 滾動容器 -->
       <div
         ref="scrollContainer"
-        class="relative max-h-96 overflow-y-auto"
+        class="relative h-full overflow-y-auto"
         :class="{ 'scrollbar-hidden': !isScrolling }"
       >
         <div class="space-y-2 px-1">

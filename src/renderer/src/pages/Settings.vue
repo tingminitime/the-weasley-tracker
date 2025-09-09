@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import McpStatus from '../components/McpStatus.vue'
 import {
@@ -19,8 +19,9 @@ const router = useRouter()
 const apiKey = ref('')
 const showApiKey = ref(false)
 const isLoading = ref(false)
-const successMessage = ref('')
-const errorMessage = ref('')
+const message = ref('')
+const messageStatus = ref(true)
+const testSuccess = ref(false)
 const showClearDialog = ref(false)
 
 function goBack() {
@@ -32,8 +33,7 @@ function toggleApiKeyVisibility() {
 }
 
 function clearMessages() {
-  successMessage.value = ''
-  errorMessage.value = ''
+  message.value = ''
 }
 
 async function loadCurrentApiKey() {
@@ -51,7 +51,8 @@ async function loadCurrentApiKey() {
 
 async function testApiKey() {
   if (!apiKey.value || apiKey.value.startsWith('••••')) {
-    errorMessage.value = '請先輸入 API Key'
+    message.value = '請先輸入 API Key'
+    messageStatus.value = false
     return
   }
 
@@ -61,14 +62,20 @@ async function testApiKey() {
   try {
     const isValid = await window.electron.ipcRenderer.invoke('settings:testApiKey', apiKey.value)
     if (isValid) {
-      successMessage.value = 'API Key 有效！'
+      message.value = 'API Key 有效！'
+      messageStatus.value = true
+      testSuccess.value = true
     }
     else {
-      errorMessage.value = 'API Key 無效，請檢查後重新輸入'
+      message.value = 'API Key 無效，請檢查後重新輸入'
+      messageStatus.value = false
+      testSuccess.value = false
     }
   }
   catch (error) {
-    errorMessage.value = `測試失敗：${error instanceof Error ? error.message : '未知錯誤'}`
+    message.value = `測試失敗：${error instanceof Error ? error.message : '未知錯誤'}`
+    messageStatus.value = false
+    testSuccess.value = false
   }
   finally {
     isLoading.value = false
@@ -77,12 +84,20 @@ async function testApiKey() {
 
 async function saveApiKey() {
   if (!apiKey.value) {
-    errorMessage.value = '請輸入 API Key'
+    message.value = '請輸入 API Key'
+    messageStatus.value = false
+    return
+  }
+
+  if (!testSuccess.value) {
+    message.value = '請先測試 API Key 連線'
+    messageStatus.value = false
     return
   }
 
   if (apiKey.value.startsWith('••••')) {
-    successMessage.value = 'API Key 已保存'
+    message.value = 'API Key 已保存'
+    messageStatus.value = true
     return
   }
 
@@ -91,13 +106,15 @@ async function saveApiKey() {
 
   try {
     await window.electron.ipcRenderer.invoke('settings:setApiKey', apiKey.value)
-    successMessage.value = 'API Key 已保存並重新初始化服務'
+    message.value = 'API Key 已保存並重新初始化服務'
+    messageStatus.value = true
     // Reset to masked display
     apiKey.value = '••••••••••••••••••••••••'
     showApiKey.value = false
   }
   catch (error) {
-    errorMessage.value = `保存失敗：${error instanceof Error ? error.message : '未知錯誤'}`
+    message.value = `保存失敗：${error instanceof Error ? error.message : '未知錯誤'}`
+    messageStatus.value = false
   }
   finally {
     isLoading.value = false
@@ -111,16 +128,23 @@ async function clearApiKey() {
   try {
     await window.electron.ipcRenderer.invoke('settings:clearApiKey')
     apiKey.value = ''
-    successMessage.value = 'API Key 已清除'
+    testSuccess.value = false
+    message.value = 'API Key 已清除'
+    messageStatus.value = true
     showClearDialog.value = false
   }
   catch (error) {
-    errorMessage.value = `清除失敗：${error instanceof Error ? error.message : '未知錯誤'}`
+    message.value = `清除失敗：${error instanceof Error ? error.message : '未知錯誤'}`
+    messageStatus.value = false
   }
   finally {
     isLoading.value = false
   }
 }
+
+watch(apiKey, () => {
+  testSuccess.value = false
+})
 
 onMounted(() => {
   loadCurrentApiKey()
@@ -210,26 +234,8 @@ onMounted(() => {
             </p>
           </div>
 
-          <!-- Messages -->
-          <div
-            v-if="successMessage"
-            class="mb-4 rounded-md bg-green-50 p-3 dark:bg-green-900/20"
-          >
-            <p class="text-sm text-green-700 dark:text-green-400">
-              {{ successMessage }}
-            </p>
-          </div>
-          <div
-            v-if="errorMessage"
-            class="mb-4 rounded-md bg-red-50 p-3 dark:bg-red-900/20"
-          >
-            <p class="text-sm text-red-700 dark:text-red-400">
-              {{ errorMessage }}
-            </p>
-          </div>
-
           <!-- Action Buttons -->
-          <div class="flex gap-3">
+          <div class="mb-4 flex gap-3">
             <button
               :disabled="isLoading"
               class="
@@ -256,7 +262,7 @@ onMounted(() => {
             </button>
 
             <button
-              :disabled="isLoading"
+              :disabled="isLoading || !testSuccess"
               class="
                 flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm
                 font-medium text-white
@@ -325,6 +331,28 @@ onMounted(() => {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+          </div>
+
+          <!-- Messages -->
+          <div
+            v-if="message"
+            :class="
+              messageStatus
+                ? 'bg-green-50 dark:bg-green-900/20'
+                : 'bg-red-50 dark:bg-red-900/20'
+            "
+            class="mb-4 rounded-md p-3"
+          >
+            <p
+              :class="
+                messageStatus
+                  ? 'text-green-700 dark:text-green-400'
+                  : 'text-red-700 dark:text-red-400'
+              "
+              class="text-sm"
+            >
+              {{ message }}
+            </p>
           </div>
         </div>
 
