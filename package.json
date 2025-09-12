@@ -1,7 +1,7 @@
 {
   "name": "the-weasley-tracker",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An Electron application with Vue and TypeScript",
   "author": "The Weasley Tracker",
   "homepage": "https://electron-vite.org",

@@ -15,8 +15,10 @@ export {
   handleBulkStatusUpdate,
   handleRefreshAllStatuses,
   handleRefreshUserStatus,
+  handleUpdateStatusDetail,
   handleUpdateUserStatus,
   refreshAllStatusesTool,
   refreshUserStatusTool,
+  updateStatusDetailTool,
   updateUserStatusTool,
 } from './statusUpdate.js'

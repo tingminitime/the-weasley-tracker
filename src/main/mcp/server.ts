@@ -9,6 +9,7 @@ import {
   handleQueryUsersByMultipleStatuses, // Phase 6 Batch Tools
   handleRefreshAllStatuses, // Phase 5 Handlers
   handleRefreshUserStatus, // Phase 5 Handlers
+  handleUpdateStatusDetail, // Phase 6 Status Detail Update
   handleUpdateUserStatus, // Phase 5 Handlers
 } from './tools/index.js'
 
@@ -138,6 +139,19 @@ export class WeasleyTrackerMcpServer {
         },
       },
       handleBulkStatusUpdate,
+    )
+
+    this.server.registerTool(
+      'updateStatusDetail',
+      {
+        title: 'Update Status Detail',
+        description: 'Update only the status detail/description for a user while preserving their current status',
+        inputSchema: {
+          userId: z.string().describe('User ID or name to update status detail for'),
+          statusDetail: z.string().optional().describe('New status detail/description (can be empty string to clear)'),
+        },
+      },
+      handleUpdateStatusDetail,
     )
   }
 

@@ -84,7 +84,7 @@ STATUS TYPES (6 supported):
 - on_duty (上班中): Working during business hours (08:30-17:30)
 - off_duty (下班): Not working, outside business hours  
 - on_leave (請假): On vacation or personal leave
-- wfh (在家工作): Working from home
+- wfh (遠端上班): Working from home / Remote work
 - out (外出): Temporarily out of office
 - meeting (會議中): In a meeting
 
@@ -115,7 +115,7 @@ User: "我要外出，下午3點回來" → Use updateUserStatus with current us
 
 STATUS UPDATE PARSING:
 - Parse time expressions: "下午3點" = 15:00, "明天" = next day
-- Extract status intent: "外出" = out, "開會" = meeting, "請假" = on_leave, "在家工作" = wfh
+- Extract status intent: "外出" = out, "開會" = meeting, "請假" = on_leave, "遠端上班" = wfh
 - Handle duration: "外出一小時" = out with 1 hour duration detail
 - Multiple users: "小王小李都請假" = bulk update both to on_leave
 
@@ -156,11 +156,11 @@ You must use the provided tools to gather information and make updates. Always c
 
       // Make OpenAI API call with function calling
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4.1-mini',
         messages,
         tools,
         tool_choice: 'auto',
-        max_tokens: 1000,
+        max_tokens: 2048,
         temperature: 0.6,
       })
 
@@ -223,7 +223,7 @@ You must use the provided tools to gather information and make updates. Always c
     const message = userMessage.toLowerCase()
 
     if (message.includes('狀態') || message.includes('status')) {
-      return '我可以幫您查詢和更新員工狀態。請提供具體的用戶名稱或狀態類型。\n\n可用的狀態類型：上班中、下班、請假、在家工作、外出、會議中'
+      return '我可以幫您查詢和更新員工狀態。請提供具體的用戶名稱或狀態類型。\n\n可用的狀態類型：上班中、下班、請假、遠端上班、外出、會議中'
     }
 
     if (message.includes('誰') || message.includes('who')) {
@@ -394,6 +394,21 @@ You must use the provided tools to gather information and make updates. Always c
           },
         },
       },
+      {
+        type: 'function',
+        function: {
+          name: 'updateStatusDetail',
+          description: 'Update only the status detail/description for a user while preserving their current status',
+          parameters: {
+            type: 'object',
+            properties: {
+              userId: { type: 'string', description: 'User ID or name to update status detail for' },
+              statusDetail: { type: 'string', description: 'New status detail/description (can be empty string to clear)' },
+            },
+            required: ['userId'],
+          },
+        },
+      },
     ]
   }
 
@@ -409,6 +424,7 @@ You must use the provided tools to gather information and make updates. Always c
       handleQueryUsersByDepartment,
       handleQueryUsersByMultipleStatuses,
       handleBulkStatusUpdate,
+      handleUpdateStatusDetail,
     } = await import('./tools/index.js')
 
     try {
@@ -431,6 +447,8 @@ You must use the provided tools to gather information and make updates. Always c
           return await handleQueryUsersByMultipleStatuses(args)
         case 'bulkStatusUpdate':
           return await handleBulkStatusUpdate(args)
+        case 'updateStatusDetail':
+          return await handleUpdateStatusDetail(args)
         default:
           throw new Error(`Unknown tool: ${toolName}`)
       }

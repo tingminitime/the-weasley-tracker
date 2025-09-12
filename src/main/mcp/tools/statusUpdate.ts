@@ -69,6 +69,25 @@ export const refreshAllStatusesTool: Tool = {
   },
 }
 
+export const updateStatusDetailTool: Tool = {
+  name: 'updateStatusDetail',
+  description: 'Update only the status detail/description for a user while preserving their current status',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      userId: {
+        type: 'string',
+        description: 'User ID or name to update status detail for',
+      },
+      statusDetail: {
+        type: 'string',
+        description: 'New status detail/description (can be empty string to clear)',
+      },
+    },
+    required: ['userId'],
+  },
+}
+
 export async function handleUpdateUserStatus(args: { userId: string, status: StatusType, statusDetail?: string }) {
   const { userId, status, statusDetail } = args
 
@@ -260,6 +279,78 @@ export async function handleRefreshAllStatuses() {
     content: [{
       type: 'text' as const,
       text: `Refreshed all user statuses. Changes applied:\n${changes.join('\n')}`,
+    }],
+  }
+}
+
+export async function handleUpdateStatusDetail(args: { userId: string, statusDetail?: string }) {
+  const { userId, statusDetail } = args
+
+  // Try to find user by ID first, then by name
+  const userStatuses = dataStore.getUserStatuses()
+  let userStatus = userStatuses.find(u => u.userId === userId)
+
+  if (!userStatus) {
+    userStatus = userStatuses.find(u => u.name.toLowerCase().includes(userId.toLowerCase()))
+  }
+
+  if (!userStatus) {
+    return {
+      content: [{
+        type: 'text' as const,
+        text: `User "${userId}" not found. Available users: ${userStatuses.map(u => u.name).join(', ')}`,
+      }],
+    }
+  }
+
+  // Keep the current status, only update statusDetail
+  const previousDetail = userStatus.statusDetail
+  
+  // Create updated status object
+  const updatedStatus = {
+    ...userStatus,
+    statusDetail,
+    lastUpdated: new Date(),
+    statusHistory: [...userStatus.statusHistory, {
+      id: `update-detail-${userStatus.userId}-${Date.now()}`,
+      status: userStatus.currentStatus,
+      statusDetail,
+      timestamp: new Date(),
+      source: 'ai_modified' as const,
+    }],
+  }
+
+  dataStore.updateUserStatus(updatedStatus)
+
+  const user = dataStore.getUsers().find(u => u.id === userStatus.userId)
+  const userName = user?.name || userStatus.name
+  const userTag = dataStore.getUserTag(userStatus.userId)
+  const tagDisplay = userTag ? ` [TEMP_STATUS:${userTag}]` : ''
+  const oldDetail = previousDetail ? ` - ${previousDetail}` : ''
+  const newDetail = statusDetail ? ` - ${statusDetail}` : ''
+
+  if (previousDetail === statusDetail) {
+    return {
+      content: [{
+        type: 'text' as const,
+        text: `${userName}${tagDisplay}'s status detail remains unchanged.`,
+      }],
+    }
+  }
+
+  if (!statusDetail) {
+    return {
+      content: [{
+        type: 'text' as const,
+        text: `Cleared status detail for ${userName}${tagDisplay}. Status remains ${userStatus.currentStatus.replace('_', ' ')}.`,
+      }],
+    }
+  }
+
+  return {
+    content: [{
+      type: 'text' as const,
+      text: `Updated ${userName}${tagDisplay}'s status detail from${oldDetail} to${newDetail}. Status remains ${userStatus.currentStatus.replace('_', ' ')}.`,
     }],
   }
 }
